@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BetUS – Betting Squares: Lions vs Bills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112..125,600..900&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --topbar: #050e2a;
+    --navbar: #0f2a5e;
+    --nav-active: #1e49b5;
+    --footer: #10275a;
+    --page: #eef1f6;
+    --surface: #ffffff;
+    --border: #e2e7ef;
+    --text: #0f1d3d;
+    --muted: #6a7488;
+    --blue: #0f6dfb;
+    --blue-dark: #0759d6;
+    --strip: #abe2fb;
+    --taken: #d7effd;
+    --green: #3aa50e;
+    --icon-bg: #e8f0fd;
+    --display: "Archivo", "Arial Black", system-ui, sans-serif;
+    --body: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--body); background: var(--page); color: var(--text); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+  svg { display: block; }
+
+  /* ===== Header ===== */
+  .topbar { background: var(--topbar); color: #fff; }
+  .topbar .wrap { display: flex; align-items: center; height: 48px; gap: 18px; }
+  .logo { display: inline-flex; font-family: var(--display); font-stretch: 125%; font-weight: 900; font-size: 15px; letter-spacing: -.5px; border: 2px solid #fff; border-radius: 999px; overflow: hidden; }
+  .logo span { padding: 2px 6px; }
+  .logo span + span { background: #fff; color: var(--topbar); border-radius: 999px 0 0 999px; }
+  .top-right { margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 14px; }
+  .top-right .lbl { color: #9aa6c2; }
+  .divider { width: 1px; height: 28px; background: #26345a; }
+  .account { font-weight: 700; font-size: 15px; letter-spacing: .3px; }
+  .avatar { position: relative; width: 30px; height: 30px; border-radius: 50%; background: #3a4560; }
+  .avatar b { position: absolute; right: -4px; bottom: -3px; background: #e01e2b; color: #fff; font-size: 8px; padding: 1px 4px; border-radius: 999px; }
+  .chip { background: var(--blue); color: #fff; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 999px; }
+  .logout { border: 1.5px solid #fff; border-radius: 999px; padding: 6px 16px; font-weight: 700; font-size: 14px; letter-spacing: .3px; }
+
+  .navbar { background: var(--navbar); border-top: 1px solid #1c3a78; }
+  .navbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 66px; }
+  .navbar a { display: flex; align-items: center; gap: 10px; color: #e2e9fb; font-size: 13px; letter-spacing: .3px; padding: 12px 18px; border-radius: 6px; }
+  .navbar a.active { background: var(--nav-active); color: #fff; }
+  .navbar svg { width: 18px; height: 18px; opacity: .9; }
+
+  /* ===== Page ===== */
+  main { padding: 18px 0 150px; }
+  .back { display: inline-flex; align-items: center; gap: 6px; color: var(--blue); font-weight: 500; font-size: 14px; margin-bottom: 14px; }
+
+  .game-bar { background: var(--navbar); color: #fff; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap; }
+  .tbadge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 11px; border: 2px solid rgba(255,255,255,.85); }
+  .tbadge.det { background: #0076b6; }
+  .tbadge.buf { background: #00338d; }
+  .tname { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 16px; letter-spacing: -.2px; }
+  .vs { font-family: var(--display); font-weight: 900; font-style: italic; font-size: 17px; opacity: .85; padding: 0 4px; }
+  .date-strip { background: var(--strip); padding: 9px 16px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 12px; color: var(--text); }
+  .date-strip small { font-family: var(--body); font-weight: 400; font-size: 10px; color: #3d4a63; margin-left: 4px; }
+
+  .card { background: var(--surface); border-radius: 12px; box-shadow: 0 2px 10px rgba(15, 29, 61, .06); padding: 22px 24px; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .card-title { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 16px; }
+  .open-pill { background: var(--green); color: #fff; font-size: 12px; font-weight: 500; padding: 3px 9px; border-radius: 5px; }
+
+  .top-cards { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; margin-top: 12px; }
+
+  /* Stat boxes (same as Grid Overview) */
+  .stat-boxes { display: grid; border: 1px solid var(--border); border-radius: 8px; }
+  .stat-boxes.four { grid-template-columns: 1.1fr .8fr 1.2fr 1.1fr; }
+  .stat { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+  .stat + .stat { border-left: 1px solid var(--border); }
+  .ico { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--icon-bg); display: grid; place-items: center; color: var(--blue); }
+  .ico.green { background: #e7f6df; color: var(--green); }
+  .ico svg { width: 16px; height: 16px; }
+  .stat-label { font-size: 12px; color: var(--muted); font-weight: 300; }
+  .stat-value { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 19px; margin-top: 1px; }
+  .stat-value.green { color: var(--green); }
+
+  .progress { margin-top: 16px; }
+  .progress-head { display: flex; justify-content: space-between; font-size: 12px; color: #3d4a63; }
+  .progress-head strong { font-weight: 600; color: var(--text); }
+  .track { height: 4px; background: var(--border); border-radius: 999px; margin: 8px 0 8px; overflow: hidden; }
+  .fill { height: 100%; background: var(--blue); border-radius: 999px; transition: width .3s; }
+  .progress-foot { color: var(--muted); font-size: 10px; }
+
+  .payouts { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--border); border-radius: 8px; }
+  .payout { padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+  .payout:nth-child(2n) { border-left: 1px solid var(--border); }
+  .payout:nth-child(n+3) { border-top: 1px solid var(--border); }
+  .payout .stat-value { font-size: 20px; }
+
+  /* ===== Board ===== */
+  .board { margin-top: 14px; padding: 24px 24px 32px; }
+  .legend { display: flex; gap: 18px; color: var(--muted); font-size: 13px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 13px; height: 13px; border-radius: 4px; display: inline-block; }
+  .dot.available { border: 1px solid #cfd6e2; background: #fff; }
+  .dot.yours { background: var(--blue); }
+  .dot.taken { background: var(--taken); }
+
+  .grid-scroll { overflow-x: auto; margin-top: 8px; padding-bottom: 4px; }
+  .grid-area {
+    display: grid;
+    grid-template-columns: 26px 34px repeat(10, minmax(80px, 92px));
+    gap: 7px;
+    justify-content: center;
+    min-width: max-content;
+  }
+  .team-tag { display: flex; align-items: center; gap: 8px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 13px; color: var(--text); }
+  .tag-bills { grid-column: 3 / -1; justify-self: center; padding: 4px 0 6px; }
+  .tag-bills .tbadge, .tag-lions .tbadge { width: 24px; height: 24px; font-size: 8px; border-width: 0; color: #fff; }
+  .tag-lions { grid-column: 1; grid-row: 3 / 13; align-self: center; writing-mode: vertical-rl; transform: rotate(180deg); }
+  .tag-lions .tbadge { transform: rotate(90deg); }
+  .col-head, .row-head { background: var(--navbar); color: #fff; border-radius: 6px; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 15px; }
+  .col-head { height: 36px; }
+  .row-head { grid-column: 2; }
+  .sq {
+    height: 74px; border-radius: 8px; border: 1px solid var(--border); background: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font: inherit; color: var(--text); cursor: pointer; transition: background .15s, box-shadow .15s;
+  }
+  .sq:hover:not(:disabled) { background: #f1f6ff; border-color: #bcd3fb; }
+  .sq:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .sq.taken { background: var(--taken); border-color: transparent; cursor: default; }
+  .sq .name { font-weight: 500; font-size: 13px; max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sq .state { font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 1px; }
+  .sq.selected { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 2px #fff inset, 0 4px 12px rgba(15,109,251,.35); }
+  .sq.selected:hover { background: var(--blue-dark); }
+  .sq.selected svg { width: 20px; height: 20px; }
+  .sq.owned { background: var(--blue); border-color: var(--blue); color: #fff; cursor: default; }
+  .sq.owned .state { color: #d6e5ff; }
+
+  /* ===== Checkout ===== */
+  .checkout {
+    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+    width: min(720px, calc(100% - 24px)); z-index: 10;
+    background: var(--surface); border-radius: 12px; border: 1px solid var(--border);
+    box-shadow: 0 10px 34px rgba(5, 14, 42, .22);
+    display: flex; align-items: center; gap: 16px; padding: 14px 16px 14px 24px;
+    transition: opacity .2s, transform .2s;
+  }
+  .checkout.hidden { opacity: 0; pointer-events: none; transform: translate(-50%, 16px); }
+  .checkout-count { color: var(--muted); font-size: 13px; }
+  .checkout-total { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 26px; }
+  .btn-clear { margin-left: auto; background: none; border: 0; font: inherit; font-size: 15px; color: var(--muted); cursor: pointer; padding: 8px; }
+  .btn-clear:hover { color: var(--text); }
+  .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--blue); color: #fff; border: 0; border-radius: 999px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 15px; padding: 13px 34px; cursor: pointer; }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-primary svg { width: 15px; height: 15px; }
+
+  /* ===== Footer ===== */
+  footer { background: var(--footer); color: #fff; border-top: 6px solid #1a6be0; padding: 36px 0 24px; }
+  .social { display: flex; align-items: center; gap: 22px; padding-bottom: 24px; border-bottom: 1px solid #1f4fae; }
+  .social a { width: 22px; height: 22px; border-radius: 50%; background: #c9d3ea; opacity: .85; }
+  .social .up { margin-left: auto; width: 36px; height: 36px; background: none; border: 1px solid #c9d3ea; }
+  .foot-cols { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; padding: 40px 0; }
+  .foot-cols h4 { font-weight: 500; font-size: 18px; margin-bottom: 26px; }
+  .foot-cols ul { list-style: none; display: grid; gap: 22px; }
+  .foot-cols li { font-size: 10px; color: #c9d3ea; }
+  .foot-cols h4.mt { margin-top: 48px; }
+  .foot-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px 0; border-top: 1px solid #1f4fae; border-bottom: 1px solid #1f4fae; flex-wrap: wrap; }
+  .foot-bar .links { display: flex; gap: 40px; font-size: 10px; color: #c9d3ea; }
+  .foot-bar .gamb { font-size: 15px; letter-spacing: .3px; color: #dbe3f5; }
+  .foot-bar .logo { font-size: 20px; border-width: 2.5px; }
+  .foot-bar .logo span + span { color: var(--footer); }
+  .payments { display: flex; justify-content: center; gap: 36px; padding: 22px 0; font-family: var(--display); font-weight: 800; font-style: italic; font-size: 18px; align-items: center; }
+  .payments i { width: 40px; height: 26px; border: 2px solid #fff; border-radius: 4px; display: inline-block; }
+  .legal { text-align: center; font-size: 8px; color: #c9d3ea; line-height: 1.6; }
+
+  @media (max-width: 1000px) {
+    .navbar .wrap { overflow-x: auto; gap: 8px; }
+    .top-cards { grid-template-columns: 1fr; }
+    .foot-cols { grid-template-columns: repeat(3, 1fr); }
+    .top-right .hide-sm { display: none; }
+  }
+  @media (max-width: 640px) {
+    .stat-boxes.four { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(3) { border-left: 0; }
+    .stat:nth-child(n+3) { border-top: 1px solid var(--border); }
+    .foot-cols { grid-template-columns: 1fr 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="wrap">
+      <a href="#" class="logo" aria-label="BetUS"><span>BET</span><span>US</span></a>
+      <div class="top-right">
+        <span class="hide-sm"><span class="lbl">Cash:</span> $3,670.25</span>
+        <span class="hide-sm"><span class="lbl">FP:</span> $6.00</span>
+        <span class="divider hide-sm"></span>
+        <a href="#" class="account hide-sm">MY ACCOUNT</a>
+        <span class="avatar"><b>10</b></span>
+        <span class="divider hide-sm"></span>
+        <span class="chip hide-sm">Button</span>
+        <a href="#" class="logout">LOGOUT</a>
+      </div>
+    </div>
+  </div>
+  <nav class="navbar">
+    <div class="wrap">
+      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>SPORTSBOOK</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/></svg>LIVE BETTING</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="7" height="12" rx="1"/><rect x="14" y="6" width="7" height="12" rx="1"/></svg>CASINO</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9 7 4 9 4 14a4 4 0 0 0 7 2.5L10 22h4l-1-5.5A4 4 0 0 0 20 14c0-5-5-7-8-12z"/></svg>POKER</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14l4-2 6 1 4-5 3 1-3 6-4 1-2 5M8 12l-2 6"/></svg>RACEBOOK</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>PROMOTIONS</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="12" r=".6"/><circle cx="12" cy="12" r=".6"/><circle cx="16" cy="12" r=".6"/></svg>MORE</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap">
+  <a href="#" class="back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    All games
+  </a>
+
+  <div class="game-bar">
+    <span class="tbadge det">DET</span>
+    <span class="tname">Detroit Lions</span>
+    <span class="vs">VS</span>
+    <span class="tname">Buffalo Bills</span>
+    <span class="tbadge buf">BUF</span>
+  </div>
+  <div class="date-strip">SUN, SEP 07, 2026 · 1:00 PM <small>ET</small></div>
+
+  <div class="top-cards">
+    <section class="card">
+      <div class="card-head">
+        <h2 class="card-title">Grid Overview</h2>
+        <span class="open-pill">Open</span>
+      </div>
+      <div class="stat-boxes four">
+        <div class="stat">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.6 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v11"/></svg></span>
+          <div><div class="stat-label">Square Price</div><div class="stat-value">$5</div></div>
+        </div>
+        <div class="stat">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4" rx="1"/><rect x="10" y="4" width="4" height="4" rx="1"/><rect x="16" y="4" width="4" height="4" rx="1"/><rect x="4" y="10" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="16" y="10" width="4" height="4" rx="1"/><rect x="4" y="16" width="4" height="4" rx="1"/><rect x="10" y="16" width="4" height="4" rx="1"/><rect x="16" y="16" width="4" height="4" rx="1"/></svg></span>
+          <div><div class="stat-label"># Grid</div><div class="stat-value">1</div></div>
+        </div>
+        <div class="stat">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><circle cx="5.5" cy="10" r="2.2"/><circle cx="18.5" cy="10" r="2.2"/><path d="M6 19c0-3.5 2.7-6 6-6s6 2.5 6 6zM1 19c0-2.5 1.8-4.5 4.5-4.5 1 0 1.8.2 2.4.7C6.7 16.3 6 17.6 6 19zM23 19c0-2.5-1.8-4.5-4.5-4.5-1 0-1.8.2-2.4.7 1.2 1.1 1.9 2.4 1.9 3.8z"/></svg></span>
+          <div><div class="stat-label">Squares Sold</div><div class="stat-value" id="soldValue">22/100</div></div>
+        </div>
+        <div class="stat">
+          <span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4zm0 4H5v1a2 2 0 0 0 2 2zm10 0v3a2 2 0 0 0 2-2V7z"/></svg></span>
+          <div><div class="stat-label">Prize Pool</div><div class="stat-value green">$500</div></div>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="progress-head"><span>Game progress</span><strong id="pctSold">22% Sold</strong></div>
+        <div class="track"><div class="fill" id="fill" style="width:22%"></div></div>
+        <div class="progress-foot" id="remaining">78 squares are still available</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2 class="card-title">Payouts</h2></div>
+      <div class="payouts">
+        <div class="payout"><span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4z"/></svg></span><div><div class="stat-label">1st Quarter</div><div class="stat-value">$2.59</div></div></div>
+        <div class="payout"><span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4z"/></svg></span><div><div class="stat-label">1st Half</div><div class="stat-value">$5.18</div></div></div>
+        <div class="payout"><span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4z"/></svg></span><div><div class="stat-label">3rd Quarter</div><div class="stat-value">$2.59</div></div></div>
+        <div class="payout"><span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4z"/></svg></span><div><div class="stat-label">Final</div><div class="stat-value green">$10.35</div></div></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card board">
+    <div class="card-head">
+      <h2 class="card-title">Pick your squares</h2>
+      <div class="legend">
+        <span><i class="dot available"></i>Available</span>
+        <span><i class="dot yours"></i>Yours</span>
+        <span><i class="dot taken"></i>Taken</span>
+      </div>
+    </div>
+    <div class="grid-scroll"><div class="grid-area" id="grid"></div></div>
+  </section>
+</main>
+
+<div class="checkout" id="checkout">
+  <div>
+    <div class="checkout-count" id="selCount">1 square selected</div>
+    <div class="checkout-total" id="selTotal">$5</div>
+  </div>
+  <button class="btn-clear" id="clearBtn">Clear</button>
+  <button class="btn-primary" id="confirmBtn">Confirm Purchase
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="social">
+      <a href="#" aria-label="Facebook"></a><a href="#" aria-label="Instagram"></a><a href="#" aria-label="X"></a>
+      <a href="#" aria-label="Reddit"></a><a href="#" aria-label="YouTube"></a><a href="#" aria-label="TikTok"></a>
+      <a href="#" class="up" aria-label="Back to top"></a>
+    </div>
+    <div class="foot-cols">
+      <div><h4>Sportsbook</h4><ul><li>Online Sportsbook</li><li>NFL Odds</li><li>NBA Odds</li><li>MLB Odds</li><li>World Series Odds</li><li>NHL Odds</li><li>NCAAF Odds</li><li>NCAAB Odds</li><li>UEFA Champions League Odds</li><li>Nascar Odds</li><li>Olympic Games Odds</li><li>French Open Odds</li><li>Live Betting</li></ul></div>
+      <div><h4>Casino</h4><ul><li>Online Casino Games</li><li>Tournaments</li><li>Bonus Play</li><li>Play Blackjack</li><li>Online Slots</li><li>Casino Guide</li><li>How to Play Blackjack</li></ul></div>
+      <div><h4>Horse Racing</h4><ul><li>Racebook</li><li>Horse Racing Rules</li><li>Racebook Glossary</li><li>Horse Race Betting</li><li>Pegasus World Cup</li><li>Triple Crown Betting</li><li>Horse Racing News</li></ul></div>
+      <div><h4>Information</h4><ul><li>Sports Betting News</li><li>BetUS Sportsbook Reviews</li><li>How to Bet Online</li><li>How to Bet On Sports</li><li>About Us</li><li>Rules &amp; Regulations</li><li>Help &amp; FAQ</li><li>Press Room</li><li>Sporting Events Odds</li><li>Affiliates</li><li>Terms of Service</li></ul></div>
+      <div><h4>Betting Offers</h4><ul><li>Casino Promotions</li><li>Promotions</li><li>Contests</li><li>Sign Up Bonuses</li><li>Crypto Bonus</li><li>Casino Bonus</li><li>Refer a Friend</li></ul></div>
+      <div><h4>Other</h4><ul><li>Why Join?</li><li>Contact US</li><li>Privacy Policy</li></ul><h4 class="mt">Contact Info</h4><ul><li>1 (888) 512-3887</li><li>Email</li></ul></div>
+    </div>
+    <div class="foot-bar">
+      <div class="links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+      <div class="gamb">IF YOU HAVE A GAMBLING PROBLEM, CALL 1-800-GAMBLER</div>
+      <span class="logo"><span>BET</span><span>US</span></span>
+    </div>
+    <div class="payments"><i></i><i></i><span>₿bitcoin</span></div>
+    <p class="legal">© 1994 - 2025 BetUS.. All Rights Reserved The BetUS Brand and Logo are trademarks of BetUS. BetUS is a premier online sportsbook and gaming destination. BetUS is a fully licensed sportsbook providing a reliable and secure sports betting service to millions of satisfied online betting customers world wide since 1994.<br>BetUS offers football betting, live and NFL odds all season long.</p>
+  </div>
+</footer>
+
+<script>
+  const PRICE = 5;
+  // "row-col": [name, state]  (row = Lions digit, col = Bills digit)
+  // Rows 7–9 were hidden in the original screenshot; entries marked * are placeholders.
+  const taken = {
+    "0-0": ["E. Jaufre", "LA"], "0-1": ["S. Muscari", "AZ"], "0-5": ["K. Kohberg", "NY"],
+    "0-7": ["S. Weiner", "FL"], "0-9": ["S. Foster", "FL"],
+    "1-6": ["J. Beals", "UT"],
+    "2-2": ["V. Lopez", "CA"],
+    "3-0": ["G. Hernandez", "TX"], "3-2": ["S. Weiner", "FL"], "3-3": ["C. Garcia", "IL"],
+    "4-4": ["S. Muscari", "AZ"], "4-5": ["C. Bedwell", "TX"],
+    "5-5": ["V. Lopez", "CA"],
+    "6-0": ["R. Parr", "TX"], "6-4": ["G. Hernandez", "TX"], "6-6": ["C. Garcia", "IL"],
+    "7-2": ["J. Beals", "UT"],
+    "7-8": ["K. Kohberg", "NY"], /* * */
+    "8-1": ["R. Parr", "TX"],    /* * */
+    "8-7": ["E. Jaufre", "LA"],  /* * */
+    "9-3": ["S. Foster", "FL"],  /* * */
+    "9-9": ["C. Bedwell", "TX"]  /* * */
+  };
+  const selected = new Set(["4-3"]);
+  const owned = new Set();
+  const grid = document.getElementById("grid");
+  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>';
+
+  function el(cls, html, row, col) {
+    const d = document.createElement("div");
+    d.className = cls;
+    if (html !== undefined) d.innerHTML = html;
+    if (row) d.style.gridRow = String(row);
+    if (col) d.style.gridColumn = String(col);
+    return d;
+  }
+
+  function build() {
+    grid.innerHTML = "";
+    grid.appendChild(el("team-tag tag-bills", '<span class="tbadge buf">BUF</span>Buffalo Bills', 1));
+    for (let c = 0; c < 10; c++) grid.appendChild(el("col-head", c, 2, c + 3));
+    grid.appendChild(el("team-tag tag-lions", '<span class="tbadge det">DET</span>Detroit Lions'));
+
+    for (let r = 0; r < 10; r++) {
+      grid.appendChild(el("row-head", r, r + 3));
+      for (let c = 0; c < 10; c++) {
+        const key = `${r}-${c}`;
+        const b = document.createElement("button");
+        b.className = "sq";
+        b.style.gridRow = String(r + 3);
+        b.style.gridColumn = String(c + 3);
+        if (taken[key]) {
+          b.classList.add("taken"); b.disabled = true;
+          b.innerHTML = `<span class="name" title="${taken[key][0]}">${taken[key][0]}</span><span class="state">${taken[key][1]}</span>`;
+          b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: taken by ${taken[key][0]}`);
+        } else if (owned.has(key)) {
+          b.classList.add("owned"); b.disabled = true;
+          b.innerHTML = `<span class="name">You</span><span class="state">Purchased</span>`;
+          b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: yours`);
+        } else {
+          const isSel = selected.has(key);
+          if (isSel) { b.classList.add("selected"); b.innerHTML = CHECK; }
+          b.setAttribute("aria-pressed", isSel);
+          b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: available`);
+          b.addEventListener("click", () => {
+            selected.has(key) ? selected.delete(key) : selected.add(key);
+            build(); update();
+          });
+        }
+        grid.appendChild(b);
+      }
+    }
+  }
+
+  function update() {
+    const n = selected.size;
+    document.getElementById("selCount").textContent = `${n} square${n === 1 ? "" : "s"} selected`;
+    document.getElementById("selTotal").textContent = `$${n * PRICE}`;
+    document.getElementById("checkout").classList.toggle("hidden", n === 0);
+    const sold = Object.keys(taken).length + owned.size;
+    document.getElementById("soldValue").textContent = `${sold}/100`;
+    document.getElementById("pctSold").textContent = `${sold}% Sold`;
+    document.getElementById("fill").style.width = `${sold}%`;
+    document.getElementById("remaining").textContent = `${100 - sold} squares are still available`;
+  }
+
+  document.getElementById("clearBtn").addEventListener("click", () => { selected.clear(); build(); update(); });
+  document.getElementById("confirmBtn").addEventListener("click", () => {
+    selected.forEach(k => owned.add(k)); selected.clear(); build(); update();
+  });
+
+  build(); update();
+</script>
+</body>
+</html>
