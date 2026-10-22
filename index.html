@@ -133,6 +133,7 @@
   .sq:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
   .sq.taken { background: var(--taken); border-color: transparent; cursor: default; }
   .sq .name { font-weight: 500; font-size: 13px; max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sq .ini { display: none; font-weight: 600; font-size: 13px; letter-spacing: .2px; }
   .sq .state { font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 1px; }
   .sq.selected { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 2px #fff inset, 0 4px 12px rgba(15,109,251,.35); }
   .sq.selected:hover { background: var(--blue-dark); }
@@ -178,16 +179,87 @@
   .legal { text-align: center; font-size: 8px; color: #c9d3ea; line-height: 1.6; }
 
   @media (max-width: 1000px) {
-    .navbar .wrap { overflow-x: auto; gap: 8px; }
+    .navbar .wrap { overflow-x: auto; gap: 8px; scrollbar-width: none; }
+    .navbar .wrap::-webkit-scrollbar { display: none; }
+    .navbar a { flex: none; white-space: nowrap; }
     .top-cards { grid-template-columns: 1fr; }
     .foot-cols { grid-template-columns: repeat(3, 1fr); }
     .top-right .hide-sm { display: none; }
+
+    /* Board fits the card width; cells stay square and show initials */
+    .grid-scroll { overflow-x: visible; }
+    .grid-area { grid-template-columns: 26px 34px repeat(10, minmax(0, 1fr)); gap: 5px; min-width: 0; }
+    .sq { height: auto; aspect-ratio: 1; min-width: 0; border-radius: 6px; }
+    .sq .name { display: none; }
+    .sq .ini { display: block; }
+    .row-head { min-width: 0; }
   }
   @media (max-width: 640px) {
+    .wrap { padding: 0 16px; }
+
+    /* Header */
+    .topbar .wrap { height: 52px; }
+    .top-right { gap: 12px; }
+    .logout { padding: 5px 14px; font-size: 13px; }
+    .navbar .wrap { height: 52px; gap: 4px; }
+    .navbar a { padding: 9px 12px; font-size: 12px; gap: 8px; }
+    .navbar svg { width: 16px; height: 16px; }
+
+    /* Game header */
+    main { padding: 14px 0 120px; }
+    .game-bar { flex-wrap: nowrap; justify-content: center; gap: 8px; padding: 10px 12px; }
+    .tbadge { width: 28px; height: 28px; font-size: 9px; flex: none; }
+    .tname { font-size: 14px; white-space: nowrap; }
+    .vs { font-size: 14px; padding: 0; }
+    .date-strip { padding: 8px 12px; text-align: center; }
+
+    /* Cards */
+    .card { padding: 16px; }
+    .card-head { margin-bottom: 12px; }
     .stat-boxes.four { grid-template-columns: 1fr 1fr; }
     .stat:nth-child(3) { border-left: 0; }
     .stat:nth-child(n+3) { border-top: 1px solid var(--border); }
-    .foot-cols { grid-template-columns: 1fr 1fr; }
+    .stat-value { font-size: 17px; }
+    .payout { padding: 12px; }
+    .payout .stat-value { font-size: 17px; }
+
+    /* Board */
+    .board { padding: 16px 10px 18px; }
+    .board .card-head { padding: 0 6px; }
+    .legend { gap: 12px; font-size: 12px; }
+    .grid-area { grid-template-columns: 16px 22px repeat(10, minmax(0, 1fr)); gap: 3px; }
+    .tag-bills { font-size: 12px; padding: 0 0 4px; gap: 6px; }
+    .tag-lions { font-size: 12px; gap: 6px; }
+    .tag-bills .tbadge, .tag-lions .tbadge { width: 18px; height: 18px; font-size: 6px; }
+    .col-head, .row-head { font-size: 12px; border-radius: 4px; }
+    .col-head { height: 24px; }
+    .sq { border-radius: 4px; }
+    .sq .ini { font-size: 9px; letter-spacing: 0; }
+    .sq .state { display: none; }
+    .sq.selected { box-shadow: 0 2px 6px rgba(15,109,251,.35); }
+    .sq.selected svg { width: 14px; height: 14px; }
+
+    /* Checkout */
+    .checkout { bottom: calc(10px + env(safe-area-inset-bottom)); gap: 8px; padding: 10px 10px 10px 16px; }
+    .checkout > div { min-width: 0; }
+    .checkout-count { font-size: 12px; white-space: nowrap; }
+    .checkout-total { font-size: 22px; }
+    .btn-clear { font-size: 14px; padding: 8px 6px; }
+    .btn-primary { font-size: 14px; padding: 12px 18px; gap: 6px; white-space: nowrap; }
+
+    /* Footer */
+    footer { padding: 28px 0 20px; }
+    .social { gap: 14px; padding-bottom: 20px; }
+    .foot-cols { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding: 28px 0; }
+    .foot-cols h4 { font-size: 16px; margin-bottom: 14px; }
+    .foot-cols h4.mt { margin-top: 28px; }
+    .foot-cols ul { gap: 12px; }
+    .foot-cols li { font-size: 12px; }
+    .foot-bar { flex-direction: column; text-align: center; gap: 16px; padding: 20px 0; }
+    .foot-bar .links { gap: 24px; font-size: 12px; }
+    .foot-bar .gamb { font-size: 13px; }
+    .payments { gap: 24px; font-size: 16px; }
+    .legal { font-size: 10px; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -379,11 +451,12 @@
         b.style.gridColumn = String(c + 3);
         if (taken[key]) {
           b.classList.add("taken"); b.disabled = true;
-          b.innerHTML = `<span class="name" title="${taken[key][0]}">${taken[key][0]}</span><span class="state">${taken[key][1]}</span>`;
+          const ini = taken[key][0].replace(/[^A-Z]/g, "");
+          b.innerHTML = `<span class="name" title="${taken[key][0]}">${taken[key][0]}</span><span class="ini" title="${taken[key][0]}">${ini}</span><span class="state">${taken[key][1]}</span>`;
           b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: taken by ${taken[key][0]}`);
         } else if (owned.has(key)) {
           b.classList.add("owned"); b.disabled = true;
-          b.innerHTML = `<span class="name">You</span><span class="state">Purchased</span>`;
+          b.innerHTML = `<span class="name">You</span><span class="ini">You</span><span class="state">Purchased</span>`;
           b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: yours`);
         } else {
           const isSel = selected.has(key);
