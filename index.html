@@ -5,73 +5,122 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BetUS Betting Squares – Prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112..125,600..900&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Nexa is the design font (licensed); Montserrat is the closest free fallback until Nexa webfonts are added -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Montserrat:wght@200;400;600;700;800;900&family=Roboto:wght@400;500;800&display=swap" rel="stylesheet">
 <style>
+  /* Tokens from the Betting Squares Redesign Figma (ADS) */
   :root {
     color-scheme: light;
-    --topbar: #050e2a;
-    --navbar: #0f2a5e;
-    --nav-active: #1e49b5;
-    --footer: #10275a;
-    --page: #eef1f6;
-    --surface: #ffffff;
-    --border: #e2e7ef;
-    --text: #0f1d3d;
-    --muted: #6a7488;
-    --blue: #0f6dfb;
-    --blue-dark: #0759d6;
-    --strip: #abe2fb;
-    --taken: #d7effd;
-    --green: #3aa50e;
-    --icon-bg: #e8f0fd;
-    --display: "Archivo", "Arial Black", system-ui, sans-serif;
-    --body: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --top: #02122e;
+    --brand: #0e2857;
+    --inv-card: #00346b;
+    --strip: #ace6ff;
+    --page: #f2f5f9;
+    --card: #feffff;
+    --card-border: #e7ecf3;
+    --fill-low: #f2f5f9;
+    --border-low: #dde3ed;
+    --border-medium: #9eaabe;
+    --fg-high: #282e38;
+    --fg-low: #7f8ba3;
+    --fg-mid: #576276;
+    --fg-sub: #6a7488;
+    --primary: #007bff;
+    --primary-muted: #f0f9ff;
+    --info-border: #83c7ff;
+    --jade: #009c63;
+    --nav-line: #445d83;
+    --foot-line: #0067d5;
+    --foot-text: #afb9cb;
+    --tb: #d50a0a;
+    --dal: #003594;
+    --shadow-card: 0 20px 50px -20px rgba(15, 40, 90, .25);
+    --nexa: "Nexa", "Montserrat", system-ui, sans-serif;
+    --roboto: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--body); background: var(--page); color: var(--text); }
+  body { font-family: var(--roboto); background: var(--page); color: var(--fg-high); }
   a { color: inherit; text-decoration: none; }
-  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
-  svg { display: block; }
+  button { font: inherit; color: inherit; }
+  svg, img { display: block; }
+  [hidden] { display: none !important; }
+  .container { width: min(1424px, calc(100% - 32px)); margin: 0 auto; }
+  .m-only { display: none; }
 
-  /* ===== Header ===== */
-  .topbar { background: var(--topbar); color: #fff; }
-  .topbar .wrap { display: flex; align-items: center; height: 48px; gap: 18px; }
-  .logo { display: inline-flex; font-family: var(--display); font-stretch: 125%; font-weight: 900; font-size: 15px; letter-spacing: -.5px; border: 2px solid #fff; border-radius: 999px; overflow: hidden; }
-  .logo span { padding: 2px 6px; }
-  .logo span + span { background: #fff; color: var(--topbar); border-radius: 999px 0 0 999px; }
-  .top-right { margin-left: auto; display: flex; align-items: center; gap: 16px; font-size: 14px; }
-  .top-right .lbl { color: #9aa6c2; }
-  .divider { width: 1px; height: 28px; background: #26345a; }
-  .account { font-weight: 700; font-size: 15px; letter-spacing: .3px; }
-  .avatar { position: relative; width: 30px; height: 30px; border-radius: 50%; background: #3a4560; }
-  .avatar b { position: absolute; right: -4px; bottom: -3px; background: #e01e2b; color: #fff; font-size: 8px; padding: 1px 4px; border-radius: 999px; }
-  .chip { background: var(--blue); color: #fff; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 999px; }
-  .logout { border: 1.5px solid #fff; border-radius: 999px; padding: 6px 16px; font-weight: 700; font-size: 14px; letter-spacing: .3px; }
+  /* ===== Buttons (ADS / Button) ===== */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; min-width: 96px; padding: 0 14px; border-radius: 999px; border: 1px solid transparent; background: none; font-family: var(--nexa); font-weight: 800; font-size: 18px; line-height: 1.2; color: var(--fg-high); cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+  .btn svg { width: 20px; height: 20px; flex: none; }
+  .btn-outline { border-color: var(--border-medium); }
+  .btn-outline:hover { background: var(--fill-low); }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: #0069db; }
+  .btn-muted { background: var(--card-border); }
+  .btn-muted:hover { background: var(--border-low); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-  .navbar { background: var(--navbar); border-top: 1px solid #1c3a78; }
-  .navbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 66px; }
-  .navbar a { display: flex; align-items: center; gap: 10px; color: #e2e9fb; font-size: 13px; letter-spacing: .3px; padding: 12px 18px; border-radius: 6px; }
-  .navbar a.active { background: var(--nav-active); color: #fff; }
-  .navbar svg { width: 18px; height: 18px; opacity: .9; }
+  /* ===== Alert (ADS / Alert) ===== */
+  .alert { display: flex; align-items: center; gap: 8px; padding: 5px 12px; border: 1px solid var(--info-border); border-radius: 8px; background: var(--primary-muted); color: var(--primary); font-weight: 500; font-size: 14px; line-height: 18px; }
+  .alert svg { width: 20px; height: 20px; flex: none; }
+
+  /* ===== Desktop header ===== */
+  .topbar { background: var(--top); color: #fff; }
+  .topbar .inner { width: min(1408px, calc(100% - 32px)); margin: 0 auto; height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo img { width: 108px; height: 24px; }
+  .top-right { display: flex; align-items: center; gap: 16px; }
+  .balances { display: flex; gap: 16px; font-family: var(--nexa); font-size: 16px; line-height: 24px; white-space: nowrap; }
+  .balances span { color: var(--foot-text); margin-right: 4px; }
+  .balances b { font-weight: 700; }
+  .vsep { width: 1px; height: 40px; background: var(--nav-line); flex: none; }
+  .account-btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 8px; font-family: var(--nexa); font-weight: 800; font-size: 18px; white-space: nowrap; }
+  .account-btn svg { width: 24px; height: 24px; }
+  .mail { position: relative; width: 40px; height: 40px; }
+  .mail .badge { position: absolute; right: -2px; bottom: 2px; min-width: 23px; height: 16px; padding: 0 4px; border-radius: 999px; background: #ec0100; color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 10px; display: grid; place-items: center; }
+  .gift { width: 40px; height: 40px; display: grid; place-items: center; }
+  .gift img { width: 40px; height: 40px; }
+  .top-btns { display: flex; gap: 6px; }
+  .top-btns .btn { border-radius: 8px; color: #fff; min-width: 0; }
+  .top-btns .btn svg { width: 24px; height: 24px; }
+  .btn-outline-inv { border-color: var(--foot-text); }
+
+  .navbar { background: var(--brand); border-bottom: 1px solid var(--nav-line); }
+  .navbar .inner { width: min(1440px, calc(100% - 32px)); margin: 0 auto; height: 79px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .navbar a { display: flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px; color: #fff; font-family: var(--nexa); font-size: 14px; text-transform: uppercase; white-space: nowrap; }
+  .navbar a img { width: 48px; height: 32px; }
+  .navbar a.active { background: #113c8c url("assets/nav-selected-bg.png") center / cover no-repeat; }
+
+  /* ===== Mobile header (ADS / Mobile Header) ===== */
+  .m-header { display: none; background: var(--top); height: 40px; padding: 6px 12px; align-items: center; justify-content: space-between; color: #fff; }
+  .m-header .logo img { width: 90px; height: 20px; }
+  .m-right { display: flex; align-items: center; gap: 12px; }
+  .m-bal { display: flex; gap: 16px; font-family: var(--nexa); font-size: 14px; white-space: nowrap; }
+  .m-bal span { color: var(--foot-text); font-size: 12px; margin-right: 1px; }
+  .m-bal b { font-weight: 700; }
+  .m-icons { display: flex; align-items: center; gap: 12px; }
+  .m-icons svg { width: 24px; height: 24px; }
+  .m-icons img { width: 40px; height: 40px; margin: -8px; }
+  .m-icons button { background: none; border: 0; cursor: pointer; }
 
   /* ===== Page ===== */
-  main { padding: 18px 0 150px; }
-  .back { display: inline-flex; align-items: center; gap: 6px; color: var(--blue); font-weight: 500; font-size: 14px; margin-bottom: 14px; }
+  main { padding: 10px 0 90px; }
+  .stack { display: flex; flex-direction: column; gap: 10px; }
 
-  .game-bar { background: var(--navbar); color: #fff; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap; }
-  .tbadge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 11px; border: 2px solid rgba(255,255,255,.85); }
-  .tbadge.det { background: #0076b6; }
-  .tbadge.buf { background: #00338d; }
-  .tname { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 16px; letter-spacing: -.2px; }
-  .vs { font-family: var(--display); font-weight: 900; font-style: italic; font-size: 17px; opacity: .85; padding: 0 4px; }
-  .date-strip { background: var(--strip); padding: 9px 16px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 12px; color: var(--text); }
-  .date-strip small { font-family: var(--body); font-weight: 400; font-size: 10px; color: #3d4a63; margin-left: 4px; }
-
-  /* ===== Live score ===== */
-  .score { display: none; font-family: var(--display); font-stretch: 112%; font-weight: 900; font-size: 24px; letter-spacing: .5px; padding: 0 6px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .score i { font-style: normal; opacity: .6; margin: 0 6px; }
-  body:not(.is-pre) .score { display: inline; }
-  body:not(.is-pre) .vs { display: none; }
+  /* Game bar */
+  .game { border-radius: 10px; overflow: hidden; }
+  .game-top { position: relative; background: var(--inv-card); color: #fff; padding: 18px 20px; display: flex; justify-content: center; }
+  .teams { display: flex; align-items: center; gap: 220px; }
+  .team { display: flex; align-items: center; gap: 12px; font-family: var(--nexa); font-weight: 800; font-size: 24px; line-height: 25.5px; white-space: nowrap; }
+  .badge-team { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 13px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .2); }
+  .badge-team.tb { background: var(--tb); }
+  .badge-team.dal { background: var(--dal); }
+  .vs-mark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  .vs-mark svg { width: 35px; height: 48px; }
+  .score { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-family: var(--nexa); font-weight: 900; font-size: 32px; letter-spacing: .5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .score i { font-style: normal; opacity: .6; margin: 0 8px; }
+  body:not(.is-pre) .score { display: block; }
+  body:not(.is-pre) .vs-mark { display: none; }
+  .date-strip { height: 42px; background: var(--strip); display: flex; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, .05); font-family: var(--nexa); font-weight: 800; font-size: 14px; text-transform: uppercase; color: var(--fg-high); }
+  .date-strip small { font-weight: 200; font-size: 12px; color: var(--fg-mid); text-transform: none; }
   .game-status { display: none; align-items: center; gap: 8px; }
   body:not(.is-pre) .game-status { display: inline-flex; }
   body:not(.is-pre) .game-date { display: none; }
@@ -79,384 +128,345 @@
   @keyframes pulse { 50% { opacity: .3; } }
   .is-live .date-strip { background: #ffe3e5; color: #a3121c; }
   .is-final .live-dot { display: none; }
-  .open-pill.live { background: #e01e2b; }
-  .open-pill.closed { background: #6a7488; }
 
-  /* Prototype-only control to preview game states */
-  .demo-bar { margin-top: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; padding: 8px 12px; border: 1.5px dashed #b9c3d6; border-radius: 10px; font-size: 12px; color: var(--muted); }
-  .demo-bar .seg button { padding: 5px 12px; font-size: 12px; }
+  /* Cards */
+  .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; box-shadow: var(--shadow-card); }
+  .info-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .info-card { padding: 6px 24px; }
+  .card-head { padding: 16px 0 10px; }
+  .card-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: var(--nexa); font-weight: 800; font-size: 20px; letter-spacing: -.6px; line-height: 1.2; }
+  .card-sub { margin-top: 3px; font-size: 14px; letter-spacing: .42px; color: var(--fg-sub); line-height: 1.2; }
+  .toggle { display: none; background: none; border: 0; padding: 2px; cursor: pointer; }
+  .toggle svg { width: 12px; height: 12px; transition: transform .2s; }
+  .collapsed .toggle svg { transform: rotate(180deg); }
+  .stats { display: flex; align-items: center; justify-content: space-between; min-height: 74px; }
+  .stats.pad { padding: 0 12px; }
+  .stat { display: flex; align-items: center; gap: 8px; }
+  .stat-ico { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--fill-low); display: grid; place-items: center; }
+  .stat-ico svg { width: 20px; height: 20px; }
+  .stat-ico.pie svg { width: 18px; height: 18px; }
+  .stat-label { font-size: 14px; color: var(--fg-low); line-height: 1.2; white-space: nowrap; }
+  .stat-value { margin-top: 6px; font-family: var(--nexa); font-weight: 800; font-size: 20px; line-height: 1.2; white-space: nowrap; }
+  .stat-value.jade { color: var(--jade); }
+  .stat-line { width: 1px; align-self: stretch; background: var(--card-border); }
+  .p-status { font-size: 11px; color: var(--fg-low); margin-top: 2px; white-space: nowrap; }
+  .p-status:empty { display: none; }
+  .p-status b { color: var(--fg-high); font-weight: 600; }
+  .p-status.now { display: flex; align-items: center; gap: 5px; color: #a3121c; }
+  .p-status.now b { color: #a3121c; }
+  .card-foot { display: none; }
 
-  .card { background: var(--surface); border-radius: 12px; box-shadow: 0 2px 10px rgba(15, 29, 61, .06); padding: 22px 24px; }
-  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-  .card-title { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 16px; }
-  .open-pill { background: var(--green); color: #fff; font-size: 12px; font-weight: 500; padding: 3px 9px; border-radius: 5px; }
+  /* Board */
+  .board { padding: 15px 36px 20px 28px; display: flex; flex-direction: column; gap: 14px; }
+  .board .card-body { display: flex; flex-direction: column; gap: 18px; }
+  .board-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .board-head .card-title { letter-spacing: 0; }
+  .legend { display: flex; gap: 19px; font-family: var(--nexa); font-size: 14px; letter-spacing: .42px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .sw { width: 13px; height: 13px; border-radius: 4px; display: inline-block; }
+  .sw.available { background: var(--primary-muted); border: 1px dashed var(--border-low); }
+  .sw.yours { background: var(--primary); }
+  .sw.taken { background: var(--fill-low); border: 1px solid var(--border-low); }
+  .tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .tools .alert { width: 300px; }
+  .board-alert { display: none; }
+  .seg { display: none; gap: 10px; padding: 4px; border-radius: 999px; background: var(--fill-low); }
+  .seg button { height: 24px; padding: 0 10px; border: 0; border-radius: 999px; background: none; font-family: var(--nexa); font-weight: 800; font-size: 12px; letter-spacing: .36px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .seg button[aria-pressed="true"] { background: var(--card); }
 
-  .top-cards { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; margin-top: 12px; }
-
-  /* Stat boxes (same as Grid Overview) */
-  .stat-boxes { display: grid; border: 1px solid var(--border); border-radius: 8px; }
-  .stat-boxes.four { grid-template-columns: 1.1fr .8fr 1.2fr 1.1fr; }
-  .stat { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
-  .stat + .stat { border-left: 1px solid var(--border); }
-  .ico { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--icon-bg); display: grid; place-items: center; color: var(--blue); }
-  .ico.green { background: #e7f6df; color: var(--green); }
-  .ico svg { width: 16px; height: 16px; }
-  .stat-label { font-size: 12px; color: var(--muted); font-weight: 300; }
-  .stat-value { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 19px; margin-top: 1px; }
-  .stat-value.green { color: var(--green); }
-
-  .progress { margin-top: 16px; }
-  .progress-head { display: flex; justify-content: space-between; font-size: 12px; color: #3d4a63; }
-  .progress-head strong { font-weight: 600; color: var(--text); }
-  .track { height: 4px; background: var(--border); border-radius: 999px; margin: 8px 0 8px; overflow: hidden; }
-  .fill { height: 100%; background: var(--blue); border-radius: 999px; transition: width .3s; }
-  .progress-foot { color: var(--muted); font-size: 10px; }
-
-  .payouts { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--border); border-radius: 8px; }
-  .payout { padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
-  .payout:nth-child(2n) { border-left: 1px solid var(--border); }
-  .payout:nth-child(n+3) { border-top: 1px solid var(--border); }
-  .payout .stat-value { font-size: 20px; }
-
-  /* Prize pool is the headline total; payouts read as its breakdown */
-  .stat-boxes.four { overflow: hidden; }
-  .stat.pool { background: #f3fbef; }
-  .stat.pool .stat-label { color: #2f7a10; font-weight: 500; }
-  .stat.pool .stat-value { font-size: 23px; }
-  .card-head.stack { flex-direction: column; align-items: flex-start; gap: 2px; }
-  .card-sub { font-size: 12px; color: var(--muted); font-weight: 300; }
-  /* Pie icons fill up with game time: 1/4, 1/2, 3/4, full */
-  .ico.pie svg { width: 18px; height: 18px; }
-  .p-q1 { --c: #8fb6f9; }
-  .p-half { --c: #5a95f6; }
-  .p-q3 { --c: #2f6fe0; }
-  .p-final { --c: var(--navbar); }
-  .ico.pie { color: var(--c); }
-  .split .p-q1, .split .p-half, .split .p-q3, .split .p-final { background: var(--c); }
-  .top-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--icon-bg); color: var(--blue-dark); font-size: 10px; font-weight: 600; vertical-align: 1px; }
-  .split { display: flex; gap: 3px; height: 8px; margin-top: 14px; }
-  .split span { border-radius: 999px; }
-
-  /* ===== Board ===== */
-  .board { margin-top: 14px; padding: 24px 24px 32px; }
-  .legend { display: flex; gap: 18px; color: var(--muted); font-size: 13px; }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .dot { width: 13px; height: 13px; border-radius: 4px; display: inline-block; }
-  .dot.available { border: 1px solid #cfd6e2; background: #fff; }
-  .dot.yours { background: var(--blue); }
-  .dot.taken { background: var(--taken); }
-
-  .grid-scroll { overflow-x: auto; margin-top: 8px; padding-bottom: 4px; }
-  .grid-area {
-    display: grid;
-    grid-template-columns: 26px 34px repeat(10, minmax(80px, 92px));
-    gap: 7px;
-    justify-content: center;
-    min-width: max-content;
-  }
-  .team-tag { display: flex; align-items: center; gap: 8px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 13px; color: var(--text); }
-  .tag-bills { grid-column: 3 / -1; justify-self: center; padding: 4px 0 6px; }
-  .tag-bills .tbadge, .tag-lions .tbadge { width: 24px; height: 24px; font-size: 8px; border-width: 0; color: #fff; }
-  .tag-lions { grid-column: 1; grid-row: 3 / 13; align-self: center; writing-mode: vertical-rl; transform: rotate(180deg); }
-  .tag-lions .tbadge { transform: rotate(90deg); }
-  .col-head, .row-head { background: var(--navbar); color: #fff; border-radius: 6px; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 15px; }
-  .col-head { height: 36px; }
-  .row-head { grid-column: 2; }
-  .sq {
-    height: 74px; border-radius: 8px; border: 1px solid var(--border); background: #fff;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font: inherit; color: var(--text); cursor: pointer; transition: background .15s, box-shadow .15s;
-  }
-  .sq:hover:not(.taken, .owned, .selected) { background: #f1f6ff; border-color: #bcd3fb; }
-  .sq:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-  .sq.taken { background: var(--taken); border-color: transparent; cursor: default; }
-  .sq .name { font-weight: 500; font-size: 13px; max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .sq .ini { display: none; font-weight: 600; font-size: 13px; letter-spacing: .2px; }
-  .sq .state { font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 1px; }
-  .sq.selected { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 2px #fff inset, 0 4px 12px rgba(15,109,251,.35); }
-  .sq.selected:hover { background: var(--blue-dark); }
-  .sq.selected svg { width: 20px; height: 20px; }
-  .sq.owned { background: var(--blue); border-color: var(--blue); color: #fff; cursor: default; }
+  .board-body { display: flex; align-items: center; gap: 18px; }
+  .tag-lions { flex: none; display: flex; align-items: center; gap: 12px; writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--nexa); font-weight: 800; font-size: 14px; white-space: nowrap; }
+  .tag-lions .badge-team { width: 28px; height: 28px; font-size: 10px; transform: rotate(90deg); }
+  .board-grid { flex: 1; min-width: 0; }
+  .tag-bills { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 0 0 8px 42px; height: 28px; font-family: var(--nexa); font-weight: 800; font-size: 14px; white-space: nowrap; }
+  .tag-bills .badge-team { width: 28px; height: 28px; font-size: 10px; }
+  .axis { display: none; }
+  .grid-area { display: grid; grid-template-columns: 34px repeat(10, minmax(0, 1fr)); grid-template-rows: 36px; grid-auto-rows: 74px; gap: 8px; }
+  .col-head, .row-head { background: var(--brand); color: #fff; border-radius: 6px; display: grid; place-items: center; font-weight: 800; font-size: 16px; }
+  .sq { position: relative; min-width: 0; border-radius: 6px; border: 1px dashed var(--border-low); background: var(--primary-muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 6px 7px; color: var(--fg-high); cursor: pointer; transition: background .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
+  .sq:hover:not(.taken, .owned, .selected) { background: #e2f2ff; border-color: var(--info-border); }
+  .sq:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .sq.taken { background: var(--fill-low); border-style: solid; cursor: default; }
+  .sq .name { font-weight: 800; font-size: 14px; line-height: 1.2; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sq .ini { display: none; font-weight: 800; font-size: 10px; }
+  .sq .state { font-size: 16px; line-height: 1.2; color: var(--fg-low); }
+  .sq.selected, .sq.owned { background: var(--primary); border: 0; color: #fff; box-shadow: 0 0 9px rgba(0, 123, 255, .61); }
+  .sq.owned { cursor: default; box-shadow: none; }
   .sq.owned .state { color: #d6e5ff; }
-  .sq { position: relative; }
+  .sq.selected svg { width: 32px; height: 32px; }
+  .board.locked .sq:not(.taken, .owned):hover { background: var(--primary-muted); border-color: var(--border-low); }
+  .board.locked .sq:not(.taken, .owned) { cursor: default; }
   .sq.win { outline: 3px solid #f5b301; outline-offset: -1px; z-index: 1; }
   .sq.win-now { animation: glow 1.6s ease-in-out infinite; }
   @keyframes glow { 50% { outline-color: #ffd970; } }
-  .wtag { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: #f5b301; color: #3a2a00; font-family: var(--display); font-weight: 800; font-size: 9px; letter-spacing: .3px; padding: 1px 6px; border-radius: 999px; white-space: nowrap; }
-  .board.locked .sq:not(.taken, .owned):hover { background: #fff; border-color: var(--border); }
-  .board.locked .sq:not(.taken, .owned) { cursor: default; }
-  .p-status { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .p-status b { color: var(--text); font-weight: 600; }
-  .p-status.now { display: flex; align-items: center; gap: 5px; color: #a3121c; }
-  .p-status.now b { color: #a3121c; }
+  .wtag { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: #f5b301; color: #3a2a00; font-family: var(--nexa); font-weight: 800; font-size: 9px; letter-spacing: .3px; padding: 1px 6px; border-radius: 999px; white-space: nowrap; }
   .quad { display: none; }
-  .sq, .seg button, .btn-quick { -webkit-tap-highlight-color: transparent; }
 
-  /* Mobile board helpers (hidden on desktop) */
-  .board-tools { display: none; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-  .seg { display: inline-flex; background: var(--page); border-radius: 999px; padding: 3px; }
-  .seg button { border: 0; background: none; font: inherit; font-size: 13px; font-weight: 500; color: var(--muted); padding: 7px 16px; border-radius: 999px; cursor: pointer; }
-  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(15, 29, 61, .15); }
-  .btn-quick { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--blue); background: none; color: var(--blue); border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; padding: 7px 14px; cursor: pointer; }
-  .btn-quick svg { width: 16px; height: 16px; }
-  .btn-quick:disabled { opacity: .4; cursor: not-allowed; }
-  .sq-info { display: none; min-height: 36px; margin-bottom: 8px; padding: 8px 12px; border-radius: 8px; background: var(--page); font-size: 13px; color: var(--muted); }
-  .sq-info b { color: var(--text); font-weight: 600; }
+  /* Prototype-only control to preview game states (?demo or ?state=…) */
+  .demo-bar { display: none; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 12px; border: 1.5px dashed #b9c3d6; border-radius: 10px; font-size: 12px; color: var(--fg-sub); }
+  body.demo .demo-bar { display: flex; }
+  .demo-bar .seg { display: inline-flex; }
 
-  /* ===== Quadrant sheet ===== */
-  .sheet-backdrop { position: fixed; inset: 0; z-index: 20; background: rgba(5, 14, 42, .45); opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
-  .sheet-backdrop.open { opacity: 1; visibility: visible; transition: opacity .2s; }
-  .sheet {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 21; max-height: 92vh; overflow-y: auto; overscroll-behavior: contain;
-    background: var(--surface); border-radius: 16px 16px 0 0; box-shadow: 0 -8px 30px rgba(5, 14, 42, .25);
-    padding: 6px 16px calc(16px + env(safe-area-inset-bottom));
-    transform: translateY(100%); visibility: hidden; transition: transform .25s, visibility 0s .25s;
-  }
+  /* ===== Checkout bar ===== */
+  .checkout { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 22; width: min(560px, calc(100% - 32px)); display: flex; align-items: center; justify-content: space-between; gap: 11px; padding: 10px 16px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; box-shadow: 0 10px 34px rgba(5, 14, 42, .22); transition: opacity .2s, transform .2s; }
+  .checkout.hidden { opacity: 0; pointer-events: none; transform: translate(-50%, 16px); }
+  .checkout-count { font-weight: 500; font-size: 12px; color: var(--fg-low); white-space: nowrap; }
+  .checkout-total { margin-top: 8px; font-family: var(--nexa); font-weight: 800; font-size: 24px; line-height: 1; }
+  .checkout-btns { display: flex; gap: 11px; }
+  .checkout .btn { min-height: 38px; min-width: 0; padding: 0 14px; font-size: 12px; letter-spacing: .36px; gap: 4px; }
+  .checkout .btn svg { width: 12px; height: 12px; }
+
+  /* ===== Quadrant panel (ADS / Drawer) ===== */
+  .scrim { position: fixed; inset: 0; z-index: 20; background: rgba(0, 0, 0, .75); opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
+  .scrim.open { opacity: 1; visibility: visible; transition: opacity .2s; }
+  .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 21; max-height: 92vh; overflow-y: auto; overscroll-behavior: contain; background: var(--card); border-radius: 10px 10px 0 0; padding: 28px 16px calc(28px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 12px; transform: translateY(100%); visibility: hidden; transition: transform .25s, visibility 0s .25s; }
   .sheet.open { transform: none; visibility: visible; transition: transform .25s; }
   .sheet.has-sel { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
-  body.sheet-open { overflow: hidden; }
-  body.sheet-open .checkout { z-index: 22; }
-  .sheet-handle { width: 40px; height: 4px; border-radius: 2px; background: #cfd6e2; margin: 4px auto 10px; }
-  .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .sheet-head h3 { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 17px; }
-  .sheet-head p { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .btn-done { flex: none; border: 0; background: var(--page); color: var(--text); font: inherit; font-size: 14px; font-weight: 600; padding: 8px 18px; border-radius: 999px; cursor: pointer; }
-  .quad-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0 10px; }
-  .quad-tabs button { display: flex; flex-direction: column; align-items: center; gap: 1px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 10px; padding: 6px 0; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .quad-tabs b { font-family: var(--display); font-weight: 800; font-size: 16px; }
-  .quad-tabs small { font-size: 10px; color: var(--muted); }
-  .quad-tabs [aria-selected="true"] { background: var(--navbar); border-color: var(--navbar); color: #fff; }
-  .quad-tabs [aria-selected="true"] small { color: #c9d3ea; }
-  .sheet .sq-info { display: block; }
-  .quad-grid { display: grid; grid-template-columns: 30px repeat(5, minmax(0, 1fr)); gap: 6px; touch-action: pan-y; }
-  .quad-grid .col-head { height: 28px; font-size: 13px; }
-  .quad-grid .row-head { font-size: 13px; }
+  body.sheet-open, body.confirm-open { overflow: hidden; }
+  .grabber { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 80px; height: 6px; border-radius: 999px; background: var(--card-border); }
+  .sheet-close { position: absolute; top: 12px; right: 16px; width: 20px; height: 20px; border: 0; border-radius: 6px; background: rgba(255, 255, 255, .5); cursor: pointer; }
+  .sheet-close svg { width: 20px; height: 20px; }
+  .sheet-title { font-family: var(--nexa); font-weight: 800; font-size: 18px; line-height: 22px; }
+  .quad-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .quad-tabs button { height: 45px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--card); color: #0f1d3d; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .quad-tabs b { font-family: var(--nexa); font-weight: 800; font-size: 16px; line-height: 18px; }
+  .quad-tabs small { font-size: 10px; color: var(--fg-sub); }
+  .quad-tabs [aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .quad-tabs [aria-selected="true"] small { color: #fff; }
+  .sheet hr { border: 0; border-top: 1px solid var(--border-low); }
+  .sheet .alert { font-size: 12px; }
+  .quad-grid { display: grid; grid-template-columns: 30px repeat(5, minmax(0, 1fr)); grid-template-rows: 28px; grid-auto-rows: 60px; gap: 3px; touch-action: pan-y; }
   .q-corner { display: flex; align-items: center; justify-content: center; }
-  .q-corner .tbadge { width: 16px; height: 16px; font-size: 5px; border-width: 0; color: #fff; }
-  .q-corner .tbadge + .tbadge { margin-left: -3px; }
-  .quad-grid .sq { height: auto; aspect-ratio: 1; min-width: 0; border-radius: 8px; }
-  .quad-grid .sq .name { display: none; }
-  .quad-grid .sq .ini { display: block; font-size: 14px; }
-  .quad-grid .sq .state { display: block; font-size: 11px; }
-  .quad-grid .sq.selected svg { width: 20px; height: 20px; }
+  .q-corner .badge-team { width: 16px; height: 16px; font-size: 5px; box-shadow: none; }
+  .q-corner .badge-team + .badge-team { margin-left: -3px; }
+  .quad-grid .sq { gap: 10px; padding: 6px 4px; }
+  .quad-grid .sq .name { display: block; font-size: 10px; }
+  .quad-grid .sq .ini { display: none; }
+  .quad-grid .sq .state { display: block; font-size: 10px; }
+  .quad-grid .sq.selected svg { width: 40px; height: 40px; }
 
-  /* ===== Checkout ===== */
-  .checkout {
-    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
-    width: min(720px, calc(100% - 24px)); z-index: 10;
-    background: var(--surface); border-radius: 12px; border: 1px solid var(--border);
-    box-shadow: 0 10px 34px rgba(5, 14, 42, .22);
-    display: flex; align-items: center; gap: 16px; padding: 14px 16px 14px 24px;
-    transition: opacity .2s, transform .2s;
-  }
-  .checkout.hidden { opacity: 0; pointer-events: none; transform: translate(-50%, 16px); }
-  .checkout-count { color: var(--muted); font-size: 13px; }
-  .checkout-total { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 26px; }
-  .btn-clear { margin-left: auto; background: none; border: 0; font: inherit; font-size: 15px; color: var(--muted); cursor: pointer; padding: 8px; }
-  .btn-clear:hover { color: var(--text); }
-  .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--blue); color: #fff; border: 0; border-radius: 999px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 15px; padding: 13px 34px; cursor: pointer; }
-  .btn-primary:hover { background: var(--blue-dark); }
-  .btn-primary svg { width: 15px; height: 15px; }
-
-  /* ===== Purchase confirmation ===== */
-  .confirm-backdrop { position: fixed; inset: 0; z-index: 30; background: rgba(5, 14, 42, .55); opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
-  .confirm-backdrop.open { opacity: 1; visibility: visible; transition: opacity .2s; }
-  .confirm {
-    position: fixed; left: 50%; top: 50%; z-index: 31; width: min(480px, calc(100% - 32px)); max-height: 90vh; overflow-y: auto;
-    background: var(--surface); border-radius: 12px; box-shadow: 0 20px 50px rgba(5, 14, 42, .35);
-    transform: translate(-50%, -46%); opacity: 0; visibility: hidden; transition: transform .2s, opacity .2s, visibility 0s .2s;
-  }
+  /* ===== Confirm purchase (ADS / Modal) ===== */
+  .confirm-scrim { position: fixed; inset: 0; z-index: 30; background: rgba(8, 16, 27, .6); opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
+  .confirm-scrim.open { opacity: 1; visibility: visible; transition: opacity .2s; }
+  .confirm { position: fixed; left: 50%; top: 50%; z-index: 31; width: min(440px, calc(100% - 32px)); max-height: 92vh; overflow-y: auto; background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; transform: translate(-50%, -46%); opacity: 0; visibility: hidden; transition: transform .2s, opacity .2s, visibility 0s .2s; }
   .confirm.open { transform: translate(-50%, -50%); opacity: 1; visibility: visible; transition: transform .2s, opacity .2s; }
-  .confirm-head { background: var(--navbar); color: #fff; text-align: center; padding: 16px 20px; border-radius: 12px 12px 0 0; }
-  .confirm-head h3 { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 18px; letter-spacing: .5px; text-transform: uppercase; }
-  .confirm-body { padding: 20px 24px 24px; }
-  .confirm-msg { text-align: center; font-size: 15px; line-height: 1.5; }
-  .confirm-msg small { display: block; color: var(--muted); font-size: 13px; }
-  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 16px 0; max-height: 96px; overflow-y: auto; }
-  .chips span { background: var(--icon-bg); color: var(--blue-dark); font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; white-space: nowrap; }
-  .sum { border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
-  .sum div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; }
-  .sum div + div { border-top: 1px solid var(--border); }
-  .sum dt { color: var(--muted); }
-  .sum dd { font-weight: 600; text-align: right; }
-  .sum .total dd { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 18px; }
-  .confirm-error { margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: #fdecee; color: #b3141f; font-size: 13px; }
-  .confirm-actions { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
-  .confirm-actions button { min-width: 130px; justify-content: center; }
-  .btn-secondary { border: 0; background: var(--page); color: var(--text); border-radius: 999px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 15px; padding: 13px 28px; cursor: pointer; }
-  .btn-secondary:hover { background: var(--border); }
-  .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
-  .btn-primary.busy { opacity: 1; cursor: progress; }
-  .spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .4); border-top-color: #fff; animation: spin .7s linear infinite; }
+  .confirm-head { height: 50px; display: grid; place-items: center; background: var(--inv-card); border-radius: 15px 15px 0 0; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 20px; }
+  .confirm-body { padding: 27px 20px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .confirm-q { margin: 0 auto; text-align: center; font-family: var(--nexa); font-weight: 800; font-size: 20px; line-height: 30px; max-width: 330px; }
+  .confirm-sub { margin-top: 11px; text-align: center; font-family: var(--nexa); font-size: 14px; letter-spacing: .42px; color: var(--fg-mid); }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-height: 120px; overflow-y: auto; }
+  .chips .alert { font-size: 12px; }
+  .sum { align-self: stretch; border: 1px solid var(--card-border); border-radius: 8px; padding: 2px 12px; }
+  .sum div { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; }
+  .sum div + div { border-top: 1px solid var(--card-border); }
+  .sum dt { font-size: 14px; color: var(--fg-mid); }
+  .sum dd { font-family: var(--nexa); font-weight: 800; font-size: 14px; color: var(--fg-mid); text-align: right; }
+  .sum .total dd { font-family: "Archivo", var(--nexa); font-size: 18px; color: var(--fg-high); }
+  .confirm-error { align-self: stretch; padding: 10px 14px; border-radius: 8px; background: #fdecee; color: #b3141f; font-size: 13px; }
+  .confirm-actions { align-self: stretch; display: flex; gap: 8px; }
+  .confirm-actions .btn { flex: 1; }
+  .btn.busy { cursor: progress; }
+  .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .4); border-top-color: #fff; animation: spin .7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .confirm-done { text-align: center; }
-  .done-ico { width: 56px; height: 56px; margin: 4px auto 12px; border-radius: 50%; background: #e7f6df; color: var(--green); display: grid; place-items: center; }
-  .done-ico svg { width: 28px; height: 28px; }
-  .confirm-done h4 { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 20px; }
-  .confirm-done p { color: var(--muted); font-size: 14px; margin-top: 4px; }
-  body.confirm-open { overflow: hidden; }
+  .done-ico { width: 56px; height: 56px; border-radius: 50%; background: #e3f6ee; display: grid; place-items: center; }
+  .done-ico svg { width: 40px; height: 40px; }
+  .confirm-done h4 { font-family: var(--nexa); font-weight: 800; font-size: 20px; }
+  .confirm-done p { text-align: center; font-size: 14px; color: var(--fg-mid); }
 
-  /* ===== Footer ===== */
-  footer { background: var(--footer); color: #fff; border-top: 6px solid #1a6be0; padding: 36px 0 24px; }
-  .social { display: flex; align-items: center; gap: 22px; padding-bottom: 24px; border-bottom: 1px solid #1f4fae; }
-  .social a { width: 22px; height: 22px; border-radius: 50%; background: #c9d3ea; opacity: .85; }
-  .social .up { margin-left: auto; width: 36px; height: 36px; background: none; border: 1px solid #c9d3ea; }
-  .foot-cols { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; padding: 40px 0; }
-  .foot-cols h4 { font-weight: 500; font-size: 18px; margin-bottom: 26px; }
-  .foot-cols ul { list-style: none; display: grid; gap: 22px; }
-  .foot-cols li { font-size: 10px; color: #c9d3ea; }
-  .foot-cols h4.mt { margin-top: 48px; }
-  .foot-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px 0; border-top: 1px solid #1f4fae; border-bottom: 1px solid #1f4fae; flex-wrap: wrap; }
-  .foot-bar .links { display: flex; gap: 40px; font-size: 10px; color: #c9d3ea; }
-  .foot-bar .gamb { font-size: 15px; letter-spacing: .3px; color: #dbe3f5; }
-  .foot-bar .logo { font-size: 20px; border-width: 2.5px; }
-  .foot-bar .logo span + span { color: var(--footer); }
-  .payments { display: flex; justify-content: center; gap: 36px; padding: 22px 0; font-family: var(--display); font-weight: 800; font-style: italic; font-size: 18px; align-items: center; }
-  .payments i { width: 40px; height: 26px; border: 2px solid #fff; border-radius: 4px; display: inline-block; }
-  .legal { text-align: center; font-size: 8px; color: #c9d3ea; line-height: 1.6; }
+  /* ===== Footer (ADS / Desktop Footer) ===== */
+  footer { background: var(--brand); border-top: 8px solid var(--foot-line); color: #fff; }
+  .foot { width: min(1440px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0; display: flex; flex-direction: column; gap: 40px; }
+  .foot-top { display: flex; align-items: center; justify-content: space-between; }
+  .social { display: flex; align-items: center; gap: 40px; }
+  .social svg, .social img { width: 24px; height: 24px; }
+  .up { width: 40px; height: 40px; border: 0; background: none; cursor: pointer; }
+  .up svg { width: 40px; height: 40px; }
+  .foot-sep { height: 1px; background: var(--foot-line); }
+  .foot-cols { display: grid; grid-template-columns: repeat(6, 180px); justify-content: space-between; }
+  .foot-cols h4 { font-family: var(--nexa); font-weight: 700; font-size: 22px; line-height: 33px; margin-bottom: 24px; }
+  .foot-cols h4.mt { margin-top: 24px; }
+  .foot-cols ul { list-style: none; }
+  .foot-cols li { padding: 10px 0; font-size: 12px; line-height: 36px; color: var(--foot-text); }
+  .foot-acc { display: none; }
+  .foot-bar { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+  .foot-links { display: flex; gap: 56px; width: 320px; font-size: 12px; color: var(--foot-text); }
+  .gamb { font-family: var(--nexa); font-weight: 700; font-size: 20px; color: var(--foot-text); text-align: center; }
+  .foot-logo { width: 320px; display: flex; justify-content: flex-end; }
+  .foot-logo img { width: 161px; height: 36px; }
+  .payments { display: flex; align-items: center; justify-content: center; gap: 40px; }
+  .pay { width: 46px; height: 32px; border-radius: 4px; background: #151f31; border: 1px solid #3a4a66; }
+  .pay-text { font-family: var(--nexa); font-weight: 800; font-style: italic; font-size: 18px; color: #fff; }
+  .legal { font-size: 10px; line-height: 15px; color: var(--foot-text); text-align: center; }
 
-  @media (max-width: 1000px) {
-    .navbar .wrap { overflow-x: auto; gap: 8px; scrollbar-width: none; }
-    .navbar .wrap::-webkit-scrollbar { display: none; }
-    .navbar a { flex: none; white-space: nowrap; }
-    .top-cards { grid-template-columns: 1fr; }
-    .foot-cols { grid-template-columns: repeat(3, 1fr); }
-    .top-right .hide-sm { display: none; }
-
-    /* Board fits the card width; cells stay square and show initials */
-    .grid-scroll { overflow-x: visible; }
-    .grid-area { grid-template-columns: 26px 34px repeat(10, minmax(0, 1fr)); gap: 5px; min-width: 0; }
-    .sq { height: auto; aspect-ratio: 1; min-width: 0; border-radius: 6px; }
-    .sq .name { display: none; }
-    .sq .ini { display: block; }
-    .row-head { min-width: 0; }
-    .sq-info { display: block; }
+  /* ===== Tablet ===== */
+  @media (max-width: 1200px) {
+    .info-cards { grid-template-columns: 1fr; }
+    .navbar .inner { overflow-x: auto; scrollbar-width: none; justify-content: flex-start; }
+    .balances { display: none; }
+    .teams { gap: 140px; }
+    .foot-cols { grid-template-columns: repeat(3, 1fr); row-gap: 24px; }
+    .foot-bar { flex-wrap: wrap; justify-content: center; }
   }
+  @media (max-width: 1000px) {
+    .grid-area { grid-auto-rows: auto; }
+    .sq { aspect-ratio: 1; gap: 2px; }
+    .sq .name { display: none; }
+    .sq .ini { display: block; font-size: 14px; }
+    .sq .state { font-size: 12px; }
+    .top-right .vsep, .mail, .gift { display: none; }
+  }
+
+  /* ===== Mobile (Figma: 390px) ===== */
   @media (max-width: 640px) {
-    .wrap { padding: 0 16px; }
+    .topbar, .navbar { display: none; }
+    .m-header { display: flex; }
+    .m-only { display: block; }
+    .d-only { display: none; }
+    main { padding: 12px 0 40px; }
+    .container { width: calc(100% - 16px); }
+    .stack { gap: 8px; }
+    .back { min-height: 24px; min-width: 0; padding: 0 10px; gap: 4px; font-size: 12px; letter-spacing: .36px; }
+    .back svg { width: 12px; height: 12px; }
 
-    /* Header */
-    .topbar .wrap { height: 52px; }
-    .top-right { gap: 12px; }
-    .logout { padding: 5px 14px; font-size: 13px; }
-    .navbar .wrap { height: 52px; gap: 4px; }
-    .navbar a { padding: 9px 12px; font-size: 12px; gap: 8px; }
-    .navbar svg { width: 16px; height: 16px; }
+    .game-top { height: 44px; padding: 0 14px; align-items: center; }
+    .teams { gap: 8px; }
+    .team { font-size: 14px; letter-spacing: -.42px; }
+    .badge-team { width: 24px; height: 24px; font-size: 10px; }
+    .vs-mark { position: static; transform: none; }
+    .vs-mark svg { width: 23px; height: 33px; }
+    .score { position: static; transform: none; font-size: 22px; }
+    .score i { margin: 0 6px; }
+    .date-strip { height: 34px; }
+    body:not(.is-pre) .team-name { display: none; }
 
-    /* Game header */
-    main { padding: 14px 0 120px; }
-    .game-bar { flex-wrap: nowrap; justify-content: center; gap: 8px; padding: 10px 12px; }
-    .tbadge { width: 28px; height: 28px; font-size: 9px; flex: none; }
-    .tname { font-size: 14px; white-space: nowrap; }
-    .vs { font-size: 14px; padding: 0; }
-    body:not(.is-pre) .tname { display: none; }
-    .score { font-size: 22px; }
+    .info-cards { gap: 8px; }
+    .info-card, .board { padding: 16px; gap: 12px; }
+    .info-card { display: flex; flex-direction: column; gap: 12px; }
+    .card-head { padding: 0; }
+    .card-head .card-sub { display: none; }
+    .card-title { font-size: 16px; line-height: 16px; letter-spacing: -.48px; width: 100%; }
+    .board-head .card-title { line-height: 20px; }
+    .toggle { display: block; }
+    .collapsed .card-body { display: none !important; }
+    .stats, .stats.pad { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--card-border); border-radius: 12px; padding: 0; min-height: 0; }
+    .stats .stat { min-height: 60px; padding: 0 12px; }
+    .stats .stat:nth-of-type(2n) { padding-left: 20px; border-left: 1px solid var(--card-border); }
+    .stats .stat:nth-of-type(n+3) { border-top: 1px solid var(--card-border); }
+    .stats .stat-line { display: none; }
+    .stat-value { margin-top: 4px; }
+    .card-foot { display: block; margin-top: 10px; text-align: center; font-size: 12px; line-height: 1; letter-spacing: .36px; color: var(--fg-low); }
+    .p-status { white-space: normal; font-size: 10px; }
+
+    .board-head { flex-direction: column; align-items: stretch; gap: 12px; }
+    .legend { font-size: 12px; line-height: 13px; letter-spacing: .36px; }
+    .board .card-body { gap: 12px; }
+    .seg { display: inline-flex; }
+    .tools .btn { min-height: 32px; min-width: 0; padding: 0 10px; gap: 4px; font-size: 12px; letter-spacing: .36px; }
+    .tools .btn svg { width: 18px; height: 18px; }
+    .tools .alert { display: none; }
+    .board-alert { display: flex; font-size: 12px; }
+
+    .board-body { display: block; }
+    .tag-lions, .tag-bills { display: none; }
+    .axis { display: flex; align-items: center; gap: 2px; height: 28px; }
+    .axis.top { justify-content: flex-end; margin-bottom: 8px; }
+    .axis.bottom { margin-top: 8px; }
+    .axis svg { width: 18px; height: 18px; }
+    .axis .badge-team { width: 26px; height: 26px; font-size: 8px; }
+    .axis.bottom .badge-team { width: 28px; height: 28px; }
+    .grid-area { grid-template-columns: repeat(11, minmax(0, 1fr)); grid-template-rows: auto; gap: 3px; }
+    .grid-area .col-head, .grid-area .row-head { aspect-ratio: 1; }
+    .grid-area .sq { aspect-ratio: 1; padding: 0; gap: 0; }
+    .grid-area .sq .state { display: none; }
+    .grid-area .sq .ini { font-size: 10px; }
+    .grid-area .sq.selected svg { width: 18px; height: 18px; }
     .wtag { display: none; }
     .sq.win { outline-width: 2px; }
-    .date-strip { padding: 8px 12px; text-align: center; }
 
-    /* Cards */
-    .card { padding: 16px; }
-    .card-head { margin-bottom: 12px; }
-    .stat-boxes.four { grid-template-columns: 1fr 1fr; }
-    .stat:nth-child(3) { border-left: 0; }
-    .stat:nth-child(n+3) { border-top: 1px solid var(--border); }
-    .stat-value { font-size: 17px; }
-    .payout { padding: 12px; }
-    .payout .stat-value { font-size: 17px; }
-    .stat.pool .stat-value { font-size: 20px; }
-    .top-tag { margin-left: 4px; padding: 1px 6px; }
-    .payout { gap: 8px; }
-    .payout .stat-label { white-space: nowrap; }
+    /* Quadrants map */
+    .board.quads .quad { display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; padding: 0; border: 2px solid #0072eb; border-radius: 6px; background: rgba(255, 255, 255, .6); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .quad span { width: 32px; height: 32px; border-radius: 50%; background: var(--inv-card); color: #fff; display: grid; place-items: center; font-family: var(--nexa); font-weight: 800; font-size: 18px; box-shadow: 0 2px 8px rgba(5, 14, 42, .3); }
+    .quad:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-    /* Board */
-    .board { padding: 16px 10px 18px; }
-    .board .card-head { padding: 0 6px; }
-    .legend { gap: 12px; font-size: 12px; }
-    .grid-area { grid-template-columns: 16px 22px repeat(10, minmax(0, 1fr)); gap: 3px; }
-    .tag-bills { font-size: 12px; padding: 0 0 4px; gap: 6px; }
-    .tag-lions { font-size: 12px; gap: 6px; }
-    .tag-bills .tbadge, .tag-lions .tbadge { width: 18px; height: 18px; font-size: 6px; }
-    .col-head, .row-head { font-size: 12px; border-radius: 4px; }
-    .col-head { height: 24px; }
-    .sq { border-radius: 4px; }
-    .sq .ini { font-size: 9px; letter-spacing: 0; }
-    .sq .state { display: none; }
-    .sq.selected { box-shadow: 0 2px 6px rgba(15,109,251,.35); }
-    .sq.selected svg { width: 14px; height: 14px; }
-    .board-tools { display: flex; }
-
-    /* Quadrants mode: the board becomes a map of four 5×5 blocks */
-    .board.quads .quad { display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; margin: -2px; padding: 0; border: 2px solid rgba(15, 109, 251, .55); border-radius: 8px; background: rgba(15, 109, 251, .04); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .quad span { width: 32px; height: 32px; border-radius: 50%; background: var(--navbar); color: #fff; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 15px; box-shadow: 0 2px 8px rgba(5, 14, 42, .3); }
-    .quad:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-
-    /* Purchase confirmation becomes a bottom sheet */
+    .checkout { bottom: calc(16px + env(safe-area-inset-bottom)); }
     .confirm { left: 0; right: 0; top: auto; bottom: 0; width: auto; border-radius: 16px 16px 0 0; transform: translateY(100%); opacity: 1; }
     .confirm.open { transform: none; }
-    .confirm-head { border-radius: 16px 16px 0 0; padding: 14px 16px; }
-    .confirm-head h3 { font-size: 16px; }
-    .confirm-body { padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); }
-    .confirm-msg { font-size: 14px; }
-    .confirm-actions button { flex: 1; min-width: 0; padding-left: 12px; padding-right: 12px; }
+    .confirm-body { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
 
-    /* Checkout */
-    .checkout { bottom: calc(10px + env(safe-area-inset-bottom)); gap: 8px; padding: 10px 10px 10px 16px; }
-    .checkout > div { min-width: 0; }
-    .checkout-count { font-size: 12px; white-space: nowrap; }
-    .checkout-total { font-size: 22px; }
-    .btn-clear { font-size: 14px; padding: 8px 6px; }
-    .btn-primary { font-size: 14px; padding: 12px 18px; gap: 6px; white-space: nowrap; }
-
-    /* Footer */
-    footer { padding: 28px 0 20px; }
-    .social { gap: 14px; padding-bottom: 20px; }
-    .foot-cols { grid-template-columns: 1fr 1fr; gap: 24px 16px; padding: 28px 0; }
-    .foot-cols h4 { font-size: 16px; margin-bottom: 14px; }
-    .foot-cols h4.mt { margin-top: 28px; }
-    .foot-cols ul { gap: 12px; }
-    .foot-cols li { font-size: 12px; }
-    .foot-bar { flex-direction: column; text-align: center; gap: 16px; padding: 20px 0; }
-    .foot-bar .links { gap: 24px; font-size: 12px; }
-    .foot-bar .gamb { font-size: 13px; }
-    .payments { gap: 24px; font-size: 16px; }
-    .legal { font-size: 10px; }
+    .foot { width: auto; padding: 56px 20px; gap: 32px; }
+    .social { gap: 24px; }
+    .foot-cols, .foot-desk-sep { display: none; }
+    .foot-acc { display: block; border-bottom: 1px solid var(--foot-line); }
+    .foot-acc details { border-top: 1px solid var(--foot-line); }
+    .foot-acc summary { list-style: none; display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 16px; font-family: var(--nexa); font-weight: 700; font-size: 18px; cursor: pointer; }
+    .foot-acc summary::-webkit-details-marker { display: none; }
+    .foot-acc summary svg { width: 16px; height: 16px; transition: transform .2s; }
+    .foot-acc details[open] summary svg { transform: rotate(180deg); }
+    .foot-acc ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; padding: 0 16px 12px; }
+    .foot-acc li { padding: 12px 0; font-size: 14px; color: var(--foot-text); }
+    .foot-bar { flex-direction: column; gap: 32px; }
+    .foot-links { width: auto; justify-content: center; gap: 32px; font-size: 14px; }
+    .foot-logo { width: auto; justify-content: center; }
+    .gamb { line-height: 24px; }
+    .payments { gap: 30px; flex-wrap: wrap; }
   }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
-<body>
+<body class="is-pre">
 
 <header>
   <div class="topbar">
-    <div class="wrap">
-      <a href="#" class="logo" aria-label="BetUS"><span>BET</span><span>US</span></a>
+    <div class="inner">
+      <a href="#" class="logo" aria-label="BetUS"><img src="assets/betus-logo.png" alt="BetUS"></a>
       <div class="top-right">
-        <span class="hide-sm"><span class="lbl">Cash:</span> <span id="cashValue">$3,670.25</span></span>
-        <span class="hide-sm"><span class="lbl">FP:</span> $6.00</span>
-        <span class="divider hide-sm"></span>
-        <a href="#" class="account hide-sm">MY ACCOUNT</a>
-        <span class="avatar"><b>10</b></span>
-        <span class="divider hide-sm"></span>
-        <span class="chip hide-sm">Button</span>
-        <a href="#" class="logout">LOGOUT</a>
+        <div class="balances"><div><span>Cash:</span><b class="cash-value">$3,670.25</b></div><div><span>FP:</span><b>$6.00</b></div></div>
+        <span class="vsep"></span>
+        <a href="#" class="account-btn">MY ACCOUNT
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 20C18 18.4087 17.3679 16.8826 16.2426 15.7574C15.1174 14.6321 13.5913 14 12 14M12 14C10.4087 14 8.88258 14.6321 7.75736 15.7574C6.63214 16.8826 6 18.4087 6 20M12 14C14.2091 14 16 12.2091 16 10C16 7.79086 14.2091 6 12 6C9.79086 6 8 7.79086 8 10C8 12.2091 9.79086 14 12 14ZM22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <span class="vsep"></span>
+        <a href="#" class="mail" aria-label="Messages, 10 unread">
+          <svg viewBox="0 0 40 40" fill="none" width="40" height="40"><path d="M30 15L21.03 20.7C20.7213 20.8934 20.3643 20.996 20 20.996C19.6357 20.996 19.2787 20.8934 18.97 20.7L10 15M12 12H28C29.1046 12 30 12.8954 30 14V26C30 27.1046 29.1046 28 28 28H12C10.8954 28 10 27.1046 10 26V14C10 12.8954 10.8954 12 12 12Z" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="badge">10</span>
+        </a>
+        <span class="vsep"></span>
+        <a href="#" class="gift" aria-label="Rewards"><img src="assets/gift.png" alt=""></a>
+        <div class="top-btns">
+          <a href="#" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M22 8V5C22 3.89543 21.1046 3 20 3H4C2.89543 3 2 3.89543 2 5V8M22 8V15C22 16.1046 21.1046 17 20 17H16M22 8H2M2 8V15C2 16.1046 2.89543 17 4 17H8M8 17C8 19.2091 9.79086 21 12 21C14.2091 21 16 19.2091 16 17M8 17C8 14.7909 9.79086 13 12 13C14.2091 13 16 14.7909 16 17M12 15.4V18.6M13.6 17L12 18.6L10.4 17" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            JOIN NOW</a>
+          <a href="#" class="btn btn-outline-inv">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9M16 7L21 12L16 17M21 12H9" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            LOGOUT</a>
+        </div>
       </div>
     </div>
   </div>
-  <nav class="navbar">
-    <div class="wrap">
-      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>SPORTSBOOK</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/></svg>LIVE BETTING</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="7" height="12" rx="1"/><rect x="14" y="6" width="7" height="12" rx="1"/></svg>CASINO</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9 7 4 9 4 14a4 4 0 0 0 7 2.5L10 22h4l-1-5.5A4 4 0 0 0 20 14c0-5-5-7-8-12z"/></svg>POKER</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14l4-2 6 1 4-5 3 1-3 6-4 1-2 5M8 12l-2 6"/></svg>RACEBOOK</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>PROMOTIONS</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="12" r=".6"/><circle cx="12" cy="12" r=".6"/><circle cx="16" cy="12" r=".6"/></svg>MORE</a>
+  <nav class="navbar" aria-label="Main">
+    <div class="inner">
+      <a href="#" class="active"><img src="assets/nav-sportsbook.png" alt=""><span>Sportsbook</span></a>
+      <a href="#"><img src="assets/nav-live.png" alt=""><span>Live Betting</span></a>
+      <a href="#"><img src="assets/nav-casino.png" alt=""><span>Casino</span></a>
+      <a href="#"><img src="assets/nav-poker.png" alt=""><span>Poker</span></a>
+      <a href="#"><img src="assets/nav-racebook.png" alt=""><span>Racebook</span></a>
+      <a href="#"><img src="assets/nav-promotions.png" alt=""><span>Promotions</span></a>
+      <a href="#"><img src="assets/nav-more.png" alt=""><span>More</span></a>
     </div>
   </nav>
+  <div class="m-header">
+    <a href="#" class="logo" aria-label="BetUS"><img src="assets/betus-logo.png" alt="BetUS"></a>
+    <div class="m-right">
+      <div class="m-bal"><div><span>Cash:</span><b class="cash-value">$3,670.25</b></div><div><span>FP:</span><b>$6.00</b></div></div>
+      <div class="m-icons">
+        <a href="#" aria-label="Rewards"><img src="assets/gift.png" alt=""></a>
+        <button type="button" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12H20M4 6H20M4 18H20" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </div>
 </header>
 
-<main class="wrap">
+<main class="container stack">
   <div class="demo-bar" role="group" aria-label="Prototype game state">
     <span>Prototype · game state</span>
     <div class="seg" id="stateSeg">
@@ -466,117 +476,119 @@
     </div>
   </div>
 
-  <a href="#" class="back">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-    All games
-  </a>
+  <div><a href="#" class="btn btn-outline back">
+    <svg class="d-only" viewBox="0 0 20 20" fill="none"><path d="M9.99951 10.0004H10.0078M12.9458 12.9466C9.04055 16.8519 4.55563 18.6986 2.92845 17.0714C1.30126 15.4442 3.14799 10.9593 7.05323 7.05408C10.9585 3.14884 15.4434 1.30211 17.0706 2.9293C18.6978 4.55648 16.851 9.0414 12.9458 12.9466ZM12.9458 7.05393C16.851 10.9592 18.6977 15.4441 17.0705 17.0713C15.4434 18.6985 10.9584 16.8517 7.0532 12.9465C3.14796 9.04125 1.30123 4.55633 2.92841 2.92914C4.5556 1.30196 9.04052 3.14869 12.9458 7.05393ZM10.4162 10.0004C10.4162 10.2305 10.2296 10.417 9.99951 10.417C9.76939 10.417 9.58285 10.2305 9.58285 10.0004C9.58285 9.77025 9.76939 9.5837 9.99951 9.5837C10.2296 9.5837 10.4162 9.77025 10.4162 10.0004Z" stroke="#282E38" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg class="m-only" viewBox="0 0 12 12" fill="none"><path d="M6 2.5L2.5 6L6 9.5M2.5 6H9.5" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All Games</a></div>
 
-  <div class="game-bar">
-    <span class="tbadge det">DET</span>
-    <span class="tname">Detroit Lions</span>
-    <span class="vs">VS</span>
-    <span class="score" id="score" aria-live="polite"></span>
-    <span class="tname">Buffalo Bills</span>
-    <span class="tbadge buf">BUF</span>
-  </div>
-  <div class="date-strip"><span class="game-date">SUN, SEP 07, 2026 · 1:00 PM <small>ET</small></span><span class="game-status"><span class="live-dot"></span><span id="gameStatus"></span></span></div>
+  <section class="game">
+    <div class="game-top">
+      <div class="teams">
+        <div class="team"><span class="badge-team tb">TB</span><span class="team-name">Buccaneers</span></div>
+        <div class="vs-mark" aria-label="versus"><svg viewBox="0 0 35 48" fill="none"><path d="M6.1265 16.1703H0L4.00075 33.7003C5.75606 33.566 7.85902 33.9223 9.56304 33.7304C9.97908 33.6838 10.2954 33.6921 10.5119 33.2727L21.3687 16.576C21.4428 16.0196 21.3459 16.2197 20.9498 16.1676C20.1491 16.0662 19.1774 16.269 18.3738 16.1676C17.9806 16.1182 17.8751 16.3156 17.9606 15.7674L25.358 0L8.83071 26.3128L6.1265 16.1731V16.1703ZM15.4331 32.3845C17.0089 32.6394 18.2313 33.5276 19.9297 33.8675C24.5886 34.8022 32.2767 34.0375 32.9862 28.2919C33.6274 23.1028 27.5237 23.7634 24.8708 22.2585C23.4317 21.4417 24.5431 20.7646 25.6971 20.4713C27.6804 19.9669 30.0541 20.6248 31.7752 21.6281L34.0691 17.2613C32.157 15.8798 24.8508 15.2274 23.2038 16.4307C22.8818 16.6665 19.2657 22.3243 18.9352 23.0151C18.1373 24.6708 19.1888 25.5014 20.7076 26.2662C22.1124 26.9761 25.7684 27.4339 26.5007 28.0945C28.2674 29.6872 23.5486 29.6735 22.6823 29.5748C20.246 29.3007 18.4621 27.7135 16.2395 27.2557L3.84687 47.6941L15.4359 32.3845H15.4331Z" fill="white"/><path d="M15.4323 32.3863L3.84326 47.6959L16.2387 27.2575C18.4614 27.7153 20.2452 29.3025 22.6815 29.5766C23.5478 29.6753 28.2666 29.689 26.4999 28.0963C25.7676 27.4357 22.1088 26.9779 20.7068 26.268C19.1909 25.5004 18.1394 24.6726 18.9344 23.0169C19.2678 22.3261 22.881 16.6683 23.203 16.4325C24.85 15.2292 32.1562 15.8816 34.0683 17.2631L31.7744 21.6299C30.0533 20.6293 27.6796 19.9714 25.6964 20.4731C24.5423 20.7664 23.431 21.4462 24.87 22.2603C27.5201 23.7625 33.6238 23.1046 32.9855 28.2937C32.2759 34.0393 24.5879 34.8041 19.9289 33.8693C18.2306 33.5294 17.0053 32.6412 15.4323 32.3863Z" fill="white"/><path d="M6.1265 16.1703L8.83071 26.31L25.358 0L17.9635 15.7729C17.8751 16.3211 17.9834 16.1237 18.3767 16.1731C19.1802 16.2718 20.1519 16.0689 20.9526 16.1731C21.3487 16.2224 21.4456 16.0223 21.3715 16.5815L10.5148 33.2781C10.2982 33.6976 9.98193 33.6893 9.5659 33.7359C7.86472 33.9278 5.75891 33.5715 4.0036 33.7058L0 16.1703H6.1265Z" fill="white"/></svg></div>
+        <span class="score" id="score" aria-live="polite"></span>
+        <div class="team"><span class="team-name">Cowboys</span><span class="badge-team dal">DAL</span></div>
+      </div>
+    </div>
+    <div class="date-strip"><span class="game-date">Thu, Oct 8 | 8:15 PM <small>EST</small></span><span class="game-status"><span class="live-dot"></span><span id="gameStatus"></span></span></div>
+  </section>
 
-  <div class="top-cards">
-    <section class="card">
+  <div class="info-cards">
+    <section class="card info-card" id="payoutsCard">
       <div class="card-head">
-        <h2 class="card-title">Grid Overview</h2>
-        <span class="open-pill" id="boardPill">Open</span>
-      </div>
-      <div class="stat-boxes four">
-        <div class="stat">
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.6 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v11"/></svg></span>
-          <div><div class="stat-label">Square Price</div><div class="stat-value">$5</div></div>
-        </div>
-        <div class="stat">
-          <span class="ico"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4" rx="1"/><rect x="10" y="4" width="4" height="4" rx="1"/><rect x="16" y="4" width="4" height="4" rx="1"/><rect x="4" y="10" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="16" y="10" width="4" height="4" rx="1"/><rect x="4" y="16" width="4" height="4" rx="1"/><rect x="10" y="16" width="4" height="4" rx="1"/><rect x="16" y="16" width="4" height="4" rx="1"/></svg></span>
-          <div><div class="stat-label"># Grid</div><div class="stat-value">1</div></div>
-        </div>
-        <div class="stat">
-          <span class="ico"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><circle cx="5.5" cy="10" r="2.2"/><circle cx="18.5" cy="10" r="2.2"/><path d="M6 19c0-3.5 2.7-6 6-6s6 2.5 6 6zM1 19c0-2.5 1.8-4.5 4.5-4.5 1 0 1.8.2 2.4.7C6.7 16.3 6 17.6 6 19zM23 19c0-2.5-1.8-4.5-4.5-4.5-1 0-1.8.2-2.4.7 1.2 1.1 1.9 2.4 1.9 3.8z"/></svg></span>
-          <div><div class="stat-label">Squares Sold</div><div class="stat-value" id="soldValue">22/100</div></div>
-        </div>
-        <div class="stat pool">
-          <span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4zm0 4H5v1a2 2 0 0 0 2 2zm10 0v3a2 2 0 0 0 2-2V7z"/></svg></span>
-          <div><div class="stat-label">Total Prize Pool</div><div class="stat-value green">$500</div></div>
-        </div>
-      </div>
-      <div class="progress">
-        <div class="progress-head"><span>Game progress</span><strong id="pctSold">22% Sold</strong></div>
-        <div class="track"><div class="fill" id="fill" style="width:22%"></div></div>
-        <div class="progress-foot" id="remaining">78 squares are still available</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-head stack">
-        <h2 class="card-title">Payouts</h2>
+        <h2 class="card-title">Payouts <button type="button" class="toggle" aria-expanded="true" aria-label="Collapse payouts"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 7.5L6 4L9.5 7.5" stroke="#282E38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></h2>
         <p class="card-sub">How the prize pool is split between winning squares</p>
       </div>
-      <div class="payouts">
-        <div class="payout"><span class="ico pie p-q1" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5A8.5 8.5 0 0 1 20.5 12z" fill="currentColor"/></svg></span><div><div class="stat-label">1st Quarter</div><div class="stat-value">$2.59</div><div class="p-status" data-p="q1"></div></div></div>
-        <div class="payout"><span class="ico pie p-half" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></span><div><div class="stat-label">1st Half</div><div class="stat-value">$5.18</div><div class="p-status" data-p="half"></div></div></div>
-        <div class="payout"><span class="ico pie p-q3" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5A8.5 8.5 0 1 1 3.5 12z" fill="currentColor"/></svg></span><div><div class="stat-label">3rd Quarter</div><div class="stat-value">$2.59</div><div class="p-status" data-p="q3"></div></div></div>
-        <div class="payout"><span class="ico pie p-final" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="8.5" fill="currentColor"/></svg></span><div><div class="stat-label">Final<span class="top-tag">Top prize</span></div><div class="stat-value">$10.35</div><div class="p-status" data-p="final"></div></div></div>
+      <div class="card-body">
+        <div class="stats">
+          <div class="stat"><span class="stat-ico pie"><svg viewBox="0 0 18 18" fill="none"><path d="M9 15.375C12.5208 15.375 15.375 12.5208 15.375 9C15.375 5.47918 12.5208 2.625 9 2.625C5.47918 2.625 2.625 5.47918 2.625 9C2.625 12.5208 5.47918 15.375 9 15.375Z" fill="#FEFFFF" stroke="#208FFF" stroke-width="1.125"/><path d="M9 9V2.625C10.6908 2.625 12.3123 3.29665 13.5078 4.49219C14.7034 5.68774 15.375 7.30925 15.375 9H9Z" fill="#208FFF"/></svg></span><div><div class="stat-label">1st Quarter</div><div class="stat-value">$2.59</div><div class="p-status" data-p="q1"></div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico pie"><svg viewBox="0 0 18 18" fill="none"><path d="M9 15.375C12.5208 15.375 15.375 12.5208 15.375 9C15.375 5.47918 12.5208 2.625 9 2.625C5.47918 2.625 2.625 5.47918 2.625 9C2.625 12.5208 5.47918 15.375 9 15.375Z" fill="#FEFFFF" stroke="#208FFF" stroke-width="1.125"/><path d="M9 9V2.625C10.6908 2.625 12.3123 3.29665 13.5078 4.49219C14.7034 5.68774 15.375 7.30925 15.375 9C15.375 10.6908 14.7034 12.3123 13.5078 13.5078C12.3123 14.7034 10.6908 15.375 9 15.375V9Z" fill="#208FFF"/></svg></span><div><div class="stat-label">1st Half</div><div class="stat-value">$5.18</div><div class="p-status" data-p="half"></div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico pie"><svg viewBox="0 0 18 18" fill="none"><path d="M9 15.375C12.5208 15.375 15.375 12.5208 15.375 9C15.375 5.47918 12.5208 2.625 9 2.625C5.47918 2.625 2.625 5.47918 2.625 9C2.625 12.5208 5.47918 15.375 9 15.375Z" fill="#FEFFFF" stroke="#208FFF" stroke-width="1.125"/><path d="M9 9V2.625C10.2609 2.625 11.4934 2.99889 12.5418 3.69938C13.5901 4.39988 14.4072 5.39551 14.8897 6.56039C15.3722 7.72527 15.4985 9.00707 15.2525 10.2437C15.0065 11.4803 14.3994 12.6162 13.5078 13.5078C12.6162 14.3994 11.4803 15.0065 10.2437 15.2525C9.00707 15.4985 7.72527 15.3722 6.56039 14.8897C5.39551 14.4072 4.39988 13.5901 3.69938 12.5418C2.99889 11.4934 2.625 10.2609 2.625 9H9Z" fill="#208FFF"/></svg></span><div><div class="stat-label">3rd Quarter</div><div class="stat-value">$2.59</div><div class="p-status" data-p="q3"></div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico pie"><svg viewBox="0 0 18 18" fill="none"><path d="M9 15.375C12.5208 15.375 15.375 12.5208 15.375 9C15.375 5.47918 12.5208 2.625 9 2.625C5.47918 2.625 2.625 5.47918 2.625 9C2.625 12.5208 5.47918 15.375 9 15.375Z" fill="#FEFFFF" stroke="#208FFF" stroke-width="1.125"/><path d="M9 15.375C12.5208 15.375 15.375 12.5208 15.375 9C15.375 5.47918 12.5208 2.625 9 2.625C5.47918 2.625 2.625 5.47918 2.625 9C2.625 12.5208 5.47918 15.375 9 15.375Z" fill="#208FFF"/></svg></span><div><div class="stat-label">Final</div><div class="stat-value">$10.35</div><div class="p-status" data-p="final"></div></div></div>
+        </div>
+        <p class="card-foot">How the prize pool is split between winning squares</p>
       </div>
-      <div class="split" aria-hidden="true">
-        <span class="p-q1" style="flex: 2.59"></span><span class="p-half" style="flex: 5.18"></span><span class="p-q3" style="flex: 2.59"></span><span class="p-final" style="flex: 10.35"></span>
+    </section>
+
+    <section class="card info-card" id="overviewCard">
+      <div class="card-head">
+        <h2 class="card-title">Overview <button type="button" class="toggle" aria-expanded="true" aria-label="Collapse overview"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 7.5L6 4L9.5 7.5" stroke="#282E38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></h2>
+        <p class="card-sub">Current contest information</p>
+      </div>
+      <div class="card-body">
+        <div class="stats pad">
+          <div class="stat"><span class="stat-ico"><svg viewBox="0 0 20 20" fill="none"><path d="M13.3334 6.66699H8.33341C7.89139 6.66699 7.46746 6.84259 7.1549 7.15515C6.84234 7.46771 6.66675 7.89163 6.66675 8.33366C6.66675 8.77569 6.84234 9.19961 7.1549 9.51217C7.46746 9.82473 7.89139 10.0003 8.33341 10.0003H11.6667C12.1088 10.0003 12.5327 10.1759 12.8453 10.4885C13.1578 10.801 13.3334 11.225 13.3334 11.667C13.3334 12.109 13.1578 12.5329 12.8453 12.8455C12.5327 13.1581 12.1088 13.3337 11.6667 13.3337H6.66675M10.0001 15.0003V5.00033M18.3334 10.0003C18.3334 14.6027 14.6025 18.3337 10.0001 18.3337C5.39771 18.3337 1.66675 14.6027 1.66675 10.0003C1.66675 5.39795 5.39771 1.66699 10.0001 1.66699C14.6025 1.66699 18.3334 5.39795 18.3334 10.0003Z" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><div class="stat-label">Square Price</div><div class="stat-value">$5</div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico"><svg viewBox="0 0 20 20" fill="none"><path d="M2.5 7.5H17.5M2.5 12.5H17.5M7.5 2.5V17.5M12.5 2.5V17.5M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><div class="stat-label">Grid</div><div class="stat-value">1</div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico"><svg viewBox="0 0 20 20" fill="none"><path d="M15.0001 17.5C15.0001 15.7319 14.2977 14.0362 13.0475 12.786C11.7972 11.5357 10.1015 10.8333 8.33341 10.8333M8.33341 10.8333C6.5653 10.8333 4.86961 11.5357 3.61937 12.786C2.36913 14.0362 1.66675 15.7319 1.66675 17.5M8.33341 10.8333C10.6346 10.8333 12.5001 8.96785 12.5001 6.66667C12.5001 4.36548 10.6346 2.5 8.33341 2.5C6.03223 2.5 4.16675 4.36548 4.16675 6.66667C4.16675 8.96785 6.03223 10.8333 8.33341 10.8333ZM18.3335 16.6666C18.3335 13.8583 16.6668 11.25 15.0001 9.99996C15.548 9.58893 15.9861 9.0492 16.2756 8.42852C16.5651 7.80784 16.6972 7.12535 16.6601 6.44146C16.6231 5.75757 16.418 5.09336 16.063 4.50763C15.7081 3.92189 15.2142 3.43268 14.6251 3.08329" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><div class="stat-label">Squares Sold</div><div class="stat-value" id="soldValue">20/100</div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico"><svg viewBox="0 0 20 20" fill="none"><path d="M5.00008 7.50033H3.75008C3.19755 7.50033 2.66764 7.28083 2.27694 6.89013C1.88624 6.49943 1.66675 5.96953 1.66675 5.41699C1.66675 4.86446 1.88624 4.33455 2.27694 3.94385C2.66764 3.55315 3.19755 3.33366 3.75008 3.33366H5.00008M5.00008 7.50033V1.66699H15.0001V7.50033M5.00008 7.50033C5.00008 8.82641 5.52687 10.0982 6.46455 11.0359C7.40223 11.9735 8.674 12.5003 10.0001 12.5003C11.3262 12.5003 12.5979 11.9735 13.5356 11.0359C14.4733 10.0982 15.0001 8.82641 15.0001 7.50033M15.0001 7.50033H16.2501C16.8026 7.50033 17.3325 7.28083 17.7232 6.89013C18.1139 6.49943 18.3334 5.96953 18.3334 5.41699C18.3334 4.86446 18.1139 4.33455 17.7232 3.94385C17.3325 3.55315 16.8026 3.33366 16.2501 3.33366H15.0001M3.33341 18.3337H16.6667M8.33341 12.2169V14.1669C8.33341 14.6253 7.94175 14.9836 7.52508 15.1753C6.54175 15.6253 5.83341 16.8669 5.83341 18.3336M11.6667 12.2169V14.1669C11.6667 14.6253 12.0584 14.9836 12.4751 15.1753C13.4584 15.6253 14.1667 16.8669 14.1667 18.3336" stroke="#009C63" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><div class="stat-label">Prize Pool</div><div class="stat-value jade">$500</div></div></div>
+        </div>
+        <p class="card-foot">Current contest information</p>
       </div>
     </section>
   </div>
 
-  <section class="card board">
-    <div class="card-head">
-      <h2 class="card-title">Pick your squares</h2>
+  <section class="card board" id="boardCard">
+    <div class="board-head">
+      <h2 class="card-title">Pick your Squares <button type="button" class="toggle" aria-expanded="true" aria-label="Collapse board"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 7.5L6 4L9.5 7.5" stroke="#282E38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></h2>
       <div class="legend">
-        <span><i class="dot available"></i>Available</span>
-        <span><i class="dot yours"></i>Yours</span>
-        <span><i class="dot taken"></i>Taken</span>
+        <span><i class="sw available"></i>Available</span>
+        <span><i class="sw yours"></i>Yours</span>
+        <span><i class="sw taken"></i>Taken</span>
       </div>
     </div>
-    <div class="board-tools">
-      <div class="seg" role="group" aria-label="Board view">
-        <button type="button" data-mode="fit" aria-pressed="true">Fit</button>
-        <button type="button" data-mode="quads" aria-pressed="false">Quadrants</button>
+    <div class="card-body">
+      <div class="tools">
+        <div class="seg" role="group" aria-label="Board view">
+          <button type="button" data-mode="fit" aria-pressed="true">Fit</button>
+          <button type="button" data-mode="quads" aria-pressed="false">Quadrants</button>
+        </div>
+        <div class="alert"><svg viewBox="0 0 20 20" fill="none"><path d="M15.8333 7.49967V4.99967C15.8333 4.55765 15.6577 4.13372 15.3452 3.82116C15.0326 3.5086 14.6087 3.33301 14.1667 3.33301H5.83333C5.39131 3.33301 4.96738 3.5086 4.65482 3.82116C4.34226 4.13372 4.16667 4.55765 4.16667 4.99967V7.49967M15.8333 7.49967C16.2754 7.49967 16.6993 7.67527 17.0118 7.98783C17.3244 8.30039 17.5 8.72431 17.5 9.16634V13.333C17.5 13.775 17.3244 14.199 17.0118 14.5115C16.6993 14.8241 16.2754 14.9997 15.8333 14.9997M15.8333 7.49967C15.3913 7.49967 14.9674 7.67527 14.6548 7.98783C14.3423 8.30039 14.1667 8.72431 14.1667 9.16634V10.833H5.83333V9.16634C5.83333 8.72431 5.65774 8.30039 5.34518 7.98783C5.03262 7.67527 4.60869 7.49967 4.16667 7.49967M4.16667 7.49967C3.72464 7.49967 3.30072 7.67527 2.98816 7.98783C2.67559 8.30039 2.5 8.72431 2.5 9.16634V13.333C2.5 13.775 2.67559 14.199 2.98816 14.5115C3.30072 14.8241 3.72464 14.9997 4.16667 14.9997M4.16667 14.9997H15.8333M4.16667 14.9997V16.6663M15.8333 14.9997V16.6663" stroke="#0072EB" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="info-text" aria-live="polite">Tap to Select a Square</span></div>
+        <button type="button" class="btn btn-outline" id="quickBtn">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M14.9334 11.6669L17.8501 8.75025C18.1593 8.40733 18.3304 7.96198 18.3304 7.50025C18.3304 7.03851 18.1593 6.59317 17.8501 6.25025L13.6834 2.15025C13.3405 1.84105 12.8951 1.66992 12.4334 1.66992C11.9717 1.66992 11.5263 1.84105 11.1834 2.15025L8.33342 5.00025M5.00008 15.0002H5.00842M8.33342 11.6669H8.34175M12.5001 5.0002H12.5084M15.0001 7.5002H15.0084M3.33341 8.33354H10.0001C10.9206 8.33354 11.6667 9.07973 11.6667 10.0002V16.6669C11.6667 17.5873 10.9206 18.3335 10.0001 18.3335H3.33341C2.41294 18.3335 1.66675 17.5873 1.66675 16.6669V10.0002C1.66675 9.07973 2.41294 8.33354 3.33341 8.33354Z" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Quick Pick</button>
       </div>
-      <button type="button" class="btn-quick" id="quickBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="16" cy="16" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>
-        Quick Pick
-      </button>
+      <div class="alert board-alert"><svg viewBox="0 0 20 20" fill="none"><path d="M15.8333 7.49967V4.99967C15.8333 4.55765 15.6577 4.13372 15.3452 3.82116C15.0326 3.5086 14.6087 3.33301 14.1667 3.33301H5.83333C5.39131 3.33301 4.96738 3.5086 4.65482 3.82116C4.34226 4.13372 4.16667 4.55765 4.16667 4.99967V7.49967M15.8333 7.49967C16.2754 7.49967 16.6993 7.67527 17.0118 7.98783C17.3244 8.30039 17.5 8.72431 17.5 9.16634V13.333C17.5 13.775 17.3244 14.199 17.0118 14.5115C16.6993 14.8241 16.2754 14.9997 15.8333 14.9997M15.8333 7.49967C15.3913 7.49967 14.9674 7.67527 14.6548 7.98783C14.3423 8.30039 14.1667 8.72431 14.1667 9.16634V10.833H5.83333V9.16634C5.83333 8.72431 5.65774 8.30039 5.34518 7.98783C5.03262 7.67527 4.60869 7.49967 4.16667 7.49967M4.16667 7.49967C3.72464 7.49967 3.30072 7.67527 2.98816 7.98783C2.67559 8.30039 2.5 8.72431 2.5 9.16634V13.333C2.5 13.775 2.67559 14.199 2.98816 14.5115C3.30072 14.8241 3.72464 14.9997 4.16667 14.9997M4.16667 14.9997H15.8333M4.16667 14.9997V16.6663M15.8333 14.9997V16.6663" stroke="#0072EB" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="info-text" aria-live="polite">Tap to Select a Square</span></div>
+
+      <div class="board-body">
+        <div class="tag-lions"><span class="badge-team tb">TB</span>Tampa Bay Buccaneers</div>
+        <div class="board-grid">
+          <div class="tag-bills"><span class="badge-team dal">DAL</span>Dallas Cowboys</div>
+          <div class="axis top"><svg viewBox="0 0 18 18" fill="none"><path d="M9 3.75L3.75 9L9 14.25M3.75 9H14.25" stroke="#7F8BA3" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="badge-team dal">DAL</span></div>
+          <div class="grid-area" id="grid"></div>
+          <div class="axis bottom"><span class="badge-team tb">TB</span><svg viewBox="0 0 18 18" fill="none"><path d="M14.25 9L9 3.75L3.75 9M9 3.75V14.25" stroke="#7F8BA3" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
     </div>
-    <div class="sq-info" id="sqInfo" aria-live="polite">Tap a square to see who has it.</div>
-    <div class="grid-scroll"><div class="grid-area" id="grid"></div></div>
   </section>
 </main>
 
-<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="scrim" id="sheetBackdrop"></div>
 <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-  <div class="sheet-grab">
-    <div class="sheet-handle"></div>
-    <div class="sheet-head">
-      <div><h3 id="sheetTitle">Quadrant A</h3><p id="sheetSub"></p></div>
-      <button type="button" class="btn-done" id="doneBtn">Done</button>
-    </div>
-  </div>
+  <div class="sheet-grab"><span class="grabber"></span></div>
+  <button type="button" class="sheet-close" id="doneBtn" aria-label="Close"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5L15 15M15 5L5 15" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <h3 class="sheet-title" id="sheetTitle">Quadrant A</h3>
   <div class="quad-tabs" role="tablist" aria-label="Quadrants">
     <button type="button" role="tab" data-q="A"><b>A</b><small></small></button>
     <button type="button" role="tab" data-q="B"><b>B</b><small></small></button>
     <button type="button" role="tab" data-q="C"><b>C</b><small></small></button>
     <button type="button" role="tab" data-q="D"><b>D</b><small></small></button>
   </div>
-  <div class="sq-info" id="sheetInfo" aria-live="polite"></div>
+  <hr>
+  <div class="alert"><svg viewBox="0 0 20 20" fill="none"><path d="M15.8333 7.49967V4.99967C15.8333 4.55765 15.6577 4.13372 15.3452 3.82116C15.0326 3.5086 14.6087 3.33301 14.1667 3.33301H5.83333C5.39131 3.33301 4.96738 3.5086 4.65482 3.82116C4.34226 4.13372 4.16667 4.55765 4.16667 4.99967V7.49967M15.8333 7.49967C16.2754 7.49967 16.6993 7.67527 17.0118 7.98783C17.3244 8.30039 17.5 8.72431 17.5 9.16634V13.333C17.5 13.775 17.3244 14.199 17.0118 14.5115C16.6993 14.8241 16.2754 14.9997 15.8333 14.9997M15.8333 7.49967C15.3913 7.49967 14.9674 7.67527 14.6548 7.98783C14.3423 8.30039 14.1667 8.72431 14.1667 9.16634V10.833H5.83333V9.16634C5.83333 8.72431 5.65774 8.30039 5.34518 7.98783C5.03262 7.67527 4.60869 7.49967 4.16667 7.49967M4.16667 7.49967C3.72464 7.49967 3.30072 7.67527 2.98816 7.98783C2.67559 8.30039 2.5 8.72431 2.5 9.16634V13.333C2.5 13.775 2.67559 14.199 2.98816 14.5115C3.30072 14.8241 3.72464 14.9997 4.16667 14.9997M4.16667 14.9997H15.8333M4.16667 14.9997V16.6663M15.8333 14.9997V16.6663" stroke="#0072EB" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="sheetInfo" aria-live="polite"></span></div>
   <div class="quad-grid" id="quadGrid"></div>
 </section>
 
-<div class="confirm-backdrop" id="confirmBackdrop"></div>
+<div class="confirm-scrim" id="confirmBackdrop"></div>
 <section class="confirm" id="confirm" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
-  <div class="confirm-head"><h3 id="confirmTitle">Confirm purchase</h3></div>
+  <div class="confirm-head" id="confirmTitle">Confirm purchase</div>
   <div class="confirm-body" id="confirmReview">
-    <p class="confirm-msg" id="confirmMsg"></p>
+    <div id="confirmMsg"><p class="confirm-q" id="confirmQ"></p><p class="confirm-sub" id="confirmSub"></p></div>
     <div class="chips" id="confirmChips"></div>
     <dl class="sum">
       <div><dt id="sumLine"></dt><dd id="sumSubtotal"></dd></div>
@@ -585,78 +597,82 @@
     </dl>
     <p class="confirm-error" id="confirmError" hidden></p>
     <div class="confirm-actions">
-      <button type="button" class="btn-secondary" id="cancelPay">Cancel</button>
-      <button type="button" class="btn-primary" id="payBtn"></button>
+      <button type="button" class="btn btn-outline" id="cancelPay">Cancel</button>
+      <button type="button" class="btn btn-primary" id="payBtn"></button>
     </div>
   </div>
   <div class="confirm-body confirm-done" id="confirmDone" hidden>
-    <div class="done-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg></div>
+    <div class="done-ico"><svg viewBox="0 0 40 40" fill="none"><path d="M14.6583 26.4585L7.70834 19.5085L5.34167 21.8585L14.6583 31.1752L34.6583 11.1752L32.3083 8.8252L14.6583 26.4585Z" fill="#009C63"/></svg></div>
     <h4>You're in!</h4>
     <p id="doneMsg"></p>
-    <div class="confirm-actions"><button type="button" class="btn-primary" id="doneOk">Done</button></div>
+    <div class="confirm-actions"><button type="button" class="btn btn-primary" id="doneOk">Done</button></div>
   </div>
 </section>
 
-<div class="checkout" id="checkout">
+<div class="checkout hidden" id="checkout">
   <div>
-    <div class="checkout-count" id="selCount">1 square selected</div>
-    <div class="checkout-total" id="selTotal">$5</div>
+    <div class="checkout-count" id="selCount">0 selected</div>
+    <div class="checkout-total" id="selTotal">$0</div>
   </div>
-  <button class="btn-clear" id="clearBtn">Clear</button>
-  <button class="btn-primary" id="confirmBtn">Confirm Purchase
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-  </button>
+  <div class="checkout-btns">
+    <button type="button" class="btn btn-muted" id="clearBtn">Clear</button>
+    <button type="button" class="btn btn-primary" id="confirmBtn">Confirm Purchase
+      <svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6H9.5M6 9.5L9.5 6L6 2.5" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
 </div>
 
 <footer>
-  <div class="wrap">
-    <div class="social">
-      <a href="#" aria-label="Facebook"></a><a href="#" aria-label="Instagram"></a><a href="#" aria-label="X"></a>
-      <a href="#" aria-label="Reddit"></a><a href="#" aria-label="YouTube"></a><a href="#" aria-label="TikTok"></a>
-      <a href="#" class="up" aria-label="Back to top"></a>
+  <div class="foot">
+    <div class="foot-top">
+      <div class="social">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none"><path d="M12 0C18.6274 0 24 5.37259 24 12C24 18.1352 19.3955 23.1944 13.4538 23.9121V15.667L16.7001 15.667L17.3734 12H13.4538V10.7031C13.4538 9.73417 13.6439 9.06339 14.0799 8.63483C14.5159 8.20627 15.1979 8.01993 16.1817 8.01993C16.4307 8.01993 16.6599 8.02241 16.8633 8.02736C17.1591 8.03456 17.4002 8.047 17.568 8.06467V4.74048C17.501 4.72184 17.4218 4.70321 17.3331 4.68486C17.1321 4.6433 16.8822 4.60324 16.6136 4.56806C16.0523 4.49453 15.4093 4.4423 14.9594 4.4423C13.1424 4.4423 11.7692 4.83102 10.8107 5.63619C9.65388 6.60791 9.10108 8.18622 9.10108 10.4199V12H6.62659V15.667H9.10108V23.6466C3.87432 22.3498 0 17.6277 0 12C0 5.37259 5.37259 0 12 0Z" fill="#AFB9CB"/></svg></a>
+        <a href="#" aria-label="Instagram"><img src="assets/social-instagram.png" alt=""></a>
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="none"><path d="M18.3263 1.9043H21.6998L14.3297 10.3278L23 21.7903H16.2112L10.894 14.8383L4.80995 21.7903H1.43443L9.31743 12.7804L1 1.9043H7.96111L12.7674 8.25863L18.3263 1.9043ZM17.1423 19.7711H19.0116L6.94539 3.81743H4.93946L17.1423 19.7711Z" fill="#AFB9CB"/></svg></a>
+        <a href="#" aria-label="Reddit"><img src="assets/social-reddit.png" alt=""></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.7466 4.83455C23.119 5.20932 23.3864 5.67531 23.5221 6.1859C24.0239 8.07044 24.0239 12.0004 24.0239 12.0004C24.0239 12.0004 24.0239 15.9304 23.5221 17.815C23.3864 18.3256 23.119 18.7916 22.7466 19.1663C22.3743 19.5411 21.91 19.8115 21.4003 19.9504C19.5239 20.455 12.0239 20.455 12.0239 20.455C12.0239 20.455 4.52393 20.455 2.64756 19.9504C2.13786 19.8115 1.67358 19.5411 1.30121 19.1663C0.928842 18.7916 0.661431 18.3256 0.525744 17.815C0.0239258 15.9304 0.0239258 12.0004 0.0239258 12.0004C0.0239258 12.0004 0.0239258 8.07044 0.525744 6.1859C0.661431 5.67531 0.928842 5.20932 1.30121 4.83455C1.67358 4.45979 2.13786 4.1894 2.64756 4.05044C4.52393 3.5459 12.0239 3.5459 12.0239 3.5459C12.0239 3.5459 19.5239 3.5459 21.4003 4.05044C21.91 4.1894 22.3743 4.45979 22.7466 4.83455ZM15.8421 12.0005L9.5694 8.43184V15.5691L15.8421 12.0005Z" fill="#AFB9CB"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none"><path d="M17.0725 0H13.0278V16.3478C13.0278 18.2957 11.4722 19.8957 9.53626 19.8957C7.60034 19.8957 6.04469 18.2957 6.04469 16.3478C6.04469 14.4348 7.56577 12.8695 9.43257 12.8V8.69567C5.31872 8.7652 2 12.1391 2 16.3478C2 20.5913 5.38786 24 9.57085 24C13.7538 24 17.1416 20.5565 17.1416 16.3478V7.9652C18.6627 9.07827 20.5295 9.73913 22.5 9.77393V5.66957C19.4579 5.56522 17.0725 3.06087 17.0725 0Z" fill="#AFB9CB"/></svg></a>
+      </div>
+      <button type="button" class="up" aria-label="Back to top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"><svg viewBox="0 0 40 40" fill="none"><path d="M8 0.5H32C36.1421 0.5 39.5 3.85786 39.5 8V32C39.5 36.1421 36.1421 39.5 32 39.5H8C3.85786 39.5 0.5 36.1421 0.5 32V8C0.5 3.85786 3.85786 0.5 8 0.5Z" stroke="#AFB9CB"/><path d="M26 23L20 17L14 23" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
-    <div class="foot-cols">
-      <div><h4>Sportsbook</h4><ul><li>Online Sportsbook</li><li>NFL Odds</li><li>NBA Odds</li><li>MLB Odds</li><li>World Series Odds</li><li>NHL Odds</li><li>NCAAF Odds</li><li>NCAAB Odds</li><li>UEFA Champions League Odds</li><li>Nascar Odds</li><li>Olympic Games Odds</li><li>French Open Odds</li><li>Live Betting</li></ul></div>
-      <div><h4>Casino</h4><ul><li>Online Casino Games</li><li>Tournaments</li><li>Bonus Play</li><li>Play Blackjack</li><li>Online Slots</li><li>Casino Guide</li><li>How to Play Blackjack</li></ul></div>
-      <div><h4>Horse Racing</h4><ul><li>Racebook</li><li>Horse Racing Rules</li><li>Racebook Glossary</li><li>Horse Race Betting</li><li>Pegasus World Cup</li><li>Triple Crown Betting</li><li>Horse Racing News</li></ul></div>
-      <div><h4>Information</h4><ul><li>Sports Betting News</li><li>BetUS Sportsbook Reviews</li><li>How to Bet Online</li><li>How to Bet On Sports</li><li>About Us</li><li>Rules &amp; Regulations</li><li>Help &amp; FAQ</li><li>Press Room</li><li>Sporting Events Odds</li><li>Affiliates</li><li>Terms of Service</li></ul></div>
-      <div><h4>Betting Offers</h4><ul><li>Casino Promotions</li><li>Promotions</li><li>Contests</li><li>Sign Up Bonuses</li><li>Crypto Bonus</li><li>Casino Bonus</li><li>Refer a Friend</li></ul></div>
-      <div><h4>Other</h4><ul><li>Why Join?</li><li>Contact US</li><li>Privacy Policy</li></ul><h4 class="mt">Contact Info</h4><ul><li>1 (888) 512-3887</li><li>Email</li></ul></div>
-    </div>
+    <div class="foot-sep foot-desk-sep"></div>
+    <div class="foot-cols" id="footCols"></div>
+    <div class="foot-acc" id="footAcc"></div>
+    <div class="foot-sep"></div>
     <div class="foot-bar">
-      <div class="links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
-      <div class="gamb">IF YOU HAVE A GAMBLING PROBLEM, CALL 1-800-GAMBLER</div>
-      <span class="logo"><span>BET</span><span>US</span></span>
+      <div class="foot-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+      <p class="gamb">IF YOU HAVE A GAMBLING PROBLEM, CALL 1-800-GAMBLER</p>
+      <a href="#" class="foot-logo" aria-label="BetUS"><img src="assets/betus-logo.png" alt="BetUS"></a>
     </div>
-    <div class="payments"><i></i><i></i><span>₿bitcoin</span></div>
+    <div class="foot-sep"></div>
+    <div class="payments"><i class="pay"></i><i class="pay"></i><span class="pay-text">₿bitcoin</span></div>
     <p class="legal">© 1994 - 2025 BetUS.. All Rights Reserved The BetUS Brand and Logo are trademarks of BetUS. BetUS is a premier online sportsbook and gaming destination. BetUS is a fully licensed sportsbook providing a reliable and secure sports betting service to millions of satisfied online betting customers world wide since 1994.<br>BetUS offers football betting, live and NFL odds all season long.</p>
   </div>
 </footer>
 
 <script>
   const PRICE = 5;
-  // "row-col": [name, state]  (row = Lions digit, col = Bills digit)
-  // Rows 7–9 were hidden in the original screenshot; entries marked * are placeholders.
+  const HOME = { short: "Buccaneers", code: "TB" };   // rows
+  const AWAY = { short: "Cowboys", code: "DAL" };     // columns
+  // "row-col": [name, state]  (row = Buccaneers digit, col = Cowboys digit); positions follow the Figma desktop board
   const taken = {
-    "0-0": ["E. Jaufre", "LA"], "0-1": ["S. Muscari", "AZ"], "0-5": ["K. Kohberg", "NY"],
-    "0-7": ["S. Weiner", "FL"], "0-9": ["S. Foster", "FL"],
+    "0-0": ["E. Jaufre", "LA"], "0-1": ["S. Muscari", "AZ"], "0-5": ["K. Kohberg", "NY"], "0-7": ["S. Weiner", "FL"], "0-9": ["S. Foster", "FL"],
     "1-6": ["J. Beals", "UT"],
-    "2-2": ["V. Lopez", "CA"],
-    "3-0": ["G. Hernandez", "TX"], "3-2": ["S. Weiner", "FL"], "3-3": ["C. Garcia", "IL"],
-    "4-4": ["S. Muscari", "AZ"], "4-5": ["C. Bedwell", "TX"],
-    "5-5": ["V. Lopez", "CA"],
-    "6-0": ["R. Parr", "TX"], "6-4": ["G. Hernandez", "TX"], "6-6": ["C. Garcia", "IL"],
-    "7-2": ["J. Beals", "UT"],
-    "7-8": ["K. Kohberg", "NY"], /* * */
-    "8-1": ["R. Parr", "TX"],    /* * */
-    "8-7": ["E. Jaufre", "LA"],  /* * */
-    "9-3": ["S. Foster", "FL"],  /* * */
-    "9-9": ["C. Bedwell", "TX"]  /* * */
+    "2-2": ["V. Lopez", "CA"], "2-8": ["M. Ortiz", "NV"],
+    "3-3": ["C. Garcia", "IL"], "3-7": ["G. Hernandez", "TX"],
+    "4-1": ["C. Bedwell", "TX"], "4-9": ["R. Parr", "TX"],
+    "5-4": ["D. Kim", "WA"],
+    "6-5": ["A. Silva", "FL"],
+    "7-1": ["T. Brooks", "GA"], "7-7": ["L. Nguyen", "CA"],
+    "8-4": ["P. Romero", "AZ"], "8-9": ["B. Hayes", "OH"],
+    "9-1": ["J. Reyes", "TX"], "9-7": ["K. Patel", "NJ"]
   };
-  const selected = new Set(["4-3"]);
+  const selected = new Set();
   const owned = new Set();
   const grid = document.getElementById("grid");
-  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>';
+  const CHECK = '<svg viewBox="0 0 40 40" fill="none"><path d="M14.6583 26.4585L7.70834 19.5085L5.34167 21.8585L14.6583 31.1752L34.6583 11.1752L32.3083 8.8252L14.6583 26.4585Z" fill="white"/></svg>';
+  const TICKET = '<svg viewBox="0 0 20 20" fill="none"><path d="M7.49999 10.0003L9.16666 11.667L12.5 8.33366M1.66666 7.50033C2.3297 7.50033 2.96558 7.76372 3.43442 8.23256C3.90326 8.7014 4.16666 9.33728 4.16666 10.0003C4.16666 10.6634 3.90326 11.2993 3.43442 11.7681C2.96558 12.2369 2.3297 12.5003 1.66666 12.5003V14.167C1.66666 14.609 1.84225 15.0329 2.15481 15.3455C2.46737 15.6581 2.8913 15.8337 3.33332 15.8337H16.6667C17.1087 15.8337 17.5326 15.6581 17.8452 15.3455C18.1577 15.0329 18.3333 14.609 18.3333 14.167V12.5003C17.6703 12.5003 17.0344 12.2369 16.5656 11.7681C16.0967 11.2993 15.8333 10.6634 15.8333 10.0003C15.8333 9.33728 16.0967 8.7014 16.5656 8.23256C17.0344 7.76372 17.6703 7.50033 18.3333 7.50033V5.83366C18.3333 5.39163 18.1577 4.96771 17.8452 4.65515C17.5326 4.34259 17.1087 4.16699 16.6667 4.16699H3.33332C2.8913 4.16699 2.46737 4.34259 2.15481 4.65515C1.84225 4.96771 1.66666 5.39163 1.66666 5.83366V7.50033Z" stroke="#007BFF" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const CHEVRON_DOWN = '<svg viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   function el(cls, html, row, col) {
     const d = document.createElement("div");
@@ -667,32 +683,33 @@
     return d;
   }
 
-  const info = document.getElementById("sqInfo");
-  const board = document.querySelector(".board");
+  const infoEls = [...document.querySelectorAll(".info-text")];
+  const board = document.getElementById("boardCard");
   const sheet = document.getElementById("sheet");
   const backdrop = document.getElementById("sheetBackdrop");
   const quadGrid = document.getElementById("quadGrid");
   const sheetInfo = document.getElementById("sheetInfo");
-  const BADGES = '<span class="tbadge det">DET</span><span class="tbadge buf">BUF</span>';
-  // Quadrant -> [first Lions row, first Bills column]; each covers 5×5 squares
+  const BADGES = '<span class="badge-team tb">TB</span><span class="badge-team dal">DAL</span>';
+  // Quadrant -> [first row digit, first column digit]; each covers 5×5 squares
   const QUADS = { A: [0, 0], B: [0, 5], C: [5, 0], D: [5, 5] };
   const ORDER = Object.keys(QUADS);
   let activeQuad = null;
-  const label = key => { const [r, c] = key.split("-"); return `<b>Lions ${r} · Bills ${c}</b>`; };
+  const label = key => { const [r, c] = key.split("-"); return `${HOME.short} ${r} • ${AWAY.short} ${c}`; };
   const isOpen = key => !taken[key] && !owned.has(key);
+  const setInfo = text => infoEls.forEach(e => { e.textContent = text; });
 
   // ===== Game state (pre-game / live / final) =====
-  // Scores per period as [Lions, Bills]; the winning square is the last digit of each
+  // Scores per period as [Buccaneers, Cowboys]; the winning square is the last digit of each
   const PERIODS = [
     { id: "q1", name: "Q1", score: [0, 7] },
-    { id: "half", name: "HALF", score: [6, 10] },
-    { id: "q3", name: "Q3", score: [16, 14] },
-    { id: "final", name: "FINAL", score: [23, 22] }
+    { id: "half", name: "HALF", score: [7, 7] },
+    { id: "q3", name: "Q3", score: [13, 17] },
+    { id: "final", name: "FINAL", score: [24, 21] }
   ];
-  const LIVE = { period: 2, quarter: "Q3", score: [13, 10], clock: 522 };
+  const LIVE = { period: 2, quarter: "Q3", score: [13, 13], clock: 522 };
   let gameState = "pre";
   let clock = LIVE.clock;
-  const winKey = ([l, b]) => `${l % 10}-${b % 10}`;
+  const winKey = ([h, a]) => `${h % 10}-${a % 10}`;
   const ownerOf = key => taken[key] ? taken[key][0] : owned.has(key) ? "You" : null;
   const locked = () => gameState !== "pre";
 
@@ -706,37 +723,39 @@
     return w;
   }
 
-  function showInfo(key, target) {
+  function infoFor(key) {
     const tag = winners().get(key);
-    const won = tag ? (tag === "NOW" ? " · <b>winning now</b>" : ` · won ${tag}`) : "";
-    if (taken[key]) target.innerHTML = `${label(key)} — taken by <b>${taken[key][0]}</b> (${taken[key][1]})${won}`;
-    else if (owned.has(key)) target.innerHTML = `${label(key)} — yours${won}`;
-    else if (locked()) target.innerHTML = `${label(key)} — unsold${won}. The board is locked once the game starts.`;
-    else target.innerHTML = `${label(key)} — ${selected.has(key) ? `selected · $${PRICE}` : "available"}`;
+    const won = tag ? (tag === "NOW" ? " · winning now" : ` · won ${tag}`) : "";
+    if (taken[key]) return `${label(key)} - taken by ${taken[key][0]} (${taken[key][1]})${won}`;
+    if (owned.has(key)) return `${label(key)} - yours${won}`;
+    if (locked()) return `${label(key)} - unsold${won}. The board is locked once the game starts.`;
+    return `${label(key)} - ${selected.has(key) ? `selected $${PRICE}` : "available"}`;
   }
 
-  function square(key, row, col, target) {
+  function square(key, row, col, inSheet) {
     const [r, c] = key.split("-");
     const b = document.createElement("button");
+    b.type = "button";
     b.className = "sq";
     b.dataset.key = key;
     b.style.gridRow = String(row);
     b.style.gridColumn = String(col);
+    const aria = `${HOME.short} ${r}, ${AWAY.short} ${c}`;
     if (taken[key]) {
       b.classList.add("taken"); b.setAttribute("aria-disabled", "true");
       const ini = taken[key][0].replace(/[^A-Z]/g, "");
       b.innerHTML = `<span class="name" title="${taken[key][0]}">${taken[key][0]}</span><span class="ini" title="${taken[key][0]}">${ini}</span><span class="state">${taken[key][1]}</span>`;
-      b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: taken by ${taken[key][0]}`);
+      b.setAttribute("aria-label", `${aria}: taken by ${taken[key][0]}`);
     } else if (owned.has(key)) {
       b.classList.add("owned"); b.setAttribute("aria-disabled", "true");
       b.innerHTML = `<span class="name">You</span><span class="ini">You</span><span class="state">Purchased</span>`;
-      b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: yours`);
+      b.setAttribute("aria-label", `${aria}: yours`);
     } else {
       const isSel = selected.has(key);
       if (isSel) { b.classList.add("selected"); b.innerHTML = CHECK; }
       if (locked()) b.setAttribute("aria-disabled", "true");
       else b.setAttribute("aria-pressed", isSel);
-      b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: ${locked() ? "unsold" : "available"}`);
+      b.setAttribute("aria-label", `${aria}: ${locked() ? "unsold" : "available"}`);
     }
     const tag = winners().get(key);
     if (tag) {
@@ -747,31 +766,29 @@
     }
     b.addEventListener("click", () => {
       if (isOpen(key) && !locked()) { selected.has(key) ? selected.delete(key) : selected.add(key); render(); }
-      showInfo(key, target);
+      if (inSheet) sheetInfo.textContent = infoFor(key); else setInfo(infoFor(key));
     });
     return b;
   }
 
   function build() {
     grid.innerHTML = "";
-    grid.appendChild(el("team-tag tag-bills", '<span class="tbadge buf">BUF</span>Buffalo Bills', 1));
-    for (let c = 0; c < 10; c++) grid.appendChild(el("col-head", c, 2, c + 3));
-    grid.appendChild(el("team-tag tag-lions", '<span class="tbadge det">DET</span>Detroit Lions'));
-
+    grid.appendChild(el("corner", "", 1, 1));
+    for (let c = 0; c < 10; c++) grid.appendChild(el("col-head", c, 1, c + 2));
     for (let r = 0; r < 10; r++) {
-      grid.appendChild(el("row-head", r, r + 3));
-      for (let c = 0; c < 10; c++) grid.appendChild(square(`${r}-${c}`, r + 3, c + 3, info));
+      grid.appendChild(el("row-head", r, r + 2, 1));
+      for (let c = 0; c < 10; c++) grid.appendChild(square(`${r}-${c}`, r + 2, c + 2, false));
     }
-    // Quadrant overlays (only shown in Quadrants mode)
+    // Quadrant overlays (only shown in Quadrants mode on mobile)
     for (const [q, [r0, c0]] of Object.entries(QUADS)) {
       const b = document.createElement("button");
       b.type = "button";
       b.className = "quad";
       b.dataset.q = q;
-      b.style.gridRow = `${r0 + 3} / span 5`;
-      b.style.gridColumn = `${c0 + 3} / span 5`;
+      b.style.gridRow = `${r0 + 2} / span 5`;
+      b.style.gridColumn = `${c0 + 2} / span 5`;
       b.innerHTML = `<span>${q}</span>`;
-      b.setAttribute("aria-label", `Quadrant ${q}: Lions ${r0}–${r0 + 4}, Bills ${c0}–${c0 + 4}`);
+      b.setAttribute("aria-label", `Quadrant ${q}: ${HOME.short} ${r0}–${r0 + 4}, ${AWAY.short} ${c0}–${c0 + 4}`);
       b.addEventListener("click", () => openQuad(q));
       grid.appendChild(b);
     }
@@ -780,7 +797,6 @@
   function buildQuad() {
     const [r0, c0] = QUADS[activeQuad];
     document.getElementById("sheetTitle").textContent = `Quadrant ${activeQuad}`;
-    document.getElementById("sheetSub").textContent = `Detroit Lions ${r0}–${r0 + 4} · Buffalo Bills ${c0}–${c0 + 4}`;
     sheet.querySelectorAll(".quad-tabs button").forEach(t => {
       const [tr, tc] = QUADS[t.dataset.q];
       let n = 0;
@@ -793,7 +809,7 @@
     for (let c = 0; c < 5; c++) quadGrid.appendChild(el("col-head", c0 + c, 1, c + 2));
     for (let r = 0; r < 5; r++) {
       quadGrid.appendChild(el("row-head", r0 + r, r + 2, 1));
-      for (let c = 0; c < 5; c++) quadGrid.appendChild(square(`${r0 + r}-${c0 + c}`, r + 2, c + 2, sheetInfo));
+      for (let c = 0; c < 5; c++) quadGrid.appendChild(square(`${r0 + r}-${c0 + c}`, r + 2, c + 2, true));
     }
   }
 
@@ -836,17 +852,12 @@
 
   function update() {
     const n = selected.size;
-    document.getElementById("selCount").textContent = `${n} square${n === 1 ? "" : "s"} selected`;
+    document.getElementById("selCount").textContent = `${n} selected`;
     document.getElementById("selTotal").textContent = `$${n * PRICE}`;
     document.getElementById("checkout").classList.toggle("hidden", n === 0);
     sheet.classList.toggle("has-sel", n > 0);
     const sold = Object.keys(taken).length + owned.size;
     document.getElementById("soldValue").textContent = `${sold}/100`;
-    document.getElementById("pctSold").textContent = `${sold}% Sold`;
-    document.getElementById("fill").style.width = `${sold}%`;
-    document.getElementById("remaining").textContent = locked()
-      ? (gameState === "live" ? "Board locked while the game is live" : "Game over · board closed")
-      : `${100 - sold} squares are still available`;
   }
 
   const mmss = t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
@@ -855,14 +866,11 @@
     document.body.classList.toggle("is-pre", gameState === "pre");
     document.body.classList.toggle("is-live", gameState === "live");
     document.body.classList.toggle("is-final", gameState === "final");
-    const [l, b] = gameState === "final" ? PERIODS[3].score : LIVE.score;
-    document.getElementById("score").innerHTML = gameState === "pre" ? "" : `${l}<i>–</i>${b}`;
-    document.getElementById("score").setAttribute("aria-label", `Detroit Lions ${l}, Buffalo Bills ${b}`);
+    const [h, a] = gameState === "final" ? PERIODS[3].score : LIVE.score;
+    document.getElementById("score").innerHTML = gameState === "pre" ? "" : `${h}<i>–</i>${a}`;
+    document.getElementById("score").setAttribute("aria-label", `Tampa Bay Buccaneers ${h}, Dallas Cowboys ${a}`);
     document.getElementById("gameStatus").textContent =
-      gameState === "live" ? `LIVE · ${LIVE.quarter} · ${mmss(clock)}` : "FINAL · SUN, SEP 07, 2026";
-    const pill = document.getElementById("boardPill");
-    pill.textContent = { pre: "Open", live: "Live · Locked", final: "Closed" }[gameState];
-    pill.className = "open-pill" + { pre: "", live: " live", final: " closed" }[gameState];
+      gameState === "live" ? `LIVE · ${LIVE.quarter} · ${mmss(clock)}` : "FINAL · THU, OCT 8";
     board.classList.toggle("locked", locked());
     document.getElementById("quickBtn").disabled = locked();
     // Payout results
@@ -878,12 +886,12 @@
     });
     if (gameState === "live") {
       const k = winKey(LIVE.score);
-      info.innerHTML = `${label(k)} is winning now${ownerOf(k) ? ` — <b>${ownerOf(k)}</b>` : ""}.`;
+      setInfo(`${label(k)} is winning now${ownerOf(k) ? ` - ${ownerOf(k)}` : ""}`);
     } else if (gameState === "final") {
       const k = winKey(PERIODS[3].score);
-      info.innerHTML = `Final winner: ${label(k)}${ownerOf(k) ? ` — <b>${ownerOf(k)}</b>` : ""}.`;
+      setInfo(`Final winner: ${label(k)}${ownerOf(k) ? ` - ${ownerOf(k)}` : ""}`);
     } else {
-      info.textContent = board.classList.contains("quads") ? "Tap a quadrant (A–D) to pick squares." : "Tap a square to see who has it.";
+      setInfo(board.classList.contains("quads") ? "Tap a quadrant (A–D) to pick squares." : "Tap to Select a Square");
     }
   }
 
@@ -903,11 +911,23 @@
     document.getElementById("gameStatus").textContent = `LIVE · ${LIVE.quarter} · ${mmss(clock)}`;
   }, 1000);
 
-  document.querySelectorAll(".board-tools .seg button").forEach(btn => btn.addEventListener("click", () => {
+  // Collapsible cards (mobile)
+  function setCollapsed(card, on) {
+    card.classList.toggle("collapsed", on);
+    card.querySelector(".toggle").setAttribute("aria-expanded", !on);
+  }
+  document.querySelectorAll(".toggle").forEach(t => t.addEventListener("click", () => {
+    const card = t.closest(".card");
+    setCollapsed(card, !card.classList.contains("collapsed"));
+  }));
+
+  document.querySelectorAll(".tools .seg button").forEach(btn => btn.addEventListener("click", () => {
     const quads = btn.dataset.mode === "quads";
     board.classList.toggle("quads", quads);
-    document.querySelectorAll(".board-tools .seg button").forEach(x => x.setAttribute("aria-pressed", x === btn));
-    if (!locked()) info.textContent = quads ? "Tap a quadrant (A–D) to pick squares." : "Tap a square to see who has it.";
+    document.querySelectorAll(".tools .seg button").forEach(x => x.setAttribute("aria-pressed", x === btn));
+    // The Quadrants design collapses Payouts and Overview to give the map room
+    ["payoutsCard", "overviewCard"].forEach(id => setCollapsed(document.getElementById(id), quads));
+    if (!locked()) setInfo(quads ? "Tap a quadrant (A–D) to pick squares." : "Tap to Select a Square");
   }));
 
   document.getElementById("quickBtn").addEventListener("click", () => {
@@ -918,7 +938,7 @@
     }
     if (!open.length || locked()) return;
     const key = open[Math.floor(Math.random() * open.length)];
-    selected.add(key); render(); showInfo(key, info);
+    selected.add(key); render(); setInfo(infoFor(key));
   });
 
   sheet.querySelectorAll(".quad-tabs button").forEach(t => t.addEventListener("click", () => switchQuad(t.dataset.q)));
@@ -929,7 +949,7 @@
     if (confirmEl.classList.contains("open")) { if (!paying) closeConfirm(); } else closeSheet();
   });
 
-  // Swipe left/right on the squares to change quadrant, swipe down on the header to close
+  // Swipe left/right on the squares to change quadrant, swipe down on the top of the panel to close
   let touch = null;
   sheet.addEventListener("touchstart", e => { touch = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: e.target }; }, { passive: true });
   sheet.addEventListener("touchend", e => {
@@ -939,13 +959,14 @@
     if (quadGrid.contains(touch.t) && Math.abs(dx) > 50 && Math.abs(dx) > 1.5 * Math.abs(dy)) {
       const i = ORDER.indexOf(activeQuad) + (dx < 0 ? 1 : -1);
       if (i >= 0 && i < ORDER.length) switchQuad(ORDER[i]);
-    } else if (touch.t.closest(".sheet-grab") && dy > 60) {
+    } else if ((touch.t.closest(".sheet-grab") || touch.t.closest(".sheet-title")) && dy > 60) {
       closeSheet();
     }
     touch = null;
   }, { passive: true });
 
   document.getElementById("clearBtn").addEventListener("click", () => { selected.clear(); render(); });
+
   // ===== Purchase confirmation =====
   let cash = 3670.25;
   let paying = false;
@@ -962,9 +983,9 @@
   function openConfirm() {
     const keys = [...selected].sort(byPosition);
     const n = keys.length, total = n * PRICE;
-    document.getElementById("confirmMsg").innerHTML =
-      `Are you sure you want to buy ${n === 1 ? "this square" : `these ${n} squares`}?<small>${money(total)} will be deducted from your account.</small>`;
-    document.getElementById("confirmChips").innerHTML = keys.map(k => { const [r, c] = k.split("-"); return `<span>Lions ${r} · Bills ${c}</span>`; }).join("");
+    document.getElementById("confirmQ").textContent = `Are you sure you want to buy ${n === 1 ? "this square" : `these ${n} squares`}?`;
+    document.getElementById("confirmSub").textContent = `${money(total)} will be deducted from your account.`;
+    document.getElementById("confirmChips").innerHTML = keys.map(k => `<span class="alert">${TICKET}${label(k)}</span>`).join("");
     document.getElementById("sumLine").textContent = `${n} square${n === 1 ? "" : "s"} × ${money(PRICE)}`;
     document.getElementById("sumSubtotal").textContent = money(total);
     document.getElementById("sumCash").textContent = `${cashText(cash)} → ${cashText(cash - total)}`;
@@ -989,7 +1010,7 @@
     confirmEl.classList.remove("open"); confirmBackdrop.classList.remove("open");
     document.body.classList.remove("confirm-open");
     setInert(false);
-    // The quadrant sheet, if open, keeps the page behind it inert
+    // The quadrant panel, if open, keeps the page behind it inert
     if (activeQuad) ["header", "main", "footer"].forEach(t => { document.querySelector(t).inert = true; });
     // Return focus to a purchased square in the visible view, or to where the user came from
     const scope = activeQuad ? quadGrid : grid;
@@ -1012,12 +1033,11 @@
       purchased = [...selected].sort(byPosition);
       const total = purchased.length * PRICE;
       cash -= total;
-      document.getElementById("cashValue").textContent = cashText(cash);
+      document.querySelectorAll(".cash-value").forEach(e => { e.textContent = cashText(cash); });
       purchased.forEach(k => owned.add(k));
       selected.clear();
       render();
-      const last = purchased[purchased.length - 1];
-      showInfo(last, info);
+      setInfo(infoFor(purchased[purchased.length - 1]));
       if (activeQuad) sheetInfo.textContent = "Purchase complete. Your squares are marked as yours.";
       document.getElementById("confirmTitle").textContent = "Purchase complete";
       document.getElementById("doneMsg").textContent =
@@ -1036,7 +1056,24 @@
   confirmBackdrop.addEventListener("click", () => { if (!paying) closeConfirm(); });
   payBtn.addEventListener("click", pay);
 
-  const initial = new URLSearchParams(location.search).get("state");
+  // ===== Footer columns (desktop) and accordion (mobile) =====
+  const FOOT = [
+    ["Sportsbook", ["Online Sportsbook", "NFL Odds", "NBA Odds", "MLB Odds", "World Series Odds", "NHL Odds", "NCAAF Odds", "NCAAB Odds", "UEFA Champions League Odds", "Nascar Odds", "Olympic Games Odds", "French Open Odds", "Live Betting"]],
+    ["Casino", ["Online Casino Games", "Tournaments", "Bonus Play", "Play Blackjack", "Online Slots", "Casino Guide", "How to Play Blackjack"]],
+    ["Horse Racing", ["Racebook", "Horse Racing Rules", "Racebook Glossary", "Horse Race Betting", "Pegasus World Cup", "Triple Crown Betting", "Horse Racing News"]],
+    ["Information", ["Sports Betting News", "BetUS Sportsbook Reviews", "How to Bet Online", "How to Bet On Sports", "About Us", "Rules & Regulations", "Help & FAQ", "Press Room", "Sporting Events Odds", "Affiliates", "Terms of Service"]],
+    ["Betting Offers", ["Casino Promotions", "Promotions", "Contests", "Sign Up Bonuses", "Crypto Bonus", "Casino Bonus", "Refer a Friend"]],
+    ["Other", ["Why Join?", "Contact US", "Privacy Policy"], "Contact Info", ["1 (888) 512-3887", "Email"]]
+  ];
+  const list = items => `<ul>${items.map(i => `<li><a href="#">${i.replace("&", "&amp;")}</a></li>`).join("")}</ul>`;
+  document.getElementById("footCols").innerHTML = FOOT.map(([t, items, t2, items2]) =>
+    `<div><h4>${t}</h4>${list(items)}${t2 ? `<h4 class="mt">${t2}</h4>${list(items2)}` : ""}</div>`).join("");
+  document.getElementById("footAcc").innerHTML = FOOT.map(([t, items, , items2]) =>
+    `<details><summary>${t}${CHEVRON_DOWN}</summary>${list(items2 ? items.concat(items2) : items)}</details>`).join("");
+
+  const params = new URLSearchParams(location.search);
+  if (params.has("demo") || params.has("state")) document.body.classList.add("demo");
+  const initial = params.get("state");
   setGameState(["live", "final"].includes(initial) ? initial : "pre");
 </script>
 </body>
