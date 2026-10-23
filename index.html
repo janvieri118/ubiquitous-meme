@@ -67,6 +67,25 @@
   .date-strip { background: var(--strip); padding: 9px 16px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 12px; color: var(--text); }
   .date-strip small { font-family: var(--body); font-weight: 400; font-size: 10px; color: #3d4a63; margin-left: 4px; }
 
+  /* ===== Live score ===== */
+  .score { display: none; font-family: var(--display); font-stretch: 112%; font-weight: 900; font-size: 24px; letter-spacing: .5px; padding: 0 6px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .score i { font-style: normal; opacity: .6; margin: 0 6px; }
+  body:not(.is-pre) .score { display: inline; }
+  body:not(.is-pre) .vs { display: none; }
+  .game-status { display: none; align-items: center; gap: 8px; }
+  body:not(.is-pre) .game-status { display: inline-flex; }
+  body:not(.is-pre) .game-date { display: none; }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #e01e2b; animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
+  .is-live .date-strip { background: #ffe3e5; color: #a3121c; }
+  .is-final .live-dot { display: none; }
+  .open-pill.live { background: #e01e2b; }
+  .open-pill.closed { background: #6a7488; }
+
+  /* Prototype-only control to preview game states */
+  .demo-bar { margin-top: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; padding: 8px 12px; border: 1.5px dashed #b9c3d6; border-radius: 10px; font-size: 12px; color: var(--muted); }
+  .demo-bar .seg button { padding: 5px 12px; font-size: 12px; }
+
   .card { background: var(--surface); border-radius: 12px; box-shadow: 0 2px 10px rgba(15, 29, 61, .06); padding: 22px 24px; }
   .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
   .card-title { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 16px; }
@@ -159,6 +178,17 @@
   .sq.selected svg { width: 20px; height: 20px; }
   .sq.owned { background: var(--blue); border-color: var(--blue); color: #fff; cursor: default; }
   .sq.owned .state { color: #d6e5ff; }
+  .sq { position: relative; }
+  .sq.win { outline: 3px solid #f5b301; outline-offset: -1px; z-index: 1; }
+  .sq.win-now { animation: glow 1.6s ease-in-out infinite; }
+  @keyframes glow { 50% { outline-color: #ffd970; } }
+  .wtag { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: #f5b301; color: #3a2a00; font-family: var(--display); font-weight: 800; font-size: 9px; letter-spacing: .3px; padding: 1px 6px; border-radius: 999px; white-space: nowrap; }
+  .board.locked .sq:not(.taken, .owned):hover { background: #fff; border-color: var(--border); }
+  .board.locked .sq:not(.taken, .owned) { cursor: default; }
+  .p-status { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .p-status b { color: var(--text); font-weight: 600; }
+  .p-status.now { display: flex; align-items: center; gap: 5px; color: #a3121c; }
+  .p-status.now b { color: #a3121c; }
   .quad { display: none; }
   .sq, .seg button, .btn-quick { -webkit-tap-highlight-color: transparent; }
 
@@ -169,6 +199,7 @@
   .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(15, 29, 61, .15); }
   .btn-quick { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--blue); background: none; color: var(--blue); border-radius: 999px; font: inherit; font-size: 13px; font-weight: 600; padding: 7px 14px; cursor: pointer; }
   .btn-quick svg { width: 16px; height: 16px; }
+  .btn-quick:disabled { opacity: .4; cursor: not-allowed; }
   .sq-info { display: none; min-height: 36px; margin-bottom: 8px; padding: 8px 12px; border-radius: 8px; background: var(--page); font-size: 13px; color: var(--muted); }
   .sq-info b { color: var(--text); font-weight: 600; }
 
@@ -318,6 +349,10 @@
     .tbadge { width: 28px; height: 28px; font-size: 9px; flex: none; }
     .tname { font-size: 14px; white-space: nowrap; }
     .vs { font-size: 14px; padding: 0; }
+    body:not(.is-pre) .tname { display: none; }
+    .score { font-size: 22px; }
+    .wtag { display: none; }
+    .sq.win { outline-width: 2px; }
     .date-strip { padding: 8px 12px; text-align: center; }
 
     /* Cards */
@@ -422,6 +457,15 @@
 </header>
 
 <main class="wrap">
+  <div class="demo-bar" role="group" aria-label="Prototype game state">
+    <span>Prototype · game state</span>
+    <div class="seg" id="stateSeg">
+      <button type="button" data-state="pre" aria-pressed="true">Pre-game</button>
+      <button type="button" data-state="live" aria-pressed="false">Live</button>
+      <button type="button" data-state="final" aria-pressed="false">Final</button>
+    </div>
+  </div>
+
   <a href="#" class="back">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     All games
@@ -431,16 +475,17 @@
     <span class="tbadge det">DET</span>
     <span class="tname">Detroit Lions</span>
     <span class="vs">VS</span>
+    <span class="score" id="score" aria-live="polite"></span>
     <span class="tname">Buffalo Bills</span>
     <span class="tbadge buf">BUF</span>
   </div>
-  <div class="date-strip">SUN, SEP 07, 2026 · 1:00 PM <small>ET</small></div>
+  <div class="date-strip"><span class="game-date">SUN, SEP 07, 2026 · 1:00 PM <small>ET</small></span><span class="game-status"><span class="live-dot"></span><span id="gameStatus"></span></span></div>
 
   <div class="top-cards">
     <section class="card">
       <div class="card-head">
         <h2 class="card-title">Grid Overview</h2>
-        <span class="open-pill">Open</span>
+        <span class="open-pill" id="boardPill">Open</span>
       </div>
       <div class="stat-boxes four">
         <div class="stat">
@@ -473,10 +518,10 @@
         <p class="card-sub">How the prize pool is split between winning squares</p>
       </div>
       <div class="payouts">
-        <div class="payout"><span class="ico pie p-q1" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5A8.5 8.5 0 0 1 20.5 12z" fill="currentColor"/></svg></span><div><div class="stat-label">1st Quarter</div><div class="stat-value">$2.59</div></div></div>
-        <div class="payout"><span class="ico pie p-half" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></span><div><div class="stat-label">1st Half</div><div class="stat-value">$5.18</div></div></div>
-        <div class="payout"><span class="ico pie p-q3" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5A8.5 8.5 0 1 1 3.5 12z" fill="currentColor"/></svg></span><div><div class="stat-label">3rd Quarter</div><div class="stat-value">$2.59</div></div></div>
-        <div class="payout"><span class="ico pie p-final" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="8.5" fill="currentColor"/></svg></span><div><div class="stat-label">Final<span class="top-tag">Top prize</span></div><div class="stat-value">$10.35</div></div></div>
+        <div class="payout"><span class="ico pie p-q1" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5A8.5 8.5 0 0 1 20.5 12z" fill="currentColor"/></svg></span><div><div class="stat-label">1st Quarter</div><div class="stat-value">$2.59</div><div class="p-status" data-p="q1"></div></div></div>
+        <div class="payout"><span class="ico pie p-half" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></span><div><div class="stat-label">1st Half</div><div class="stat-value">$5.18</div><div class="p-status" data-p="half"></div></div></div>
+        <div class="payout"><span class="ico pie p-q3" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><path d="M12 12V3.5A8.5 8.5 0 1 1 3.5 12z" fill="currentColor"/></svg></span><div><div class="stat-label">3rd Quarter</div><div class="stat-value">$2.59</div><div class="p-status" data-p="q3"></div></div></div>
+        <div class="payout"><span class="ico pie p-final" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="8.5" fill="currentColor"/></svg></span><div><div class="stat-label">Final<span class="top-tag">Top prize</span></div><div class="stat-value">$10.35</div><div class="p-status" data-p="final"></div></div></div>
       </div>
       <div class="split" aria-hidden="true">
         <span class="p-q1" style="flex: 2.59"></span><span class="p-half" style="flex: 5.18"></span><span class="p-q3" style="flex: 2.59"></span><span class="p-final" style="flex: 10.35"></span>
@@ -636,9 +681,37 @@
   const label = key => { const [r, c] = key.split("-"); return `<b>Lions ${r} · Bills ${c}</b>`; };
   const isOpen = key => !taken[key] && !owned.has(key);
 
+  // ===== Game state (pre-game / live / final) =====
+  // Scores per period as [Lions, Bills]; the winning square is the last digit of each
+  const PERIODS = [
+    { id: "q1", name: "Q1", score: [0, 7] },
+    { id: "half", name: "HALF", score: [6, 10] },
+    { id: "q3", name: "Q3", score: [16, 14] },
+    { id: "final", name: "FINAL", score: [23, 22] }
+  ];
+  const LIVE = { period: 2, quarter: "Q3", score: [13, 10], clock: 522 };
+  let gameState = "pre";
+  let clock = LIVE.clock;
+  const winKey = ([l, b]) => `${l % 10}-${b % 10}`;
+  const ownerOf = key => taken[key] ? taken[key][0] : owned.has(key) ? "You" : null;
+  const locked = () => gameState !== "pre";
+
+  // Winning squares to mark on the board: key -> tag
+  function winners() {
+    const w = new Map();
+    if (gameState === "pre") return w;
+    const done = gameState === "final" ? PERIODS.length : LIVE.period;
+    PERIODS.slice(0, done).forEach(p => w.set(winKey(p.score), w.has(winKey(p.score)) ? w.get(winKey(p.score)) + " · " + p.name : p.name));
+    if (gameState === "live") w.set(winKey(LIVE.score), "NOW");
+    return w;
+  }
+
   function showInfo(key, target) {
-    if (taken[key]) target.innerHTML = `${label(key)} — taken by <b>${taken[key][0]}</b> (${taken[key][1]})`;
-    else if (owned.has(key)) target.innerHTML = `${label(key)} — yours`;
+    const tag = winners().get(key);
+    const won = tag ? (tag === "NOW" ? " · <b>winning now</b>" : ` · won ${tag}`) : "";
+    if (taken[key]) target.innerHTML = `${label(key)} — taken by <b>${taken[key][0]}</b> (${taken[key][1]})${won}`;
+    else if (owned.has(key)) target.innerHTML = `${label(key)} — yours${won}`;
+    else if (locked()) target.innerHTML = `${label(key)} — unsold${won}. The board is locked once the game starts.`;
     else target.innerHTML = `${label(key)} — ${selected.has(key) ? `selected · $${PRICE}` : "available"}`;
   }
 
@@ -661,11 +734,19 @@
     } else {
       const isSel = selected.has(key);
       if (isSel) { b.classList.add("selected"); b.innerHTML = CHECK; }
-      b.setAttribute("aria-pressed", isSel);
-      b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: available`);
+      if (locked()) b.setAttribute("aria-disabled", "true");
+      else b.setAttribute("aria-pressed", isSel);
+      b.setAttribute("aria-label", `Lions ${r}, Bills ${c}: ${locked() ? "unsold" : "available"}`);
+    }
+    const tag = winners().get(key);
+    if (tag) {
+      b.classList.add("win");
+      if (tag === "NOW") b.classList.add("win-now");
+      b.insertAdjacentHTML("beforeend", `<span class="wtag">${tag === "NOW" ? "WINNING NOW" : tag}</span>`);
+      b.setAttribute("aria-label", b.getAttribute("aria-label") + (tag === "NOW" ? ", winning now" : `, won ${tag}`));
     }
     b.addEventListener("click", () => {
-      if (isOpen(key)) { selected.has(key) ? selected.delete(key) : selected.add(key); render(); }
+      if (isOpen(key) && !locked()) { selected.has(key) ? selected.delete(key) : selected.add(key); render(); }
       showInfo(key, target);
     });
     return b;
@@ -763,14 +844,70 @@
     document.getElementById("soldValue").textContent = `${sold}/100`;
     document.getElementById("pctSold").textContent = `${sold}% Sold`;
     document.getElementById("fill").style.width = `${sold}%`;
-    document.getElementById("remaining").textContent = `${100 - sold} squares are still available`;
+    document.getElementById("remaining").textContent = locked()
+      ? (gameState === "live" ? "Board locked while the game is live" : "Game over · board closed")
+      : `${100 - sold} squares are still available`;
   }
 
-  document.querySelectorAll(".seg button").forEach(btn => btn.addEventListener("click", () => {
+  const mmss = t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
+
+  function renderGame() {
+    document.body.classList.toggle("is-pre", gameState === "pre");
+    document.body.classList.toggle("is-live", gameState === "live");
+    document.body.classList.toggle("is-final", gameState === "final");
+    const [l, b] = gameState === "final" ? PERIODS[3].score : LIVE.score;
+    document.getElementById("score").innerHTML = gameState === "pre" ? "" : `${l}<i>–</i>${b}`;
+    document.getElementById("score").setAttribute("aria-label", `Detroit Lions ${l}, Buffalo Bills ${b}`);
+    document.getElementById("gameStatus").textContent =
+      gameState === "live" ? `LIVE · ${LIVE.quarter} · ${mmss(clock)}` : "FINAL · SUN, SEP 07, 2026";
+    const pill = document.getElementById("boardPill");
+    pill.textContent = { pre: "Open", live: "Live · Locked", final: "Closed" }[gameState];
+    pill.className = "open-pill" + { pre: "", live: " live", final: " closed" }[gameState];
+    board.classList.toggle("locked", locked());
+    document.getElementById("quickBtn").disabled = locked();
+    // Payout results
+    PERIODS.forEach((p, i) => {
+      const elp = document.querySelector(`.p-status[data-p="${p.id}"]`);
+      const done = gameState === "final" || (gameState === "live" && i < LIVE.period);
+      const now = gameState === "live" && i === LIVE.period;
+      const who = ownerOf(winKey(done ? p.score : LIVE.score));
+      elp.classList.toggle("now", now);
+      elp.innerHTML = done ? `Won by <b>${who || "no one (unsold)"}</b> · ${p.score[0]}–${p.score[1]}`
+        : now ? `<span class="live-dot"></span>${who ? `<b>${who}</b> leading` : "Unsold square leading"}`
+        : gameState === "live" ? "Upcoming" : "";
+    });
+    if (gameState === "live") {
+      const k = winKey(LIVE.score);
+      info.innerHTML = `${label(k)} is winning now${ownerOf(k) ? ` — <b>${ownerOf(k)}</b>` : ""}.`;
+    } else if (gameState === "final") {
+      const k = winKey(PERIODS[3].score);
+      info.innerHTML = `Final winner: ${label(k)}${ownerOf(k) ? ` — <b>${ownerOf(k)}</b>` : ""}.`;
+    } else {
+      info.textContent = board.classList.contains("quads") ? "Tap a quadrant (A–D) to pick squares." : "Tap a square to see who has it.";
+    }
+  }
+
+  function setGameState(st) {
+    gameState = st;
+    if (locked()) { selected.clear(); closeSheet(); }
+    document.querySelectorAll("#stateSeg button").forEach(x => x.setAttribute("aria-pressed", x.dataset.state === st));
+    renderGame();
+    render();
+  }
+
+  document.querySelectorAll("#stateSeg button").forEach(btn => btn.addEventListener("click", () => setGameState(btn.dataset.state)));
+  // Live clock counts down (prototype only)
+  setInterval(() => {
+    if (gameState !== "live" || clock <= 0) return;
+    clock--;
+    document.getElementById("gameStatus").textContent = `LIVE · ${LIVE.quarter} · ${mmss(clock)}`;
+  }, 1000);
+
+  document.querySelectorAll(".board-tools .seg button").forEach(btn => btn.addEventListener("click", () => {
     const quads = btn.dataset.mode === "quads";
     board.classList.toggle("quads", quads);
-    document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x === btn));
-    info.textContent = quads ? "Tap a quadrant (A–D) to pick squares." : "Tap a square to see who has it.";
+    document.querySelectorAll(".board-tools .seg button").forEach(x => x.setAttribute("aria-pressed", x === btn));
+    if (!locked()) info.textContent = quads ? "Tap a quadrant (A–D) to pick squares." : "Tap a square to see who has it.";
   }));
 
   document.getElementById("quickBtn").addEventListener("click", () => {
@@ -779,7 +916,7 @@
       const key = `${r}-${c}`;
       if (isOpen(key) && !selected.has(key)) open.push(key);
     }
-    if (!open.length) return;
+    if (!open.length || locked()) return;
     const key = open[Math.floor(Math.random() * open.length)];
     selected.add(key); render(); showInfo(key, info);
   });
@@ -899,7 +1036,8 @@
   confirmBackdrop.addEventListener("click", () => { if (!paying) closeConfirm(); });
   payBtn.addEventListener("click", pay);
 
-  build(); update();
+  const initial = new URLSearchParams(location.search).get("state");
+  setGameState(["live", "final"].includes(initial) ? initial : "pre");
 </script>
 </body>
 </html>
