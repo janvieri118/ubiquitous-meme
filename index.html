@@ -99,6 +99,22 @@
   .payout:nth-child(n+3) { border-top: 1px solid var(--border); }
   .payout .stat-value { font-size: 20px; }
 
+  /* Prize pool is the headline total; payouts read as its breakdown */
+  .stat-boxes.four { overflow: hidden; }
+  .stat.pool { background: #f3fbef; }
+  .stat.pool .stat-label { color: #2f7a10; font-weight: 500; }
+  .stat.pool .stat-value { font-size: 23px; }
+  .card-head.stack { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .card-sub { font-size: 12px; color: var(--muted); font-weight: 300; }
+  .pbadge { flex: none; min-width: 46px; height: 30px; padding: 0 6px; border-radius: 8px; display: grid; place-items: center; font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 11px; letter-spacing: .3px; }
+  .p-q1 { background: #dbe8fe; color: var(--navbar); }
+  .p-half { background: #9fc0fa; color: var(--navbar); }
+  .p-q3 { background: #4f8ef5; color: #fff; }
+  .p-final { background: var(--navbar); color: #fff; }
+  .top-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--icon-bg); color: var(--blue-dark); font-size: 10px; font-weight: 600; vertical-align: 1px; }
+  .split { display: flex; gap: 3px; height: 8px; margin-top: 14px; }
+  .split span { border-radius: 999px; }
+
   /* ===== Board ===== */
   .board { margin-top: 14px; padding: 24px 24px 32px; }
   .legend { display: flex; gap: 18px; color: var(--muted); font-size: 13px; }
@@ -310,6 +326,11 @@
     .stat-value { font-size: 17px; }
     .payout { padding: 12px; }
     .payout .stat-value { font-size: 17px; }
+    .stat.pool .stat-value { font-size: 20px; }
+    .pbadge { min-width: 40px; font-size: 10px; }
+    .top-tag { margin-left: 4px; padding: 1px 6px; }
+    .payout { gap: 8px; }
+    .payout .stat-label { white-space: nowrap; }
 
     /* Board */
     .board { padding: 16px 10px 18px; }
@@ -432,9 +453,9 @@
           <span class="ico"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><circle cx="5.5" cy="10" r="2.2"/><circle cx="18.5" cy="10" r="2.2"/><path d="M6 19c0-3.5 2.7-6 6-6s6 2.5 6 6zM1 19c0-2.5 1.8-4.5 4.5-4.5 1 0 1.8.2 2.4.7C6.7 16.3 6 17.6 6 19zM23 19c0-2.5-1.8-4.5-4.5-4.5-1 0-1.8.2-2.4.7 1.2 1.1 1.9 2.4 1.9 3.8z"/></svg></span>
           <div><div class="stat-label">Squares Sold</div><div class="stat-value" id="soldValue">22/100</div></div>
         </div>
-        <div class="stat">
+        <div class="stat pool">
           <span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4zm0 4H5v1a2 2 0 0 0 2 2zm10 0v3a2 2 0 0 0 2-2V7z"/></svg></span>
-          <div><div class="stat-label">Prize Pool</div><div class="stat-value green">$500</div></div>
+          <div><div class="stat-label">Total Prize Pool</div><div class="stat-value green">$500</div></div>
         </div>
       </div>
       <div class="progress">
@@ -445,12 +466,18 @@
     </section>
 
     <section class="card">
-      <div class="card-head"><h2 class="card-title">Payouts</h2></div>
+      <div class="card-head stack">
+        <h2 class="card-title">Payouts</h2>
+        <p class="card-sub">How the prize pool is split between winning squares</p>
+      </div>
       <div class="payouts">
-        <div class="payout"><span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4z"/></svg></span><div><div class="stat-label">1st Quarter</div><div class="stat-value">$2.59</div></div></div>
-        <div class="payout"><span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4z"/></svg></span><div><div class="stat-label">1st Half</div><div class="stat-value">$5.18</div></div></div>
-        <div class="payout"><span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4z"/></svg></span><div><div class="stat-label">3rd Quarter</div><div class="stat-value">$2.59</div></div></div>
-        <div class="payout"><span class="ico green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h4v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 15v3h3v3H8v-3h3v-3a5 5 0 0 1-3.6-3H7a4 4 0 0 1-4-4V5h4z"/></svg></span><div><div class="stat-label">Final</div><div class="stat-value green">$10.35</div></div></div>
+        <div class="payout"><span class="pbadge p-q1">Q1</span><div><div class="stat-label">1st Quarter</div><div class="stat-value">$2.59</div></div></div>
+        <div class="payout"><span class="pbadge p-half">HALF</span><div><div class="stat-label">1st Half</div><div class="stat-value">$5.18</div></div></div>
+        <div class="payout"><span class="pbadge p-q3">Q3</span><div><div class="stat-label">3rd Quarter</div><div class="stat-value">$2.59</div></div></div>
+        <div class="payout"><span class="pbadge p-final">FINAL</span><div><div class="stat-label">Final<span class="top-tag">Top prize</span></div><div class="stat-value">$10.35</div></div></div>
+      </div>
+      <div class="split" aria-hidden="true">
+        <span class="p-q1" style="flex: 2.59"></span><span class="p-half" style="flex: 5.18"></span><span class="p-q3" style="flex: 2.59"></span><span class="p-final" style="flex: 10.35"></span>
       </div>
     </section>
   </div>
