@@ -208,6 +208,44 @@
   .btn-primary:hover { background: var(--blue-dark); }
   .btn-primary svg { width: 15px; height: 15px; }
 
+  /* ===== Purchase confirmation ===== */
+  .confirm-backdrop { position: fixed; inset: 0; z-index: 30; background: rgba(5, 14, 42, .55); opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
+  .confirm-backdrop.open { opacity: 1; visibility: visible; transition: opacity .2s; }
+  .confirm {
+    position: fixed; left: 50%; top: 50%; z-index: 31; width: min(480px, calc(100% - 32px)); max-height: 90vh; overflow-y: auto;
+    background: var(--surface); border-radius: 12px; box-shadow: 0 20px 50px rgba(5, 14, 42, .35);
+    transform: translate(-50%, -46%); opacity: 0; visibility: hidden; transition: transform .2s, opacity .2s, visibility 0s .2s;
+  }
+  .confirm.open { transform: translate(-50%, -50%); opacity: 1; visibility: visible; transition: transform .2s, opacity .2s; }
+  .confirm-head { background: var(--navbar); color: #fff; text-align: center; padding: 16px 20px; border-radius: 12px 12px 0 0; }
+  .confirm-head h3 { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 18px; letter-spacing: .5px; text-transform: uppercase; }
+  .confirm-body { padding: 20px 24px 24px; }
+  .confirm-msg { text-align: center; font-size: 15px; line-height: 1.5; }
+  .confirm-msg small { display: block; color: var(--muted); font-size: 13px; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 16px 0; max-height: 96px; overflow-y: auto; }
+  .chips span { background: var(--icon-bg); color: var(--blue-dark); font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; white-space: nowrap; }
+  .sum { border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+  .sum div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; }
+  .sum div + div { border-top: 1px solid var(--border); }
+  .sum dt { color: var(--muted); }
+  .sum dd { font-weight: 600; text-align: right; }
+  .sum .total dd { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 18px; }
+  .confirm-error { margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: #fdecee; color: #b3141f; font-size: 13px; }
+  .confirm-actions { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+  .confirm-actions button { min-width: 130px; justify-content: center; }
+  .btn-secondary { border: 0; background: var(--page); color: var(--text); border-radius: 999px; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 15px; padding: 13px 28px; cursor: pointer; }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-primary.busy { opacity: 1; cursor: progress; }
+  .spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .4); border-top-color: #fff; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .confirm-done { text-align: center; }
+  .done-ico { width: 56px; height: 56px; margin: 4px auto 12px; border-radius: 50%; background: #e7f6df; color: var(--green); display: grid; place-items: center; }
+  .done-ico svg { width: 28px; height: 28px; }
+  .confirm-done h4 { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 20px; }
+  .confirm-done p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  body.confirm-open { overflow: hidden; }
+
   /* ===== Footer ===== */
   footer { background: var(--footer); color: #fff; border-top: 6px solid #1a6be0; padding: 36px 0 24px; }
   .social { display: flex; align-items: center; gap: 22px; padding-bottom: 24px; border-bottom: 1px solid #1f4fae; }
@@ -295,6 +333,15 @@
     .quad span { width: 32px; height: 32px; border-radius: 50%; background: var(--navbar); color: #fff; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 15px; box-shadow: 0 2px 8px rgba(5, 14, 42, .3); }
     .quad:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 
+    /* Purchase confirmation becomes a bottom sheet */
+    .confirm { left: 0; right: 0; top: auto; bottom: 0; width: auto; border-radius: 16px 16px 0 0; transform: translateY(100%); opacity: 1; }
+    .confirm.open { transform: none; }
+    .confirm-head { border-radius: 16px 16px 0 0; padding: 14px 16px; }
+    .confirm-head h3 { font-size: 16px; }
+    .confirm-body { padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); }
+    .confirm-msg { font-size: 14px; }
+    .confirm-actions button { flex: 1; min-width: 0; padding-left: 12px; padding-right: 12px; }
+
     /* Checkout */
     .checkout { bottom: calc(10px + env(safe-area-inset-bottom)); gap: 8px; padding: 10px 10px 10px 16px; }
     .checkout > div { min-width: 0; }
@@ -327,7 +374,7 @@
     <div class="wrap">
       <a href="#" class="logo" aria-label="BetUS"><span>BET</span><span>US</span></a>
       <div class="top-right">
-        <span class="hide-sm"><span class="lbl">Cash:</span> $3,670.25</span>
+        <span class="hide-sm"><span class="lbl">Cash:</span> <span id="cashValue">$3,670.25</span></span>
         <span class="hide-sm"><span class="lbl">FP:</span> $6.00</span>
         <span class="divider hide-sm"></span>
         <a href="#" class="account hide-sm">MY ACCOUNT</a>
@@ -449,6 +496,31 @@
   </div>
   <div class="sq-info" id="sheetInfo" aria-live="polite"></div>
   <div class="quad-grid" id="quadGrid"></div>
+</section>
+
+<div class="confirm-backdrop" id="confirmBackdrop"></div>
+<section class="confirm" id="confirm" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
+  <div class="confirm-head"><h3 id="confirmTitle">Confirm purchase</h3></div>
+  <div class="confirm-body" id="confirmReview">
+    <p class="confirm-msg" id="confirmMsg"></p>
+    <div class="chips" id="confirmChips"></div>
+    <dl class="sum">
+      <div><dt id="sumLine"></dt><dd id="sumSubtotal"></dd></div>
+      <div><dt>Cash balance</dt><dd id="sumCash"></dd></div>
+      <div class="total"><dt>Total to pay</dt><dd id="sumTotal"></dd></div>
+    </dl>
+    <p class="confirm-error" id="confirmError" hidden></p>
+    <div class="confirm-actions">
+      <button type="button" class="btn-secondary" id="cancelPay">Cancel</button>
+      <button type="button" class="btn-primary" id="payBtn"></button>
+    </div>
+  </div>
+  <div class="confirm-body confirm-done" id="confirmDone" hidden>
+    <div class="done-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg></div>
+    <h4>You're in!</h4>
+    <p id="doneMsg"></p>
+    <div class="confirm-actions"><button type="button" class="btn-primary" id="doneOk">Done</button></div>
+  </div>
 </section>
 
 <div class="checkout" id="checkout">
@@ -686,7 +758,10 @@
   sheet.querySelectorAll(".quad-tabs button").forEach(t => t.addEventListener("click", () => switchQuad(t.dataset.q)));
   document.getElementById("doneBtn").addEventListener("click", closeSheet);
   backdrop.addEventListener("click", closeSheet);
-  document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (confirmEl.classList.contains("open")) { if (!paying) closeConfirm(); } else closeSheet();
+  });
 
   // Swipe left/right on the squares to change quadrant, swipe down on the header to close
   let touch = null;
@@ -705,9 +780,95 @@
   }, { passive: true });
 
   document.getElementById("clearBtn").addEventListener("click", () => { selected.clear(); render(); });
-  document.getElementById("confirmBtn").addEventListener("click", () => {
-    selected.forEach(k => owned.add(k)); selected.clear(); render();
-  });
+  // ===== Purchase confirmation =====
+  let cash = 3670.25;
+  let paying = false;
+  let purchased = [];
+  const confirmEl = document.getElementById("confirm");
+  const confirmBackdrop = document.getElementById("confirmBackdrop");
+  const payBtn = document.getElementById("payBtn");
+  const money = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+  const cashText = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const byPosition = (a, b) => { const [ar, ac] = a.split("-").map(Number), [br, bc] = b.split("-").map(Number); return ar - br || ac - bc; };
+  const LAYERS = ["header", "main", "footer", "#sheet", "#checkout"];
+  const setInert = on => LAYERS.forEach(t => { document.querySelector(t).inert = on; });
+
+  function openConfirm() {
+    const keys = [...selected].sort(byPosition);
+    const n = keys.length, total = n * PRICE;
+    document.getElementById("confirmMsg").innerHTML =
+      `Are you sure you want to buy ${n === 1 ? "this square" : `these ${n} squares`}?<small>${money(total)} will be deducted from your account.</small>`;
+    document.getElementById("confirmChips").innerHTML = keys.map(k => { const [r, c] = k.split("-"); return `<span>Lions ${r} · Bills ${c}</span>`; }).join("");
+    document.getElementById("sumLine").textContent = `${n} square${n === 1 ? "" : "s"} × ${money(PRICE)}`;
+    document.getElementById("sumSubtotal").textContent = money(total);
+    document.getElementById("sumCash").textContent = `${cashText(cash)} → ${cashText(cash - total)}`;
+    document.getElementById("sumTotal").textContent = money(total);
+    const short = total > cash;
+    const err = document.getElementById("confirmError");
+    err.hidden = !short;
+    err.textContent = short ? `Not enough cash. You need ${cashText(total - cash)} more to complete this purchase.` : "";
+    payBtn.disabled = short;
+    payBtn.classList.remove("busy");
+    payBtn.textContent = `Pay ${money(total)}`;
+    document.getElementById("confirmTitle").textContent = "Confirm purchase";
+    document.getElementById("confirmReview").hidden = false;
+    document.getElementById("confirmDone").hidden = true;
+    confirmEl.classList.add("open"); confirmBackdrop.classList.add("open");
+    document.body.classList.add("confirm-open");
+    setInert(true);
+    document.getElementById("cancelPay").focus();
+  }
+
+  function closeConfirm() {
+    confirmEl.classList.remove("open"); confirmBackdrop.classList.remove("open");
+    document.body.classList.remove("confirm-open");
+    setInert(false);
+    // The quadrant sheet, if open, keeps the page behind it inert
+    if (activeQuad) ["header", "main", "footer"].forEach(t => { document.querySelector(t).inert = true; });
+    // Return focus to a purchased square in the visible view, or to where the user came from
+    const scope = activeQuad ? quadGrid : grid;
+    const key = purchased.find(k => scope.querySelector(`[data-key="${k}"]`));
+    purchased = [];
+    const target = key ? scope.querySelector(`[data-key="${key}"]`)
+      : activeQuad ? sheet.querySelector('[aria-selected="true"]')
+      : document.getElementById("confirmBtn");
+    if (target.offsetParent) target.focus({ preventScroll: true });
+  }
+
+  function pay() {
+    if (paying || payBtn.disabled) return;
+    paying = true;
+    payBtn.classList.add("busy");
+    payBtn.innerHTML = '<span class="spinner"></span>Processing…';
+    document.getElementById("cancelPay").disabled = true;
+    // Simulated network request
+    setTimeout(() => {
+      purchased = [...selected].sort(byPosition);
+      const total = purchased.length * PRICE;
+      cash -= total;
+      document.getElementById("cashValue").textContent = cashText(cash);
+      purchased.forEach(k => owned.add(k));
+      selected.clear();
+      render();
+      const last = purchased[purchased.length - 1];
+      showInfo(last, info);
+      if (activeQuad) sheetInfo.textContent = "Purchase complete. Your squares are marked as yours.";
+      document.getElementById("confirmTitle").textContent = "Purchase complete";
+      document.getElementById("doneMsg").textContent =
+        `${purchased.length} square${purchased.length === 1 ? "" : "s"} purchased · ${money(total)} deducted. New balance: ${cashText(cash)}.`;
+      document.getElementById("confirmReview").hidden = true;
+      document.getElementById("confirmDone").hidden = false;
+      document.getElementById("cancelPay").disabled = false;
+      paying = false;
+      document.getElementById("doneOk").focus();
+    }, 900);
+  }
+
+  document.getElementById("confirmBtn").addEventListener("click", openConfirm);
+  document.getElementById("cancelPay").addEventListener("click", closeConfirm);
+  document.getElementById("doneOk").addEventListener("click", closeConfirm);
+  confirmBackdrop.addEventListener("click", () => { if (!paying) closeConfirm(); });
+  payBtn.addEventListener("click", pay);
 
   build(); update();
 </script>
