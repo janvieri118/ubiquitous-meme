@@ -183,18 +183,22 @@
   .axis { display: none; }
   .grid-area { display: grid; grid-template-columns: 34px repeat(10, minmax(0, 1fr)); grid-template-rows: 36px; grid-auto-rows: 74px; gap: 8px; }
   .col-head, .row-head { background: var(--brand); color: #fff; border-radius: 6px; display: grid; place-items: center; font-weight: 800; font-size: 16px; }
-  .sq { position: relative; min-width: 0; border-radius: 6px; border: 1px dashed var(--border-low); background: var(--primary-muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 6px 7px; color: var(--fg-high); cursor: pointer; transition: background .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
-  .sq:hover:not(.taken, .owned, .selected) { background: #e2f2ff; border-color: var(--info-border); }
+  /* Square states from the Figma "Squares States" components (Free / Hover / Taken / Selected / Purchased) */
+  .sq { --dash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' rx='6' fill='none' stroke='%23DDE3ED' stroke-width='2' stroke-dasharray='6 6'/%3E%3C/svg%3E");
+    position: relative; min-width: 0; border-radius: 6px; border: 1px solid transparent; background: var(--primary-muted) var(--dash) center / 100% 100% no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 6px 7px; color: var(--fg-high); cursor: pointer; transition: background .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
+  @media (hover: hover) {
+    .board:not(.locked) .sq:hover:not(.taken, .owned, .selected) { background-image: none; border: 2px solid #a4d8ff; }
+    .board:not(.locked) .sq:hover:not(.taken, .owned, .selected)::after { content: "+"; font-size: 16px; line-height: 1; color: #0072eb; }
+  }
   .sq:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-  .sq.taken { background: var(--fill-low); border-style: solid; cursor: default; }
+  .sq.taken { background: var(--fill-low); border-color: var(--border-low); cursor: default; }
   .sq .name { font-weight: 800; font-size: 14px; line-height: 1.2; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sq .ini { display: none; font-weight: 800; font-size: 10px; }
   .sq .state { font-size: 16px; line-height: 1.2; color: var(--fg-low); }
   .sq.selected, .sq.owned { background: var(--primary); border: 0; color: #fff; box-shadow: 0 0 9px rgba(0, 123, 255, .61); }
-  .sq.owned { cursor: default; box-shadow: none; }
-  .sq.owned .state { color: #d6e5ff; }
-  .sq.selected svg { width: 32px; height: 32px; }
-  .board.locked .sq:not(.taken, .owned):hover { background: var(--primary-muted); border-color: var(--border-low); }
+  .sq.owned { cursor: default; }
+  .sq.owned .state { color: #fff; }
+  .sq.selected svg { width: 40px; height: 40px; }
   .board.locked .sq:not(.taken, .owned) { cursor: default; }
   .sq.win { outline: 3px solid #f5b301; outline-offset: -1px; z-index: 1; }
   .sq.win-now { animation: glow 1.6s ease-in-out infinite; }
@@ -239,7 +243,7 @@
   .q-corner { display: flex; align-items: center; justify-content: center; }
   .q-corner .badge-team { width: 16px; height: 16px; font-size: 6px; box-shadow: none; }
   .q-corner .badge-team + .badge-team { margin-left: -3px; }
-  .quad-grid .sq { aspect-ratio: auto; gap: 10px; padding: 6px 4px; }
+  .quad-grid .sq { --dash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' rx='6' fill='none' stroke='%23DDE3ED' stroke-width='2' stroke-dasharray='2 2'/%3E%3C/svg%3E"); aspect-ratio: auto; gap: 10px; padding: 6px 4px; }
   .quad-grid .sq .name { display: block; font-size: 10px; }
   .quad-grid .sq .ini { display: none; }
   .quad-grid .sq .state { display: block; font-size: 10px; }
@@ -377,10 +381,10 @@
     .axis.bottom .badge-team { width: 28px; height: 28px; }
     .grid-area { grid-template-columns: repeat(11, minmax(0, 1fr)); grid-template-rows: auto; gap: 3px; }
     .grid-area .col-head, .grid-area .row-head { aspect-ratio: 1; }
-    .grid-area .sq { aspect-ratio: 1; padding: 0; gap: 0; }
+    .grid-area .sq { --dash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' rx='6' fill='none' stroke='%23DDE3ED' stroke-width='2' stroke-dasharray='2 2'/%3E%3C/svg%3E"); aspect-ratio: 1; padding: 0; gap: 0; }
     .grid-area .sq .state { display: none; }
     .grid-area .sq .ini { font-size: 10px; }
-    .grid-area .sq.selected svg { width: 18px; height: 18px; }
+    .grid-area .sq.selected svg { width: 28px; height: 28px; }
     .wtag { display: none; }
     .sq.win { outline-width: 2px; }
 
