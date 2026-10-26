@@ -6,7 +6,7 @@
 <title>BetUS Betting Squares – Prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <!-- Nexa is the design font (licensed); Montserrat is the closest free fallback until Nexa webfonts are added -->
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Montserrat:wght@200;400;600;700;800;900&family=Roboto:wght@400;500;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Montserrat:wght@200;300;400;600;700;800;900&family=Roboto:wght@400;500;800&display=swap" rel="stylesheet">
 <style>
   /* Tokens from the Betting Squares Redesign Figma (ADS) */
   :root {
@@ -93,8 +93,8 @@
   .m-header { display: none; background: var(--top); height: 40px; padding: 6px 12px; align-items: center; justify-content: space-between; color: #fff; }
   .m-header .logo img { width: 90px; height: 20px; }
   .m-right { display: flex; align-items: center; gap: 12px; }
-  .m-bal { display: flex; gap: 16px; font-family: var(--nexa); font-size: 14px; white-space: nowrap; }
-  .m-bal span { color: var(--foot-text); font-size: 12px; margin-right: 1px; }
+  .m-bal { display: flex; gap: 16px; font-family: var(--nexa); font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .m-bal span { color: var(--foot-text); margin-right: 1px; }
   .m-bal b { font-weight: 700; }
   .m-icons { display: flex; align-items: center; gap: 12px; }
   .m-icons svg { width: 24px; height: 24px; }
@@ -110,7 +110,7 @@
   .game-top { position: relative; background: var(--inv-card); color: #fff; padding: 18px 20px; display: flex; justify-content: center; }
   .teams { display: flex; align-items: center; gap: 220px; }
   .team { display: flex; align-items: center; gap: 12px; font-family: var(--nexa); font-weight: 800; font-size: 24px; line-height: 25.5px; white-space: nowrap; }
-  .badge-team { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 13px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .2); }
+  .badge-team { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 13px; letter-spacing: 0; box-shadow: 0 0 0 2px rgba(255, 255, 255, .2); }
   .badge-team.tb { background: var(--tb); }
   .badge-team.dal { background: var(--dal); }
   .vs-mark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
@@ -237,7 +237,7 @@
   .sheet .alert { font-size: 12px; }
   .quad-grid { display: grid; grid-template-columns: 30px repeat(5, minmax(0, 1fr)); grid-template-rows: 28px; grid-auto-rows: 60px; gap: 3px; touch-action: pan-y; }
   .q-corner { display: flex; align-items: center; justify-content: center; }
-  .q-corner .badge-team { width: 16px; height: 16px; font-size: 5px; box-shadow: none; }
+  .q-corner .badge-team { width: 16px; height: 16px; font-size: 6px; box-shadow: none; }
   .q-corner .badge-team + .badge-team { margin-left: -3px; }
   .quad-grid .sq { aspect-ratio: auto; gap: 10px; padding: 6px 4px; }
   .quad-grid .sq .name { display: block; font-size: 10px; }
@@ -253,7 +253,7 @@
   .confirm-head { height: 50px; display: grid; place-items: center; background: var(--inv-card); border-radius: 15px 15px 0 0; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 20px; }
   .confirm-body { padding: 27px 20px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
   .confirm-q { margin: 0 auto; text-align: center; font-family: var(--nexa); font-weight: 800; font-size: 20px; line-height: 30px; max-width: 330px; }
-  .confirm-sub { margin-top: 11px; text-align: center; font-family: var(--nexa); font-size: 14px; letter-spacing: .42px; color: var(--fg-mid); }
+  .confirm-sub { margin-top: 11px; text-align: center; font-family: var(--nexa); font-weight: 300; font-size: 14px; letter-spacing: .42px; color: var(--fg-mid); }
   .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-height: 120px; overflow-y: auto; }
   .chips .alert { font-size: 12px; }
   .sum { align-self: stretch; border: 1px solid var(--card-border); border-radius: 8px; padding: 2px 12px; }
@@ -336,7 +336,8 @@
     .vs-mark svg { width: 23px; height: 33px; }
     .score { position: static; transform: none; font-size: 22px; }
     .score i { margin: 0 6px; }
-    .date-strip { height: 34px; }
+    .date-strip { height: 34px; font-size: 12px; }
+    .date-strip small { font-size: 10px; }
     body:not(.is-pre) .team-name { display: none; }
 
     .info-cards { gap: 8px; }
@@ -403,11 +404,11 @@
     .foot-acc summary svg { width: 16px; height: 16px; transition: transform .2s; }
     .foot-acc details[open] summary svg { transform: rotate(180deg); }
     .foot-acc ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; padding: 0 16px 12px; }
-    .foot-acc li { padding: 12px 0; font-size: 14px; color: var(--foot-text); }
+    .foot-acc li { padding: 12px 0; font-size: 12px; color: var(--foot-text); }
     .foot-bar { flex-direction: column; gap: 32px; }
     .foot-links { width: auto; justify-content: center; gap: 32px; font-size: 14px; }
     .foot-logo { width: auto; justify-content: center; }
-    .gamb { line-height: 24px; }
+    .gamb { font-size: 17px; line-height: 24px; }
     .payments { gap: 30px; flex-wrap: wrap; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
