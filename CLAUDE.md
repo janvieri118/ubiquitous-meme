@@ -1,7 +1,8 @@
 # CLAUDE.md
 
-This repository is used for ongoing UI/UX prototyping. The prototype is a single
-self-contained page, `index.html`.
+This repository is used for ongoing UI/UX prototyping. The prototype has two pages:
+`games.html` (the Betting Squares games list) and `index.html` (the squares board for a game).
+Images exported from Figma live in `assets/`.
 
 ## Workflow
 

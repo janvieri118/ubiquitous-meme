@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BetUS Betting Squares – Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- Nexa is the design font (licensed); Montserrat is the closest free fallback until Nexa webfonts are added -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700;800;900&family=Roboto:wght@400;500;800&display=swap" rel="stylesheet">
+<style>
+  /* Tokens from the Betting Squares Redesign Figma (ADS) */
+  :root {
+    color-scheme: light;
+    --top: #02122e;
+    --brand: #0e2857;
+    --inv-card: #00346b;
+    --strip: #ace6ff;
+    --page: #f2f5f9;
+    --card: #feffff;
+    --card-border: #e7ecf3;
+    --fill-low: #f2f5f9;
+    --border-low: #dde3ed;
+    --border-medium: #9eaabe;
+    --fg-high: #282e38;
+    --fg-low: #7f8ba3;
+    --fg-mid: #576276;
+    --fg-sub: #6a7488;
+    --primary: #007bff;
+    --primary-muted: #f0f9ff;
+    --info-border: #83c7ff;
+    --jade: #009c63;
+    --nav-line: #445d83;
+    --foot-line: #0067d5;
+    --foot-text: #afb9cb;
+    --tb: #d50a0a;
+    --dal: #003594;
+    --shadow-card: 0 20px 50px -20px rgba(15, 40, 90, .25);
+    --nexa: "Nexa", "Montserrat", system-ui, sans-serif;
+    --roboto: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--roboto); background: var(--page); color: var(--fg-high); }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; }
+  svg, img { display: block; }
+  [hidden] { display: none !important; }
+  .container { width: min(1424px, calc(100% - 32px)); margin: 0 auto; }
+  .m-only { display: none; }
+
+  /* ===== Buttons (ADS / Button) ===== */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; min-width: 96px; padding: 0 14px; border-radius: 999px; border: 1px solid transparent; background: none; font-family: var(--nexa); font-weight: 800; font-size: 18px; line-height: 1.2; color: var(--fg-high); cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+  .btn svg { width: 20px; height: 20px; flex: none; }
+  .btn-outline { border-color: var(--border-medium); }
+  .btn-outline:hover { background: var(--fill-low); }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: #0069db; }
+  .btn-muted { background: var(--card-border); }
+  .btn-muted:hover { background: var(--border-low); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  /* ===== Alert (ADS / Alert) ===== */
+  .alert { display: flex; align-items: center; gap: 8px; padding: 5px 12px; border: 1px solid var(--info-border); border-radius: 8px; background: var(--primary-muted); color: var(--primary); font-weight: 500; font-size: 14px; line-height: 18px; }
+  .alert svg { width: 20px; height: 20px; flex: none; }
+
+  /* ===== Desktop header ===== */
+  .topbar { background: var(--top); color: #fff; }
+  .topbar .inner { width: min(1408px, calc(100% - 32px)); margin: 0 auto; height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo img { width: 108px; height: 24px; }
+  .top-right { display: flex; align-items: center; gap: 16px; }
+  .balances { display: flex; gap: 16px; font-family: var(--nexa); font-size: 16px; line-height: 24px; white-space: nowrap; }
+  .balances span { color: var(--foot-text); margin-right: 4px; }
+  .balances b { font-weight: 700; }
+  .vsep { width: 1px; height: 40px; background: var(--nav-line); flex: none; }
+  .account-btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 8px; font-family: var(--nexa); font-weight: 800; font-size: 18px; white-space: nowrap; }
+  .account-btn svg { width: 24px; height: 24px; }
+  .mail { position: relative; width: 40px; height: 40px; }
+  .mail .badge { position: absolute; right: -2px; bottom: 2px; min-width: 23px; height: 16px; padding: 0 4px; border-radius: 999px; background: #ec0100; color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 10px; display: grid; place-items: center; }
+  .gift { width: 40px; height: 40px; display: grid; place-items: center; }
+  .gift img { width: 40px; height: 40px; }
+  .top-btns { display: flex; gap: 6px; }
+  .top-btns .btn { border-radius: 8px; color: #fff; min-width: 0; }
+  .top-btns .btn svg { width: 24px; height: 24px; }
+  .btn-outline-inv { border-color: var(--foot-text); }
+
+  .navbar { background: var(--brand); border-bottom: 1px solid var(--nav-line); }
+  .navbar .inner { width: min(1440px, calc(100% - 32px)); margin: 0 auto; height: 79px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .navbar a { display: flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px; color: #fff; font-family: var(--nexa); font-size: 14px; text-transform: uppercase; white-space: nowrap; }
+  .navbar a img { width: 48px; height: 32px; }
+  .navbar a.active { background: #113c8c url("assets/nav-selected-bg.png") center / cover no-repeat; }
+
+  /* ===== Mobile header (ADS / Mobile Header) ===== */
+  .m-header { display: none; background: var(--top); height: 40px; padding: 6px 12px; align-items: center; justify-content: space-between; color: #fff; }
+  .m-header .logo img { width: 90px; height: 20px; }
+  .m-right { display: flex; align-items: center; gap: 12px; }
+  .m-bal { display: flex; gap: 16px; font-family: var(--nexa); font-size: 14px; white-space: nowrap; }
+  .m-bal span { color: var(--foot-text); font-size: 12px; margin-right: 1px; }
+  .m-bal b { font-weight: 700; }
+  .m-icons { display: flex; align-items: center; gap: 12px; }
+  .m-icons svg { width: 24px; height: 24px; }
+  .m-icons img { width: 40px; height: 40px; margin: -8px; }
+  .m-icons button { background: none; border: 0; cursor: pointer; }
+
+  /* ===== Page (Figma: 1- Squares) ===== */
+  main { padding: 10px 0 90px; display: flex; flex-direction: column; gap: 16px; }
+  .hero { display: block; margin-bottom: -6px; border-radius: 16px; overflow: hidden; outline: 1px solid #212a3b; outline-offset: -1px; background: #0b2147; }
+  .hero img { width: 100%; height: auto; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .tabs { display: flex; height: 40px; }
+  .tabs button { height: 40px; padding: 0 16px; border: 0; border-bottom: 4px solid transparent; background: none; font-family: var(--nexa); font-weight: 800; font-size: 18px; color: var(--fg-mid); cursor: pointer; }
+  .tabs button[aria-selected="true"] { color: var(--fg-high); border-bottom-color: var(--primary); }
+  .tabs button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+
+  .games { display: flex; flex-direction: column; gap: 16px; }
+  .game { display: flex; flex-direction: column; gap: 12px; }
+  .game-head { border-radius: 10px; overflow: hidden; }
+  .game-top { height: 60px; padding: 0 20px; background: var(--inv-card); color: #fff; display: flex; align-items: center; justify-content: space-between; }
+  .matchup { display: flex; align-items: center; gap: 16px; }
+  .team { display: flex; align-items: center; gap: 12px; font-family: var(--nexa); font-weight: 800; font-size: 18px; letter-spacing: -.54px; white-space: nowrap; }
+  .badge-team { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 14px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .2); }
+  .vs { width: 23px; height: 33px; flex: none; }
+  .collapse { width: 16px; height: 16px; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+  .collapse svg { width: 12px; height: 12px; transition: transform .2s; }
+  .game.closed .collapse svg { transform: rotate(180deg); }
+  .game.closed .slider { display: none; }
+  .date-strip { height: 42px; padding: 0 14px; background: var(--strip); display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, .05); font-family: var(--nexa); font-weight: 800; font-size: 14px; text-transform: uppercase; }
+  .date-strip small { font-weight: 200; font-size: 12px; color: var(--fg-mid); text-transform: none; }
+
+  .slider { position: relative; }
+  .track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; padding: 0 0 24px; margin-bottom: -24px; }
+  .track::-webkit-scrollbar { display: none; }
+  .nav-btn { position: absolute; top: 112px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; cursor: pointer; z-index: 2; }
+  .nav-btn svg { width: 40px; height: 40px; }
+  .nav-btn.prev { left: -22px; }
+  .nav-btn.prev svg { transform: scaleX(-1); }
+  .nav-btn.next { right: -22px; }
+  .nav-btn[hidden] { display: none; }
+
+  .gcard { flex: 0 0 613px; width: 613px; min-width: 0; scroll-snap-align: start; display: flex; flex-direction: column; gap: 18px; padding: 20px 28px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--shadow-card); }
+  .gcard-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .gcard-title { font-family: var(--nexa); font-weight: 800; font-size: 18px; letter-spacing: -.54px; }
+  .badge-open { height: 24px; padding: 0 8px; border-radius: 6px; background: #3fb100; color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 14px; display: grid; place-items: center; }
+  .stats { height: 76px; padding: 0 12px; border: 1px solid var(--card-border); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .stat { display: flex; align-items: center; gap: 8px; }
+  .stat-ico { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--fill-low); display: grid; place-items: center; }
+  .stat-ico svg { width: 20px; height: 20px; }
+  .stat-label { font-size: 14px; color: var(--fg-low); white-space: nowrap; }
+  .stat-value { margin-top: 6px; font-family: var(--nexa); font-weight: 800; font-size: 20px; white-space: nowrap; }
+  .stat-value.jade { color: var(--jade); }
+  .stat-line { width: 1px; align-self: stretch; margin: 1px 0; background: var(--card-border); }
+  .progress-head { display: flex; justify-content: space-between; font-size: 14px; line-height: 12px; color: var(--fg-mid); }
+  .progress-head strong { font-weight: 800; color: var(--fg-high); }
+  .bar { height: 5px; margin: 8px 0; border-radius: 999px; background: var(--card-border); overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 999px; background: var(--primary); }
+  .progress-foot { font-size: 12px; line-height: 12px; color: var(--fg-low); }
+  .gcard .btn { width: 100%; }
+  .empty { padding: 40px 20px; text-align: center; color: var(--fg-mid); font-size: 14px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; }
+
+  /* ===== Footer (ADS / Desktop Footer) ===== */
+  footer { background: var(--brand); border-top: 8px solid var(--foot-line); color: #fff; }
+  .foot { width: min(1440px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0; display: flex; flex-direction: column; gap: 40px; }
+  .foot-top { display: flex; align-items: center; justify-content: space-between; }
+  .social { display: flex; align-items: center; gap: 40px; }
+  .social svg, .social img { width: 24px; height: 24px; }
+  .up { width: 40px; height: 40px; border: 0; background: none; cursor: pointer; }
+  .up svg { width: 40px; height: 40px; }
+  .foot-sep { height: 1px; background: var(--foot-line); }
+  .foot-cols { display: grid; grid-template-columns: repeat(6, 180px); justify-content: space-between; }
+  .foot-cols h4 { font-family: var(--nexa); font-weight: 700; font-size: 22px; line-height: 33px; margin-bottom: 24px; }
+  .foot-cols h4.mt { margin-top: 24px; }
+  .foot-cols ul { list-style: none; }
+  .foot-cols li { padding: 10px 0; font-size: 12px; line-height: 36px; color: var(--foot-text); }
+  .foot-acc { display: none; }
+  .foot-bar { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+  .foot-links { display: flex; gap: 56px; width: 320px; font-size: 12px; color: var(--foot-text); }
+  .gamb { font-family: var(--nexa); font-weight: 700; font-size: 20px; color: var(--foot-text); text-align: center; }
+  .foot-logo { width: 320px; display: flex; justify-content: flex-end; }
+  .foot-logo img { width: 161px; height: 36px; }
+  .payments { display: flex; align-items: center; justify-content: center; gap: 40px; }
+  .pay { width: 46px; height: 32px; border-radius: 4px; background: #151f31; border: 1px solid #3a4a66; }
+  .pay-text { font-family: var(--nexa); font-weight: 800; font-style: italic; font-size: 18px; color: #fff; }
+  .legal { font-size: 10px; line-height: 15px; color: var(--foot-text); text-align: center; }
+
+  @media (max-width: 1200px) {
+    .navbar .inner { overflow-x: auto; scrollbar-width: none; justify-content: flex-start; }
+    .balances { display: none; }
+    .foot-cols { grid-template-columns: repeat(3, 1fr); row-gap: 24px; }
+    .foot-bar { flex-wrap: wrap; justify-content: center; }
+  }
+  @media (max-width: 1480px) {
+    .nav-btn.prev { left: -8px; }
+    .nav-btn.next { right: -8px; }
+  }
+  @media (max-width: 1000px) {
+    .top-right .vsep, .mail, .gift { display: none; }
+    .nav-btn { display: none; }
+  }
+
+  /* ===== Mobile (Figma: 1- Mobile Squares, 390px) ===== */
+  @media (max-width: 640px) {
+    .topbar, .navbar { display: none; }
+    .m-header { display: flex; }
+    .container { width: calc(100% - 16px); }
+    main { padding: 10px 0 40px; gap: 8px; }
+    .hero { margin: 0 4px 4px; }
+    .tabs { height: 36px; padding: 6px 0; }
+    .tabs button { height: 24px; padding: 0 12px; border-bottom-width: 2px; font-size: 12px; }
+    .games { gap: 8px; }
+    .game { gap: 8px; }
+    .game-top { height: 44px; padding: 0 14px; }
+    .matchup { gap: 8px; }
+    .team { font-size: 14px; letter-spacing: -.42px; }
+    .team .full { display: none; }
+    .badge-team { width: 24px; height: 24px; font-size: 10px; }
+    .date-strip { height: 34px; }
+    .track { gap: 8px; }
+    .gcard { flex-basis: 334px; width: 334px; padding: 12px; gap: 12px; }
+    .gcard-title { font-size: 14px; letter-spacing: -.42px; }
+    .badge-open { height: 20px; padding: 0 6px; font-size: 12px; }
+    .stats { height: auto; display: grid; grid-template-columns: 1fr 1fr; padding: 0; }
+    .stats .stat { height: 60px; padding: 0 12px; }
+    .stats .stat:nth-of-type(2n) { padding-left: 20px; border-left: 1px solid var(--card-border); }
+    .stats .stat:nth-of-type(n+3) { border-top: 1px solid var(--card-border); }
+    .stats .stat-line { display: none; }
+    .stat-value { margin-top: 4px; }
+
+    .foot { width: auto; padding: 56px 20px; gap: 32px; }
+    .social { gap: 24px; }
+    .foot-cols, .foot-desk-sep { display: none; }
+    .foot-acc { display: block; border-bottom: 1px solid var(--foot-line); }
+    .foot-acc details { border-top: 1px solid var(--foot-line); }
+    .foot-acc summary { list-style: none; display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 16px; font-family: var(--nexa); font-weight: 700; font-size: 18px; cursor: pointer; }
+    .foot-acc summary::-webkit-details-marker { display: none; }
+    .foot-acc summary svg { width: 16px; height: 16px; transition: transform .2s; }
+    .foot-acc details[open] summary svg { transform: rotate(180deg); }
+    .foot-acc ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; padding: 0 16px 12px; }
+    .foot-acc li { padding: 12px 0; font-size: 14px; color: var(--foot-text); }
+    .foot-bar { flex-direction: column; gap: 32px; }
+    .foot-links { width: auto; justify-content: center; gap: 32px; font-size: 14px; }
+    .foot-logo { width: auto; justify-content: center; }
+    .gamb { line-height: 24px; }
+    .payments { gap: 30px; flex-wrap: wrap; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="inner">
+      <a href="#" class="logo" aria-label="BetUS"><img src="assets/betus-logo.png" alt="BetUS"></a>
+      <div class="top-right">
+        <div class="balances"><div><span>Cash:</span><b class="cash-value">$3,670.25</b></div><div><span>FP:</span><b>$6.00</b></div></div>
+        <span class="vsep"></span>
+        <a href="#" class="account-btn">MY ACCOUNT
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 20C18 18.4087 17.3679 16.8826 16.2426 15.7574C15.1174 14.6321 13.5913 14 12 14M12 14C10.4087 14 8.88258 14.6321 7.75736 15.7574C6.63214 16.8826 6 18.4087 6 20M12 14C14.2091 14 16 12.2091 16 10C16 7.79086 14.2091 6 12 6C9.79086 6 8 7.79086 8 10C8 12.2091 9.79086 14 12 14ZM22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <span class="vsep"></span>
+        <a href="#" class="mail" aria-label="Messages, 10 unread">
+          <svg viewBox="0 0 40 40" fill="none" width="40" height="40"><path d="M30 15L21.03 20.7C20.7213 20.8934 20.3643 20.996 20 20.996C19.6357 20.996 19.2787 20.8934 18.97 20.7L10 15M12 12H28C29.1046 12 30 12.8954 30 14V26C30 27.1046 29.1046 28 28 28H12C10.8954 28 10 27.1046 10 26V14C10 12.8954 10.8954 12 12 12Z" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="badge">10</span>
+        </a>
+        <span class="vsep"></span>
+        <a href="#" class="gift" aria-label="Rewards"><img src="assets/gift.png" alt=""></a>
+        <div class="top-btns">
+          <a href="#" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M22 8V5C22 3.89543 21.1046 3 20 3H4C2.89543 3 2 3.89543 2 5V8M22 8V15C22 16.1046 21.1046 17 20 17H16M22 8H2M2 8V15C2 16.1046 2.89543 17 4 17H8M8 17C8 19.2091 9.79086 21 12 21C14.2091 21 16 19.2091 16 17M8 17C8 14.7909 9.79086 13 12 13C14.2091 13 16 14.7909 16 17M12 15.4V18.6M13.6 17L12 18.6L10.4 17" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            JOIN NOW</a>
+          <a href="#" class="btn btn-outline-inv">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9M16 7L21 12L16 17M21 12H9" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            LOGOUT</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="navbar" aria-label="Main">
+    <div class="inner">
+      <a href="#" class="active"><img src="assets/nav-sportsbook.png" alt=""><span>Sportsbook</span></a>
+      <a href="#"><img src="assets/nav-live.png" alt=""><span>Live Betting</span></a>
+      <a href="#"><img src="assets/nav-casino.png" alt=""><span>Casino</span></a>
+      <a href="#"><img src="assets/nav-poker.png" alt=""><span>Poker</span></a>
+      <a href="#"><img src="assets/nav-racebook.png" alt=""><span>Racebook</span></a>
+      <a href="#"><img src="assets/nav-promotions.png" alt=""><span>Promotions</span></a>
+      <a href="#"><img src="assets/nav-more.png" alt=""><span>More</span></a>
+    </div>
+  </nav>
+  <div class="m-header">
+    <a href="#" class="logo" aria-label="BetUS"><img src="assets/betus-logo.png" alt="BetUS"></a>
+    <div class="m-right">
+      <div class="m-bal"><div><span>Cash:</span><b class="cash-value">$3,670.25</b></div><div><span>FP:</span><b>$6.00</b></div></div>
+      <div class="m-icons">
+        <a href="#" aria-label="Rewards"><img src="assets/gift.png" alt=""></a>
+        <button type="button" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12H20M4 6H20M4 18H20" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <h1 class="sr-only">Betting Squares</h1>
+  <a class="hero" href="#" aria-label="Betting Squares: multiple games, multiple ways to win, bigger prize pools">
+    <picture>
+      <source media="(max-width: 640px)" srcset="assets/hero-mobile.png">
+      <img src="assets/hero-desktop.png" alt="Betting Squares. Multiple Games. Multiple Ways to Win. Bigger Prize Pools.">
+    </picture>
+  </a>
+
+  <div class="tabs" role="tablist" aria-label="Leagues">
+    <button type="button" role="tab" aria-selected="true" data-league="NFL">NFL</button>
+    <button type="button" role="tab" aria-selected="false" data-league="NCAAF">NCAAF</button>
+    <button type="button" role="tab" aria-selected="false" data-league="NBA">NBA</button>
+    <button type="button" role="tab" aria-selected="false" data-league="NCAAB">NCAAB</button>
+  </div>
+
+  <div class="games" id="games" role="tabpanel"></div>
+</main>
+
+<footer>
+  <div class="foot">
+    <div class="foot-top">
+      <div class="social">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none"><path d="M12 0C18.6274 0 24 5.37259 24 12C24 18.1352 19.3955 23.1944 13.4538 23.9121V15.667L16.7001 15.667L17.3734 12H13.4538V10.7031C13.4538 9.73417 13.6439 9.06339 14.0799 8.63483C14.5159 8.20627 15.1979 8.01993 16.1817 8.01993C16.4307 8.01993 16.6599 8.02241 16.8633 8.02736C17.1591 8.03456 17.4002 8.047 17.568 8.06467V4.74048C17.501 4.72184 17.4218 4.70321 17.3331 4.68486C17.1321 4.6433 16.8822 4.60324 16.6136 4.56806C16.0523 4.49453 15.4093 4.4423 14.9594 4.4423C13.1424 4.4423 11.7692 4.83102 10.8107 5.63619C9.65388 6.60791 9.10108 8.18622 9.10108 10.4199V12H6.62659V15.667H9.10108V23.6466C3.87432 22.3498 0 17.6277 0 12C0 5.37259 5.37259 0 12 0Z" fill="#AFB9CB"/></svg></a>
+        <a href="#" aria-label="Instagram"><img src="assets/social-instagram.png" alt=""></a>
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="none"><path d="M18.3263 1.9043H21.6998L14.3297 10.3278L23 21.7903H16.2112L10.894 14.8383L4.80995 21.7903H1.43443L9.31743 12.7804L1 1.9043H7.96111L12.7674 8.25863L18.3263 1.9043ZM17.1423 19.7711H19.0116L6.94539 3.81743H4.93946L17.1423 19.7711Z" fill="#AFB9CB"/></svg></a>
+        <a href="#" aria-label="Reddit"><img src="assets/social-reddit.png" alt=""></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.7466 4.83455C23.119 5.20932 23.3864 5.67531 23.5221 6.1859C24.0239 8.07044 24.0239 12.0004 24.0239 12.0004C24.0239 12.0004 24.0239 15.9304 23.5221 17.815C23.3864 18.3256 23.119 18.7916 22.7466 19.1663C22.3743 19.5411 21.91 19.8115 21.4003 19.9504C19.5239 20.455 12.0239 20.455 12.0239 20.455C12.0239 20.455 4.52393 20.455 2.64756 19.9504C2.13786 19.8115 1.67358 19.5411 1.30121 19.1663C0.928842 18.7916 0.661431 18.3256 0.525744 17.815C0.0239258 15.9304 0.0239258 12.0004 0.0239258 12.0004C0.0239258 12.0004 0.0239258 8.07044 0.525744 6.1859C0.661431 5.67531 0.928842 5.20932 1.30121 4.83455C1.67358 4.45979 2.13786 4.1894 2.64756 4.05044C4.52393 3.5459 12.0239 3.5459 12.0239 3.5459C12.0239 3.5459 19.5239 3.5459 21.4003 4.05044C21.91 4.1894 22.3743 4.45979 22.7466 4.83455ZM15.8421 12.0005L9.5694 8.43184V15.5691L15.8421 12.0005Z" fill="#AFB9CB"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none"><path d="M17.0725 0H13.0278V16.3478C13.0278 18.2957 11.4722 19.8957 9.53626 19.8957C7.60034 19.8957 6.04469 18.2957 6.04469 16.3478C6.04469 14.4348 7.56577 12.8695 9.43257 12.8V8.69567C5.31872 8.7652 2 12.1391 2 16.3478C2 20.5913 5.38786 24 9.57085 24C13.7538 24 17.1416 20.5565 17.1416 16.3478V7.9652C18.6627 9.07827 20.5295 9.73913 22.5 9.77393V5.66957C19.4579 5.56522 17.0725 3.06087 17.0725 0Z" fill="#AFB9CB"/></svg></a>
+      </div>
+      <button type="button" class="up" aria-label="Back to top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"><svg viewBox="0 0 40 40" fill="none"><path d="M8 0.5H32C36.1421 0.5 39.5 3.85786 39.5 8V32C39.5 36.1421 36.1421 39.5 32 39.5H8C3.85786 39.5 0.5 36.1421 0.5 32V8C0.5 3.85786 3.85786 0.5 8 0.5Z" stroke="#AFB9CB"/><path d="M26 23L20 17L14 23" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="foot-sep foot-desk-sep"></div>
+    <div class="foot-cols" id="footCols"></div>
+    <div class="foot-acc" id="footAcc"></div>
+    <div class="foot-sep"></div>
+    <div class="foot-bar">
+      <div class="foot-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+      <p class="gamb">IF YOU HAVE A GAMBLING PROBLEM, CALL 1-800-GAMBLER</p>
+      <a href="#" class="foot-logo" aria-label="BetUS"><img src="assets/betus-logo.png" alt="BetUS"></a>
+    </div>
+    <div class="foot-sep"></div>
+    <div class="payments"><i class="pay"></i><i class="pay"></i><span class="pay-text">₿bitcoin</span></div>
+    <p class="legal">© 1994 - 2025 BetUS.. All Rights Reserved The BetUS Brand and Logo are trademarks of BetUS. BetUS is a premier online sportsbook and gaming destination. BetUS is a fully licensed sportsbook providing a reliable and secure sports betting service to millions of satisfied online betting customers world wide since 1994.<br>BetUS offers football betting, live and NFL odds all season long.</p>
+  </div>
+</footer>
+
+<script>
+  const ICON = {
+    dollar: "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M13.3334 6.66699H8.33341C7.89139 6.66699 7.46746 6.84259 7.1549 7.15515C6.84234 7.46771 6.66675 7.89163 6.66675 8.33366C6.66675 8.77569 6.84234 9.19961 7.1549 9.51217C7.46746 9.82473 7.89139 10.0003 8.33341 10.0003H11.6667C12.1088 10.0003 12.5327 10.1759 12.8453 10.4885C13.1578 10.801 13.3334 11.225 13.3334 11.667C13.3334 12.109 13.1578 12.5329 12.8453 12.8455C12.5327 13.1581 12.1088 13.3337 11.6667 13.3337H6.66675M10.0001 15.0003V5.00033M18.3334 10.0003C18.3334 14.6027 14.6025 18.3337 10.0001 18.3337C5.39771 18.3337 1.66675 14.6027 1.66675 10.0003C1.66675 5.39795 5.39771 1.66699 10.0001 1.66699C14.6025 1.66699 18.3334 5.39795 18.3334 10.0003Z\" stroke=\"#282E38\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+    grid: "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M2.5 7.5H17.5M2.5 12.5H17.5M7.5 2.5V17.5M12.5 2.5V17.5M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z\" stroke=\"#282E38\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+    users: "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M15.0001 17.5C15.0001 15.7319 14.2977 14.0362 13.0475 12.786C11.7972 11.5357 10.1015 10.8333 8.33341 10.8333M8.33341 10.8333C6.5653 10.8333 4.86961 11.5357 3.61937 12.786C2.36913 14.0362 1.66675 15.7319 1.66675 17.5M8.33341 10.8333C10.6346 10.8333 12.5001 8.96785 12.5001 6.66667C12.5001 4.36548 10.6346 2.5 8.33341 2.5C6.03223 2.5 4.16675 4.36548 4.16675 6.66667C4.16675 8.96785 6.03223 10.8333 8.33341 10.8333ZM18.3335 16.6666C18.3335 13.8583 16.6668 11.25 15.0001 9.99996C15.548 9.58893 15.9861 9.0492 16.2756 8.42852C16.5651 7.80784 16.6972 7.12535 16.6601 6.44146C16.6231 5.75757 16.418 5.09336 16.063 4.50763C15.7081 3.92189 15.2142 3.43268 14.6251 3.08329\" stroke=\"#282E38\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+    trophy: "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M5.00008 7.50033H3.75008C3.19755 7.50033 2.66764 7.28083 2.27694 6.89013C1.88624 6.49943 1.66675 5.96953 1.66675 5.41699C1.66675 4.86446 1.88624 4.33455 2.27694 3.94385C2.66764 3.55315 3.19755 3.33366 3.75008 3.33366H5.00008M5.00008 7.50033V1.66699H15.0001V7.50033M5.00008 7.50033C5.00008 8.82641 5.52687 10.0982 6.46455 11.0359C7.40223 11.9735 8.674 12.5003 10.0001 12.5003C11.3262 12.5003 12.5979 11.9735 13.5356 11.0359C14.4733 10.0982 15.0001 8.82641 15.0001 7.50033M15.0001 7.50033H16.2501C16.8026 7.50033 17.3325 7.28083 17.7232 6.89013C18.1139 6.49943 18.3334 5.96953 18.3334 5.41699C18.3334 4.86446 18.1139 4.33455 17.7232 3.94385C17.3325 3.55315 16.8026 3.33366 16.2501 3.33366H15.0001M3.33341 18.3337H16.6667M8.33341 12.2169V14.1669C8.33341 14.6253 7.94175 14.9836 7.52508 15.1753C6.54175 15.6253 5.83341 16.8669 5.83341 18.3336M11.6667 12.2169V14.1669C11.6667 14.6253 12.0584 14.9836 12.4751 15.1753C13.4584 15.6253 14.1667 16.8669 14.1667 18.3336\" stroke=\"#009C63\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
+  };
+  const VS = "<svg viewBox=\"0 0 35 48\" fill=\"none\"><path d=\"M6.1265 16.1703H0L4.00075 33.7003C5.75606 33.566 7.85902 33.9223 9.56304 33.7304C9.97908 33.6838 10.2954 33.6921 10.5119 33.2727L21.3687 16.576C21.4428 16.0196 21.3459 16.2197 20.9498 16.1676C20.1491 16.0662 19.1774 16.269 18.3738 16.1676C17.9806 16.1182 17.8751 16.3156 17.9606 15.7674L25.358 0L8.83071 26.3128L6.1265 16.1731V16.1703ZM15.4331 32.3845C17.0089 32.6394 18.2313 33.5276 19.9297 33.8675C24.5886 34.8022 32.2767 34.0375 32.9862 28.2919C33.6274 23.1028 27.5237 23.7634 24.8708 22.2585C23.4317 21.4417 24.5431 20.7646 25.6971 20.4713C27.6804 19.9669 30.0541 20.6248 31.7752 21.6281L34.0691 17.2613C32.157 15.8798 24.8508 15.2274 23.2038 16.4307C22.8818 16.6665 19.2657 22.3243 18.9352 23.0151C18.1373 24.6708 19.1888 25.5014 20.7076 26.2662C22.1124 26.9761 25.7684 27.4339 26.5007 28.0945C28.2674 29.6872 23.5486 29.6735 22.6823 29.5748C20.246 29.3007 18.4621 27.7135 16.2395 27.2557L3.84687 47.6941L15.4359 32.3845H15.4331Z\" fill=\"white\"/><path d=\"M15.4323 32.3863L3.84326 47.6959L16.2387 27.2575C18.4614 27.7153 20.2452 29.3025 22.6815 29.5766C23.5478 29.6753 28.2666 29.689 26.4999 28.0963C25.7676 27.4357 22.1088 26.9779 20.7068 26.268C19.1909 25.5004 18.1394 24.6726 18.9344 23.0169C19.2678 22.3261 22.881 16.6683 23.203 16.4325C24.85 15.2292 32.1562 15.8816 34.0683 17.2631L31.7744 21.6299C30.0533 20.6293 27.6796 19.9714 25.6964 20.4731C24.5423 20.7664 23.431 21.4462 24.87 22.2603C27.5201 23.7625 33.6238 23.1046 32.9855 28.2937C32.2759 34.0393 24.5879 34.8041 19.9289 33.8693C18.2306 33.5294 17.0053 32.6412 15.4323 32.3863Z\" fill=\"white\"/><path d=\"M6.1265 16.1703L8.83071 26.31L25.358 0L17.9635 15.7729C17.8751 16.3211 17.9834 16.1237 18.3767 16.1731C19.1802 16.2718 20.1519 16.0689 20.9526 16.1731C21.3487 16.2224 21.4456 16.0223 21.3715 16.5815L10.5148 33.2781C10.2982 33.6976 9.98193 33.6893 9.5659 33.7359C7.86472 33.9278 5.75891 33.5715 4.0036 33.7058L0 16.1703H6.1265Z\" fill=\"white\"/></svg>";
+  const ARROW_R = "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M4.16667 10H15.8333M10 15.8333L15.8333 10L10 4.16667\" stroke=\"white\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
+  const NEXT = '<svg viewBox="0 0 40 40" fill="none"><path d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z" fill="#E7ECF3"/><path d="M17.5 25L22.5 20L17.5 15" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const CHEVRON_DOWN = '<svg viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const CHEVRON = '<svg viewBox="0 0 12 12" fill="none"><path d="M9.5 4.5L6 8L2.5 4.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // Contest data (prototype). Only Buccaneers vs Cowboys has a squares board page (index.html).
+  const GAMES = {
+    NFL: [
+      { home: ["TB", "Tampa Bay", "Buccaneers", "#d50a0a"], away: ["DAL", "Dallas", "Cowboys", "#003594"], date: "Thu, Oct 8 | 8:15 PM",
+        grids: [{ price: 1, grid: 1, sold: 70 }, { price: 5, grid: 2, sold: 37 }, { price: 5, grid: 3, sold: 37 }] },
+      { home: ["BAL", "Baltimore", "Ravens", "#8611cf"], away: ["CIN", "Cincinnati", "Bengals", "#e58d00"], date: "Thu, Oct 8 | 8:15 PM",
+        grids: [{ price: 5, grid: 1, sold: 37 }, { price: 5, grid: 2, sold: 37 }] }
+    ],
+    NCAAF: [], NBA: [], NCAAB: []
+  };
+
+  const team = ([code, city, name, color], side) => {
+    const badge = `<span class="badge-team" style="background:${color}">${code}</span>`;
+    const label = `<span><span class="full">${city} </span>${name}</span>`;
+    return `<div class="team">${side === "home" ? badge + label : label + badge}</div>`;
+  };
+
+  const card = (g, c) => `
+    <article class="gcard" aria-label="${g.home[2]} vs ${g.away[2]}, grid ${c.grid}">
+      <div class="gcard-head"><h3 class="gcard-title">Grid Overview</h3><span class="badge-open">Open</span></div>
+      <div class="stats">
+        <div class="stat"><span class="stat-ico">${ICON.dollar}</span><div><div class="stat-label">Square Price</div><div class="stat-value">$${c.price}</div></div></div>
+        <span class="stat-line"></span>
+        <div class="stat"><span class="stat-ico">${ICON.grid}</span><div><div class="stat-label">Grid</div><div class="stat-value">${c.grid}</div></div></div>
+        <span class="stat-line"></span>
+        <div class="stat"><span class="stat-ico">${ICON.users}</span><div><div class="stat-label">Squares Sold</div><div class="stat-value">${c.sold}/100</div></div></div>
+        <span class="stat-line"></span>
+        <div class="stat"><span class="stat-ico">${ICON.trophy}</span><div><div class="stat-label">Prize Pool</div><div class="stat-value jade">$${c.price * 100}</div></div></div>
+      </div>
+      <div>
+        <div class="progress-head"><span>Game progress</span><strong>${c.sold}% Sold</strong></div>
+        <div class="bar" role="progressbar" aria-valuenow="${c.sold}" aria-valuemin="0" aria-valuemax="100" aria-label="Squares sold"><i style="width:${c.sold}%"></i></div>
+        <div class="progress-foot">${100 - c.sold} squares are still available</div>
+      </div>
+      <a class="btn btn-primary" href="index.html">Pick Squares ${ARROW_R}</a>
+    </article>`;
+
+  function render(league) {
+    const list = GAMES[league];
+    const box = document.getElementById("games");
+    if (!list.length) { box.innerHTML = `<p class="empty">No ${league} squares games are open right now.</p>`; return; }
+    box.innerHTML = list.map((g, i) => `
+      <section class="game" aria-label="${g.home[1]} ${g.home[2]} vs ${g.away[1]} ${g.away[2]}">
+        <div class="game-head">
+          <div class="game-top">
+            <div class="matchup">${team(g.home, "home")}<span class="vs" aria-label="versus">${VS}</span>${team(g.away, "away")}</div>
+            <button type="button" class="collapse" aria-expanded="true" aria-controls="slider-${i}" aria-label="Hide grids">${CHEVRON}</button>
+          </div>
+          <div class="date-strip">${g.date} <small>EST</small></div>
+        </div>
+        <div class="slider" id="slider-${i}">
+          <button type="button" class="nav-btn prev" aria-label="Previous grids">${NEXT}</button>
+          <div class="track">${g.grids.map(c => card(g, c)).join("")}</div>
+          <button type="button" class="nav-btn next" aria-label="Next grids">${NEXT}</button>
+        </div>
+      </section>`).join("");
+    box.querySelectorAll(".game").forEach(sec => {
+      const track = sec.querySelector(".track");
+      const prev = sec.querySelector(".prev"), next = sec.querySelector(".next");
+      const sync = () => {
+        prev.hidden = track.scrollLeft <= 2;
+        next.hidden = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      };
+      const step = () => track.querySelector(".gcard").offsetWidth + 12;
+      prev.addEventListener("click", () => track.scrollBy({ left: -step() }));
+      next.addEventListener("click", () => track.scrollBy({ left: step() }));
+      track.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("resize", sync);
+      sync();
+      const btn = sec.querySelector(".collapse");
+      btn.addEventListener("click", () => {
+        const closed = sec.classList.toggle("closed");
+        btn.setAttribute("aria-expanded", !closed);
+        btn.setAttribute("aria-label", closed ? "Show grids" : "Hide grids");
+      });
+    });
+  }
+
+  document.querySelectorAll(".tabs button").forEach(t => t.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === t));
+    render(t.dataset.league);
+  }));
+  render("NFL");
+
+  const FOOT = [
+    ["Sportsbook", ["Online Sportsbook", "NFL Odds", "NBA Odds", "MLB Odds", "World Series Odds", "NHL Odds", "NCAAF Odds", "NCAAB Odds", "UEFA Champions League Odds", "Nascar Odds", "Olympic Games Odds", "French Open Odds", "Live Betting"]],
+    ["Casino", ["Online Casino Games", "Tournaments", "Bonus Play", "Play Blackjack", "Online Slots", "Casino Guide", "How to Play Blackjack"]],
+    ["Horse Racing", ["Racebook", "Horse Racing Rules", "Racebook Glossary", "Horse Race Betting", "Pegasus World Cup", "Triple Crown Betting", "Horse Racing News"]],
+    ["Information", ["Sports Betting News", "BetUS Sportsbook Reviews", "How to Bet Online", "How to Bet On Sports", "About Us", "Rules & Regulations", "Help & FAQ", "Press Room", "Sporting Events Odds", "Affiliates", "Terms of Service"]],
+    ["Betting Offers", ["Casino Promotions", "Promotions", "Contests", "Sign Up Bonuses", "Crypto Bonus", "Casino Bonus", "Refer a Friend"]],
+    ["Other", ["Why Join?", "Contact US", "Privacy Policy"], "Contact Info", ["1 (888) 512-3887", "Email"]]
+  ];
+  const list = items => `<ul>${items.map(i => `<li><a href="#">${i.replace("&", "&amp;")}</a></li>`).join("")}</ul>`;
+  document.getElementById("footCols").innerHTML = FOOT.map(([t, items, t2, items2]) =>
+    `<div><h4>${t}</h4>${list(items)}${t2 ? `<h4 class="mt">${t2}</h4>${list(items2)}` : ""}</div>`).join("");
+  document.getElementById("footAcc").innerHTML = FOOT.map(([t, items, , items2]) =>
+    `<details><summary>${t}${CHEVRON_DOWN}</summary>${list(items2 ? items.concat(items2) : items)}</details>`).join("");
+</script>
+</body>
+</html>
