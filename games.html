@@ -155,6 +155,7 @@
   .bar i { display: block; height: 100%; border-radius: 999px; background: var(--primary); }
   .progress-foot { font-size: 12px; line-height: 12px; color: var(--fg-low); }
   .gcard .btn { width: 100%; }
+  .badge-open.full { background: var(--fg-mid); }
   .empty { padding: 40px 20px; text-align: center; color: var(--fg-mid); font-size: 14px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; }
 
   /* ===== Footer (ADS / Desktop Footer) ===== */
@@ -377,6 +378,10 @@
   // Contest data lives in games-data.js (shared with the board page)
   const GAMES = { NFL: [], NCAAF: [], NBA: [], NCAAB: [] };
   window.SQUARES_GAMES.forEach(g => GAMES[g.league].push(g));
+  // Add squares bought on the board page (saved in this browser) to each grid's sold count
+  const soldFor = (g, c) => Math.min(100, c.sold + window.SQUARES_STORE.owned(g.id, c.grid).length);
+  const cashText = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.querySelectorAll(".cash-value").forEach(e => { e.textContent = cashText(window.SQUARES_STORE.cash()); });
 
   const team = ([code, city, name, color], side) => {
     const badge = `<span class="badge-team" style="background:${color}">${code}</span>`;
@@ -384,24 +389,24 @@
     return `<div class="team">${side === "home" ? badge + label : label + badge}</div>`;
   };
 
-  const card = (g, c) => `
+  const card = (g, c, sold = soldFor(g, c), full = sold >= 100) => `
     <article class="gcard" aria-label="${g.home[2]} vs ${g.away[2]}, grid ${c.grid}">
-      <div class="gcard-head"><h3 class="gcard-title">Grid Overview</h3><span class="badge-open">Open</span></div>
+      <div class="gcard-head"><h3 class="gcard-title">Grid Overview</h3><span class="badge-open${full ? " full" : ""}">${full ? "Sold Out" : "Open"}</span></div>
       <div class="stats">
         <div class="stat"><span class="stat-ico">${ICON.dollar}</span><div><div class="stat-label">Square Price</div><div class="stat-value">$${c.price}</div></div></div>
         <span class="stat-line"></span>
         <div class="stat"><span class="stat-ico">${ICON.grid}</span><div><div class="stat-label">Grid</div><div class="stat-value">${c.grid}</div></div></div>
         <span class="stat-line"></span>
-        <div class="stat"><span class="stat-ico">${ICON.users}</span><div><div class="stat-label">Squares Sold</div><div class="stat-value">${c.sold}/100</div></div></div>
+        <div class="stat"><span class="stat-ico">${ICON.users}</span><div><div class="stat-label">Squares Sold</div><div class="stat-value">${sold}/100</div></div></div>
         <span class="stat-line"></span>
         <div class="stat"><span class="stat-ico">${ICON.trophy}</span><div><div class="stat-label">Prize Pool</div><div class="stat-value jade">$${c.price * 100}</div></div></div>
       </div>
       <div>
-        <div class="progress-head"><span>Game progress</span><strong>${c.sold}% Sold</strong></div>
-        <div class="bar" role="progressbar" aria-valuenow="${c.sold}" aria-valuemin="0" aria-valuemax="100" aria-label="Squares sold"><i style="width:${c.sold}%"></i></div>
-        <div class="progress-foot">${100 - c.sold} squares are still available</div>
+        <div class="progress-head"><span>Game progress</span><strong>${sold}% Sold</strong></div>
+        <div class="bar" role="progressbar" aria-valuenow="${sold}" aria-valuemin="0" aria-valuemax="100" aria-label="Squares sold"><i style="width:${sold}%"></i></div>
+        <div class="progress-foot">${full ? "All squares are sold" : `${100 - sold} squares are still available`}</div>
       </div>
-      <a class="btn btn-primary" href="index.html?game=${g.id}&amp;grid=${c.grid}">Pick Squares ${ARROW_R}</a>
+      <a class="btn btn-primary" href="index.html?game=${g.id}&amp;grid=${c.grid}">${full ? "View Squares" : "Pick Squares"} ${ARROW_R}</a>
     </article>`;
 
   function render(league) {

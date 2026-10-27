@@ -724,7 +724,8 @@
   applyGame();
 
   const selected = new Set();
-  const owned = new Set();
+  const STORE = window.SQUARES_STORE;
+  const owned = new Set(STORE.owned(GAME.id, GRID.grid).filter(k => !taken[k]));   // purchases from earlier visits
   const grid = document.getElementById("grid");
   const CHECK = '<svg viewBox="0 0 40 40" fill="none"><path d="M14.6583 26.4585L7.70834 19.5085L5.34167 21.8585L14.6583 31.1752L34.6583 11.1752L32.3083 8.8252L14.6583 26.4585Z" fill="white"/></svg>';
   const TICKET = '<svg viewBox="0 0 20 20" fill="none"><path d="M7.49999 10.0003L9.16666 11.667L12.5 8.33366M1.66666 7.50033C2.3297 7.50033 2.96558 7.76372 3.43442 8.23256C3.90326 8.7014 4.16666 9.33728 4.16666 10.0003C4.16666 10.6634 3.90326 11.2993 3.43442 11.7681C2.96558 12.2369 2.3297 12.5003 1.66666 12.5003V14.167C1.66666 14.609 1.84225 15.0329 2.15481 15.3455C2.46737 15.6581 2.8913 15.8337 3.33332 15.8337H16.6667C17.1087 15.8337 17.5326 15.6581 17.8452 15.3455C18.1577 15.0329 18.3333 14.609 18.3333 14.167V12.5003C17.6703 12.5003 17.0344 12.2369 16.5656 11.7681C16.0967 11.2993 15.8333 10.6634 15.8333 10.0003C15.8333 9.33728 16.0967 8.7014 16.5656 8.23256C17.0344 7.76372 17.6703 7.50033 18.3333 7.50033V5.83366C18.3333 5.39163 18.1577 4.96771 17.8452 4.65515C17.5326 4.34259 17.1087 4.16699 16.6667 4.16699H3.33332C2.8913 4.16699 2.46737 4.34259 2.15481 4.65515C1.84225 4.96771 1.66666 5.39163 1.66666 5.83366V7.50033Z" stroke="#007BFF" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -914,7 +915,15 @@
     sheet.classList.toggle("has-sel", n > 0);
     const sold = Object.keys(taken).length + owned.size;
     document.getElementById("soldValue").textContent = `${sold}/100`;
+    // Quick Pick needs at least one free square that isn't already selected
+    const free = 100 - sold - n;
+    const quick = document.getElementById("quickBtn");
+    quick.disabled = locked() || free <= 0;
+    quick.title = locked() ? "The board is locked once the game starts" : free <= 0 ? (isFull() ? "This grid is full" : "No free squares left to pick") : "";
   }
+
+  const isFull = () => Object.keys(taken).length + owned.size >= 100;
+  const FULL_MSG = "This grid is full - all 100 squares are sold.";
 
   const mmss = t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
 
@@ -928,7 +937,6 @@
     document.getElementById("gameStatus").textContent =
       gameState === "live" ? `LIVE · ${LIVE.quarter} · ${mmss(clock)}` : `FINAL · ${GAME.date.split("|")[0].trim().toUpperCase()}`;
     board.classList.toggle("locked", locked());
-    document.getElementById("quickBtn").disabled = locked();
     // Payout results
     PERIODS.forEach((p, i) => {
       const elp = document.querySelector(`.p-status[data-p="${p.id}"]`);
@@ -947,7 +955,7 @@
       const k = winKey(PERIODS[3].score);
       setInfo(`Final winner: ${label(k)}${ownerOf(k) ? ` - ${ownerOf(k)}` : ""}`);
     } else {
-      setInfo(board.classList.contains("quads") ? "Tap a quadrant (A–D) to pick squares." : "Tap to Select a Square");
+      setInfo(isFull() ? FULL_MSG : board.classList.contains("quads") ? "Tap a quadrant (A–D) to pick squares." : "Tap to Select a Square");
     }
   }
 
@@ -983,7 +991,7 @@
     document.querySelectorAll(".tools .seg button").forEach(x => x.setAttribute("aria-pressed", x === btn));
     // The Quadrants design collapses Payouts and Overview to give the map room
     ["payoutsCard", "overviewCard"].forEach(id => setCollapsed(document.getElementById(id), quads));
-    if (!locked()) setInfo(quads ? "Tap a quadrant (A–D) to pick squares." : "Tap to Select a Square");
+    if (!locked()) setInfo(isFull() ? FULL_MSG : quads ? "Tap a quadrant (A–D) to pick squares." : "Tap to Select a Square");
   }));
 
   document.getElementById("quickBtn").addEventListener("click", () => {
@@ -1024,7 +1032,7 @@
   document.getElementById("clearBtn").addEventListener("click", () => { selected.clear(); render(); });
 
   // ===== Purchase confirmation =====
-  let cash = 3670.25;
+  let cash = STORE.cash();
   let paying = false;
   let purchased = [];
   const confirmEl = document.getElementById("confirm");
@@ -1032,6 +1040,7 @@
   const payBtn = document.getElementById("payBtn");
   const money = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
   const cashText = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.querySelectorAll(".cash-value").forEach(e => { e.textContent = cashText(cash); });
   const byPosition = (a, b) => { const [ar, ac] = a.split("-").map(Number), [br, bc] = b.split("-").map(Number); return ar - br || ac - bc; };
   const LAYERS = ["header", "main", "footer", "#sheet", "#checkout"];
   const setInert = on => LAYERS.forEach(t => { document.querySelector(t).inert = on; });
@@ -1091,9 +1100,11 @@
       cash -= total;
       document.querySelectorAll(".cash-value").forEach(e => { e.textContent = cashText(cash); });
       purchased.forEach(k => owned.add(k));
+      STORE.setOwned(GAME.id, GRID.grid, [...owned]);
+      STORE.setCash(cash);
       selected.clear();
       render();
-      setInfo(infoFor(purchased[purchased.length - 1]));
+      setInfo(isFull() ? FULL_MSG : infoFor(purchased[purchased.length - 1]));
       if (activeQuad) sheetInfo.textContent = "Purchase complete. Your squares are marked as yours.";
       document.getElementById("confirmTitle").textContent = "Purchase complete";
       document.getElementById("doneMsg").textContent =
