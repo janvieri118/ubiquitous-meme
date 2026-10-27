@@ -111,6 +111,14 @@
   .tabs button { height: 40px; padding: 0 16px; border: 0; border-bottom: 4px solid transparent; background: none; font-family: var(--nexa); font-weight: 800; font-size: 18px; color: var(--fg-mid); cursor: pointer; }
   .tabs button[aria-selected="true"] { color: var(--fg-high); border-bottom-color: var(--primary); }
   .tabs button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+  /* My Grids: not a league, so it sits apart on the right as a pill */
+  .tabs { align-items: center; }
+  .tabs .my-tab { margin-left: auto; height: 36px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border-medium); border-radius: 999px; font-size: 16px; color: var(--fg-high); white-space: nowrap; }
+  .tabs .my-tab:hover { background: var(--fill-low); }
+  .tabs .my-tab[aria-selected="true"] { border-color: var(--primary); background: var(--primary-muted); color: var(--primary); }
+  .tabs .my-tab:focus-visible { outline-offset: 2px; }
+  .my-tab svg { width: 18px; height: 18px; flex: none; }
+  .my-count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--primary); color: #fff; font-family: var(--nexa); font-weight: 700; font-size: 12px; display: grid; place-items: center; }
 
   .games { display: flex; flex-direction: column; gap: 16px; }
   .game { display: flex; flex-direction: column; gap: 12px; }
@@ -157,6 +165,29 @@
   .progress-foot { font-size: 12px; line-height: 12px; color: var(--fg-low); }
   .gcard .btn { width: 100%; }
   .badge-open.full { background: var(--fg-mid); }
+  /* ===== My Grids (no Figma frame yet: built from the Grid Overview card parts) ===== */
+  .my-summary { display: flex; flex-direction: column; gap: 18px; padding: 20px 28px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--shadow-card); }
+  .my-title { font-family: var(--nexa); font-weight: 800; font-size: 22px; letter-spacing: -.66px; }
+  .my-sub { margin-top: 4px; font-size: 14px; color: var(--fg-low); }
+  .my-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 16px; }
+  .mycard { display: flex; flex-direction: column; gap: 16px; padding: 20px 24px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--shadow-card); }
+  .mycard-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .my-match { display: flex; align-items: center; gap: 8px; font-family: var(--nexa); font-weight: 800; font-size: 18px; letter-spacing: -.54px; }
+  .my-match .badge-team { width: 30px; height: 30px; font-size: 11px; box-shadow: none; }
+  .my-match .vs-text { font-size: 14px; color: var(--fg-low); }
+  .my-date { margin-top: 6px; font-size: 14px; color: var(--fg-mid); }
+  .my-date b { font-weight: 500; color: var(--fg-high); }
+  .my-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { height: 26px; padding: 0 10px; border-radius: 6px; background: var(--fill-low); border: 1px solid var(--border-low); display: inline-flex; align-items: center; font-size: 13px; color: var(--fg-mid); white-space: nowrap; }
+  .chip b { margin-left: 4px; font-weight: 500; color: var(--fg-high); }
+  .my-sq-label { margin-bottom: 8px; font-size: 14px; color: var(--fg-mid); }
+  .my-sq-label strong { font-weight: 800; color: var(--fg-high); }
+  .my-squares { display: flex; flex-wrap: wrap; gap: 6px; }
+  .my-squares .sq-chip { height: 28px; padding: 0 10px; border-radius: 6px; background: var(--primary); color: #fff; display: inline-flex; align-items: center; font-family: var(--nexa); font-weight: 700; font-size: 13px; white-space: nowrap; box-shadow: 0 0 8px rgba(0, 123, 255, .35); }
+  .my-squares .more { background: var(--primary-muted); color: var(--primary); box-shadow: none; border: 1px solid var(--info-border); }
+  .mycard .btn { width: 100%; margin-top: auto; }
+  .empty .btn { margin-top: 16px; }
+  .empty strong { display: block; margin-bottom: 6px; font-family: var(--nexa); font-weight: 800; font-size: 18px; color: var(--fg-high); }
   .empty { padding: 40px 20px; text-align: center; color: var(--fg-mid); font-size: 14px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; }
 
   /* ===== Footer (ADS / Desktop Footer) ===== */
@@ -208,6 +239,20 @@
     .hero { margin: 0 4px 4px; }
     .tabs { height: 36px; padding: 6px 0; }
     .tabs button { height: 24px; padding: 0 12px; border-bottom-width: 2px; font-size: 12px; }
+    .tabs .my-tab { height: 26px; padding: 0 8px; gap: 4px; font-size: 12px; }
+    .my-tab svg { width: 14px; height: 14px; }
+    .my-count { min-width: 16px; height: 16px; padding: 0 4px; font-size: 10px; }
+    .my-summary { padding: 12px; gap: 12px; }
+    .my-title { font-size: 18px; letter-spacing: -.54px; }
+    .my-sub { font-size: 12px; }
+    .my-list { grid-template-columns: 1fr; gap: 8px; }
+    .mycard { padding: 12px; gap: 12px; }
+    .my-match { font-size: 14px; letter-spacing: -.42px; gap: 6px; }
+    .my-match .badge-team { width: 24px; height: 24px; font-size: 9px; }
+    .my-match .vs-text { font-size: 12px; }
+    .my-date, .my-sq-label { font-size: 12px; }
+    .chip { height: 22px; padding: 0 8px; font-size: 12px; }
+    .my-squares .sq-chip { height: 24px; padding: 0 8px; font-size: 12px; }
     .games { gap: 8px; }
     .game { gap: 8px; }
     .game-top { height: 44px; padding: 0 14px; }
@@ -321,6 +366,7 @@
     <button type="button" role="tab" aria-selected="false" data-league="NCAAF">NCAAF</button>
     <button type="button" role="tab" aria-selected="false" data-league="NBA">NBA</button>
     <button type="button" role="tab" aria-selected="false" data-league="NCAAB">NCAAB</button>
+    <button type="button" role="tab" aria-selected="false" data-league="MY" class="my-tab"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 10L9.16667 11.6667L12.5 8.33333M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>My Grids<span class="my-count" id="myCount" hidden></span></button>
   </div>
 
   <div class="games" id="games" role="tabpanel"></div>
@@ -413,7 +459,78 @@
       <a class="btn btn-primary" href="index.html?game=${g.id}&amp;grid=${c.grid}">${full ? "View Squares" : "Pick Squares"} ${ARROW_R}</a>
     </article>`;
 
+  // ===== My Grids: every grid with squares bought in this browser, soonest game first =====
+  const MONTHS = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+  const when = date => {   // "Thu, Oct 8 | 8:15 PM" -> sortable number
+    const m = date.match(/(\w{3}) (\d+) \| (\d+):(\d+) (AM|PM)/);
+    return m ? new Date(2026, MONTHS[m[1]], +m[2], (+m[3] % 12) + (m[5] === "PM" ? 12 : 0), +m[4]).getTime() : 0;
+  };
+  const myEntries = () => window.SQUARES_GAMES
+    .flatMap(g => g.grids.map(c => ({ g, c, keys: STORE.owned(g.id, c.grid) })))
+    .filter(e => e.keys.length)
+    .sort((a, b) => when(a.g.date) - when(b.g.date) || a.c.grid - b.c.grid);
+  const SQUARE_ICON = '<svg viewBox="0 0 20 20" fill="none"><path d="M7.5 10L9.16667 11.6667L12.5 8.33333M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const MAX_CHIPS = 8;
+  const myCard = ({ g, c, keys }) => {
+    const sold = soldFor(g, c), full = sold >= 100;
+    const sorted = [...keys].sort((a, b) => a.localeCompare(b));
+    const chip = k => { const [r, col] = k.split("-"); return `<span class="sq-chip" title="${g.home[4] || g.home[2]} ${r} • ${g.away[4] || g.away[2]} ${col}">${g.home[0]} ${r} • ${g.away[0]} ${col}</span>`; };
+    const extra = sorted.length - MAX_CHIPS;
+    return `
+    <article class="mycard" aria-label="${g.home[2]} vs ${g.away[2]}, grid ${c.grid}: ${keys.length} of your squares">
+      <div class="mycard-head">
+        <div>
+          <div class="my-match"><span class="badge-team" style="background:${g.home[3]}">${g.home[0]}</span>${g.home[4] || g.home[2]} <span class="vs-text">vs</span> ${g.away[4] || g.away[2]}<span class="badge-team" style="background:${g.away[3]}">${g.away[0]}</span></div>
+          <p class="my-date"><b>${g.date.replace(" |", " •")}</b> EST</p>
+        </div>
+        <span class="badge-open${full ? " full" : ""}">${full ? "Sold Out" : "Open"}</span>
+      </div>
+      <div class="my-meta"><span class="chip">${g.league}</span><span class="chip">Grid<b>${c.grid}</b></span><span class="chip">Square<b>$${c.price}</b></span><span class="chip">Paid<b>$${keys.length * c.price}</b></span><span class="chip">Prize Pool<b>$${c.price * 100}</b></span></div>
+      <div>
+        <p class="my-sq-label">Your squares <strong>(${keys.length})</strong></p>
+        <div class="my-squares">${sorted.slice(0, MAX_CHIPS).map(chip).join("")}${extra > 0 ? `<span class="sq-chip more">+${extra} more</span>` : ""}</div>
+      </div>
+      <div>
+        <div class="progress-head"><span>Game progress</span><strong>${sold}% Sold</strong></div>
+        <div class="bar" role="progressbar" aria-valuenow="${sold}" aria-valuemin="0" aria-valuemax="100" aria-label="Squares sold"><i style="width:${sold}%"></i></div>
+        <div class="progress-foot">${full ? "All squares are sold" : `${100 - sold} squares are still available`}</div>
+      </div>
+      <a class="btn btn-primary" href="index.html?game=${g.id}&amp;grid=${c.grid}&amp;from=my">View My Squares ${ARROW_R}</a>
+    </article>`;
+  };
+  function renderMine(box) {
+    const entries = myEntries();
+    if (!entries.length) {
+      box.innerHTML = `<div class="empty"><strong>You don't have any squares yet</strong>Pick squares in any grid and they'll show up here, so you can follow all your games in one place.<br><button type="button" class="btn btn-primary" id="browseBtn">Browse Games ${ARROW_R}</button></div>`;
+      document.getElementById("browseBtn").addEventListener("click", () => document.querySelector('.tabs [data-league="NFL"]').click());
+      return;
+    }
+    const squares = entries.reduce((n, e) => n + e.keys.length, 0);
+    const paid = entries.reduce((n, e) => n + e.keys.length * e.c.price, 0);
+    const games = new Set(entries.map(e => e.g.id)).size;
+    box.innerHTML = `
+      <section class="my-summary" aria-label="My Grids summary">
+        <div><h2 class="my-title">My Grids</h2><p class="my-sub">Every grid you have squares in, soonest game first</p></div>
+        <div class="stats">
+          <div class="stat"><span class="stat-ico">${ICON.users}</span><div><div class="stat-label">Games</div><div class="stat-value">${games}</div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico">${ICON.grid}</span><div><div class="stat-label">Grids</div><div class="stat-value">${entries.length}</div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico">${SQUARE_ICON}</span><div><div class="stat-label">My Squares</div><div class="stat-value">${squares}</div></div></div>
+          <span class="stat-line"></span>
+          <div class="stat"><span class="stat-ico">${ICON.dollar}</span><div><div class="stat-label">Total Paid</div><div class="stat-value jade">$${paid}</div></div></div>
+        </div>
+      </section>
+      <div class="my-list">${entries.map(myCard).join("")}</div>`;
+  }
+  const myCount = document.getElementById("myCount");
+  const n = myEntries().length;
+  myCount.textContent = n; myCount.hidden = !n;
+  document.querySelector(".my-tab").setAttribute("aria-label", `My Grids, ${n} grid${n === 1 ? "" : "s"}`);
+
   function render(league) {
+    const box0 = document.getElementById("games");
+    if (league === "MY") { renderMine(box0); return; }
     const list = GAMES[league];
     const box = document.getElementById("games");
     if (!list.length) { box.innerHTML = `<p class="empty">No ${league} squares games are open right now.</p>`; return; }
@@ -459,8 +576,10 @@
   document.querySelectorAll(".tabs button").forEach(t => t.addEventListener("click", () => {
     document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === t));
     render(t.dataset.league);
+    history.replaceState(null, "", t.dataset.league === "MY" ? "#my-grids" : location.pathname + location.search);
   }));
-  render("NFL");
+  // games.html#my-grids opens straight on My Grids (the board's All Games link comes back here)
+  if (location.hash === "#my-grids") document.querySelector(".my-tab").click(); else render("NFL");
 
   const FOOT = [
     ["Sportsbook", ["Online Sportsbook", "NFL Odds", "NBA Odds", "MLB Odds", "World Series Odds", "NHL Odds", "NCAAF Odds", "NCAAB Odds", "UEFA Champions League Odds", "Nascar Odds", "Olympic Games Odds", "French Open Odds", "Live Betting"]],
