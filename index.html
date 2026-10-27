@@ -547,7 +547,7 @@
     <div class="board-head">
       <h2 class="card-title">Pick your Squares <button type="button" class="toggle" aria-expanded="true" aria-label="Collapse board"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 7.5L6 4L9.5 7.5" stroke="#282E38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></h2>
       <div class="legend">
-        <span><i class="sw available"></i>Available</span>
+        <span id="legendAvailable"><i class="sw available"></i>Available</span>
         <span><i class="sw yours"></i>Yours</span>
         <span><i class="sw taken"></i>Taken</span>
       </div>
@@ -922,6 +922,8 @@
     const quick = document.getElementById("quickBtn");
     quick.disabled = locked() || free <= 0;
     quick.title = locked() ? "The board is locked once the game starts" : free <= 0 ? (isFull() ? "This grid is full" : "No free squares left to pick") : "";
+    // A sold-out grid has nothing available, so drop that legend entry
+    document.getElementById("legendAvailable").hidden = isFull();
   }
 
   const isFull = () => Object.keys(taken).length + owned.size >= 100;
