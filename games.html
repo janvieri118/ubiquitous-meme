@@ -180,9 +180,14 @@
   .my-meta { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { height: 26px; padding: 0 10px; border-radius: 6px; background: var(--fill-low); border: 1px solid var(--border-low); display: inline-flex; align-items: center; font-size: 13px; color: var(--fg-mid); white-space: nowrap; }
   .chip b { margin-left: 4px; font-weight: 500; color: var(--fg-high); }
-  .my-sq-label { margin-bottom: 8px; font-size: 14px; color: var(--fg-mid); }
+  /* Your squares: collapsed by default, the whole row toggles the ticket list */
+  .my-sq-label { width: 100%; height: 40px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--fill-low); font-size: 14px; color: var(--fg-mid); text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .my-sq-label:hover { border-color: var(--border-low); }
+  .my-sq-label:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   .my-sq-label strong { font-weight: 800; color: var(--fg-high); }
-  .my-squares { display: flex; flex-wrap: wrap; gap: 6px; }
+  .my-sq-label svg { width: 12px; height: 12px; flex: none; transition: transform .2s; }
+  .my-sq-label[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .my-squares { margin-top: 8px; max-height: 240px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; }
   /* Same ticket chips as the board's purchase confirmation */
   .my-squares .alert { font-size: 12px; white-space: nowrap; }
   .mycard .btn { width: 100%; margin-top: auto; }
@@ -251,6 +256,7 @@
     .my-match .badge-team { width: 24px; height: 24px; font-size: 9px; }
     .my-match .vs-text { font-size: 12px; }
     .my-date, .my-sq-label { font-size: 12px; }
+    .my-sq-label { height: 36px; }
     .chip { height: 22px; padding: 0 8px; font-size: 12px; }
     .games { gap: 8px; }
     .game { gap: 8px; }
@@ -470,12 +476,11 @@
     .sort((a, b) => when(a.g.date) - when(b.g.date) || a.c.grid - b.c.grid);
   const SQUARE_ICON = '<svg viewBox="0 0 20 20" fill="none"><path d="M7.5 10L9.16667 11.6667L12.5 8.33333M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const TICKET = '<svg viewBox="0 0 20 20" fill="none"><path d="M7.49999 10.0003L9.16666 11.667L12.5 8.33366M1.66666 7.50033C2.3297 7.50033 2.96558 7.76372 3.43442 8.23256C3.90326 8.7014 4.16666 9.33728 4.16666 10.0003C4.16666 10.6634 3.90326 11.2993 3.43442 11.7681C2.96558 12.2369 2.3297 12.5003 1.66666 12.5003V14.167C1.66666 14.609 1.84225 15.0329 2.15481 15.3455C2.46737 15.6581 2.8913 15.8337 3.33332 15.8337H16.6667C17.1087 15.8337 17.5326 15.6581 17.8452 15.3455C18.1577 15.0329 18.3333 14.609 18.3333 14.167V12.5003C17.6703 12.5003 17.0344 12.2369 16.5656 11.7681C16.0967 11.2993 15.8333 10.6634 15.8333 10.0003C15.8333 9.33728 16.0967 8.7014 16.5656 8.23256C17.0344 7.76372 17.6703 7.50033 18.3333 7.50033V5.83366C18.3333 5.39163 18.1577 4.96771 17.8452 4.65515C17.5326 4.34259 17.1087 4.16699 16.6667 4.16699H3.33332C2.8913 4.16699 2.46737 4.34259 2.15481 4.65515C1.84225 4.96771 1.66666 5.39163 1.66666 5.83366V7.50033Z" stroke="#007BFF" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const MAX_CHIPS = 8;
+  const CHEVRON_DARK = '<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="#282E38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const myCard = ({ g, c, keys }) => {
     const sold = soldFor(g, c), full = sold >= 100;
     const sorted = [...keys].sort((a, b) => a.localeCompare(b));
     const chip = k => { const [r, col] = k.split("-"); return `<span class="alert">${TICKET}${g.home[4] || g.home[2]} ${r} • ${g.away[4] || g.away[2]} ${col}</span>`; };
-    const extra = sorted.length - MAX_CHIPS;
     return `
     <article class="mycard" aria-label="${g.home[2]} vs ${g.away[2]}, grid ${c.grid}: ${keys.length} of your squares">
       <div class="mycard-head">
@@ -487,8 +492,8 @@
       </div>
       <div class="my-meta"><span class="chip">${g.league}</span><span class="chip">Grid<b>${c.grid}</b></span><span class="chip">Square<b>$${c.price}</b></span><span class="chip">Paid<b>$${keys.length * c.price}</b></span><span class="chip">Prize Pool<b>$${c.price * 100}</b></span></div>
       <div>
-        <p class="my-sq-label">Your squares <strong>(${keys.length})</strong></p>
-        <div class="my-squares">${sorted.slice(0, MAX_CHIPS).map(chip).join("")}${extra > 0 ? `<span class="alert">+${extra} more</span>` : ""}</div>
+        <button type="button" class="my-sq-label" aria-expanded="false" aria-controls="mysq-${g.id}-${c.grid}"><span>Your squares <strong>(${keys.length})</strong></span>${CHEVRON_DARK}</button>
+        <div class="my-squares" id="mysq-${g.id}-${c.grid}" hidden>${sorted.map(chip).join("")}</div>
       </div>
       <div>
         <div class="progress-head"><span>Game progress</span><strong>${sold}% Sold</strong></div>
@@ -522,6 +527,11 @@
         </div>
       </section>
       <div class="my-list">${entries.map(myCard).join("")}</div>`;
+    box.querySelectorAll(".my-sq-label").forEach(t => t.addEventListener("click", () => {
+      const open = t.getAttribute("aria-expanded") !== "true";
+      t.setAttribute("aria-expanded", open);
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !open;
+    }));
   }
   const myCount = document.getElementById("myCount");
   const n = myEntries().length;
