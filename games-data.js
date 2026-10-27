@@ -17,10 +17,10 @@ window.SQUARES_GAMES = [
     grids: [{ price: 1, grid: 1, sold: 100 }, { price: 5, grid: 2, sold: 58 }, { price: 10, grid: 3, sold: 21 }] },
   { id: "gb-chi", league: "NFL", date: "Sun, Nov 1 | 1:00 PM",
     home: ["GB", "Green Bay", "Packers", "#203731"], away: ["CHI", "Chicago", "Bears", "#0b162a"],
-    grids: [{ price: 5, grid: 1, sold: 64 }, { price: 10, grid: 2, sold: 30 }] },
+    grids: [{ price: 5, grid: 1, sold: 100 }, { price: 10, grid: 2, sold: 100 }] },   // sold out (demo)
   { id: "mia-nyj", league: "NFL", date: "Mon, Nov 2 | 8:15 PM",
     home: ["MIA", "Miami", "Dolphins", "#008e97"], away: ["NYJ", "New York", "Jets", "#125740"],
-    grids: [{ price: 5, grid: 1, sold: 18 }] },
+    grids: [{ price: 5, grid: 1, sold: 100 }] },   // sold out (demo)
 
   // ===== NCAAF =====
   { id: "ala-uga", league: "NCAAF", date: "Sat, Oct 31 | 3:30 PM",
