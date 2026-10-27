@@ -670,14 +670,15 @@
 </footer>
 
 <!-- Bump ?v= whenever games-data.js changes so browsers don't pair this page with a cached copy -->
-<script src="games-data.js?v=2"></script>
+<script src="games-data.js?v=3"></script>
 <script>
   // Which game and grid to show: index.html?game=bal-cin&grid=2 (defaults to the Figma board, TB vs DAL grid 2)
   const query = new URLSearchParams(location.search);
   const GAME = window.SQUARES_GAMES.find(g => g.id === query.get("game")) || window.SQUARES_GAMES[0];
   const GRID = GAME.grids.find(c => String(c.grid) === query.get("grid")) || GAME.grids.find(c => c.grid === 2) || GAME.grids[0];
   const PRICE = GRID.price;
-  const team = ([code, city, short, color]) => ({ code, city, short, color, full: `${city} ${short}` });
+  // Team tuple: [code, city/school, name, color, short label (defaults to name)]
+  const team = ([code, city, name, color, short = name]) => ({ code, city, short, color, full: `${city} ${name}` });
   const HOME = team(GAME.home);   // rows
   const AWAY = team(GAME.away);   // columns
 
