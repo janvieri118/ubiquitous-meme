@@ -107,49 +107,76 @@
   .hero img { width: 100%; height: auto; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-  .tabs { display: flex; height: 40px; }
-  .tabs button { height: 40px; padding: 0 16px; border: 0; border-bottom: 4px solid transparent; background: none; font-family: var(--nexa); font-weight: 800; font-size: 18px; color: var(--fg-mid); cursor: pointer; }
-  .tabs button[aria-selected="true"] { color: var(--fg-high); border-bottom-color: var(--primary); }
-  .tabs button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
-  /* My Grids: not a league, so it sits apart on the right as a pill */
-  .tabs { align-items: center; }
-  .tabs .my-tab { margin-left: auto; height: 36px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border-medium); border-radius: 999px; font-size: 16px; color: var(--fg-high); white-space: nowrap; }
-  .tabs .my-tab:hover { background: var(--fill-low); }
-  .tabs .my-tab[aria-selected="true"] { border-color: var(--primary); background: var(--primary-muted); color: var(--primary); }
-  .tabs .my-tab:focus-visible { outline-offset: 2px; }
-  .my-tab svg { width: 18px; height: 18px; flex: none; }
-  .my-count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--primary); color: #fff; font-family: var(--nexa); font-weight: 700; font-size: 12px; display: grid; place-items: center; }
+  /* Toolbar above the leagues (Figma: Toolbar / Account Controls) */
+  .toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 12px; min-height: 40px; }
+  .toolbar .back { margin-right: auto; }
+  .my-btn { min-width: 182px; padding-right: 9px; justify-content: flex-start; }
+  .my-btn[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-muted); color: var(--primary); }
+  .my-count { margin-left: auto; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: #208fff; color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 12px; line-height: 1.2; display: grid; place-items: center; }
 
+  /* League sections (Figma: Odds Sections) */
   .games { display: flex; flex-direction: column; gap: 16px; }
-  .game { display: flex; flex-direction: column; gap: 12px; }
-  .game-head { border-radius: 10px; overflow: hidden; }
-  .game-top { height: 60px; padding: 0 20px; background: var(--inv-card); color: #fff; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
-  .matchup { display: flex; align-items: center; gap: 16px; }
-  .team { display: flex; align-items: center; gap: 12px; font-family: var(--nexa); font-weight: 800; font-size: 18px; letter-spacing: -.54px; white-space: nowrap; }
-  .badge-team { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 14px; letter-spacing: 0; box-shadow: 0 0 0 2px rgba(255, 255, 255, .2); }
-  .team .short { display: none; }
-  .vs { width: 23px; height: 33px; flex: none; }
-  .collapse { width: 16px; height: 16px; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
-  .collapse svg { width: 12px; height: 12px; transition: transform .2s; }
-  .game.closed .collapse svg { transform: rotate(180deg); }
-  .game.closed .slider { display: none; }
-  .date-strip { height: 42px; padding: 0 14px; background: var(--strip); display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, .05); font-family: var(--nexa); font-weight: 800; font-size: 14px; text-transform: uppercase; }
-  .date-strip small { font-weight: 400; font-size: 12px; color: var(--fg-mid); text-transform: none; }
+  .league { display: flex; flex-direction: column; gap: 10px; }
+  .league-head { height: 50px; padding: 0 20px; border-radius: 8px; background: var(--inv-card); color: #fff; display: flex; align-items: center; gap: 9px; }
+  .league-head h2 { font-family: var(--nexa); font-weight: 800; font-size: 20px; line-height: 21.6px; }
+  .league-count { height: 16px; padding: 0 6px; border-radius: 4px; background: rgba(255, 255, 255, .2); color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 10px; line-height: 1.2; display: grid; place-items: center; white-space: nowrap; }
 
   .slider { position: relative; }
-  .track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; padding: 0 0 24px; margin-bottom: -24px; }
+  .track { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; padding: 0 0 24px; margin-bottom: -24px; }
   .track::-webkit-scrollbar { display: none; }
-  .nav-btn { position: absolute; top: 112px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; cursor: pointer; z-index: 2; }
+  .nav-btn { position: absolute; top: calc(50% - 32px); width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; cursor: pointer; z-index: 2; }
   .nav-btn svg { width: 40px; height: 40px; }
-  .nav-btn.prev { left: -22px; }
+  .nav-btn.prev { left: -20px; }
   .nav-btn.prev svg { transform: scaleX(-1); }
-  .nav-btn.next { right: -22px; }
+  .nav-btn.next { right: -20px; }
   .nav-btn[hidden] { display: none; }
 
-  .gcard { flex: 0 0 613px; width: 613px; min-width: 0; scroll-snap-align: start; display: flex; flex-direction: column; gap: 18px; padding: 20px 28px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--shadow-card); }
-  .gcard-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  .gcard-title { font-family: var(--nexa); font-weight: 800; font-size: 18px; letter-spacing: -.54px; }
-  .badge-open { height: 24px; padding: 0 8px; border-radius: 6px; background: #3fb100; color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 14px; display: grid; place-items: center; }
+  /* Event card (Figma: Card · KC @ DAL) */
+  .ecard { flex: 0 0 409px; width: 409px; min-width: 0; scroll-snap-align: start; display: flex; flex-direction: column; border: 1px solid var(--card-border); border-radius: 12px; overflow: hidden; background: var(--card); }
+  .ecard-head { height: 49px; flex: none; padding: 8px 20px; background: #f8fafc; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .ecard-date { font-size: 14px; line-height: 1.2; font-weight: 800; white-space: nowrap; }
+  .ecard-date small { font-size: 14px; font-weight: 400; color: var(--fg-mid); }
+  .badge-open { height: 24px; padding: 0 8px; border-radius: 6px; background: #3fb100; color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 14px; line-height: 1.2; display: grid; place-items: center; white-space: nowrap; }
+  .badge-open.full { background: var(--border-low); color: var(--fg-high); }
+  .ecard-body { flex: 1; padding: 14px 20px; display: flex; flex-direction: column; gap: 12px; background: var(--card); box-shadow: 0 20px 50px -20px rgba(15, 40, 90, .25); }
+  .ecard-ctrls { display: flex; flex-direction: column; gap: 8px; }
+  .ctrl-row { display: flex; align-items: center; gap: 6px; }
+  .ctrl-label { flex: none; width: 44px; font-family: var(--nexa); font-weight: 800; font-size: 12px; line-height: 1.2; letter-spacing: .36px; }
+  .ctrl-main { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .seg-track { flex: none; display: flex; gap: 4px; padding: 2px; border-radius: 999px; background: var(--fill-low); }
+  .seg-track button { height: 24px; min-width: 48px; padding: 0 8px; border: 0; border-radius: 999px; background: none; font-family: var(--nexa); font-weight: 800; font-size: 12px; line-height: 1.2; letter-spacing: .36px; color: var(--fg-mid); cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+  .seg-track.grids button { min-width: 56px; }
+  .seg-track button[aria-pressed="true"] { background: var(--fg-high); color: #fff; }
+  .seg-track button:disabled { opacity: .4; cursor: not-allowed; }
+  .seg-track button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+  .seg-track button:not([aria-pressed="true"]):not(:disabled):hover { color: var(--fg-high); }
+  .prize-chip { flex: none; height: 24px; min-width: 56px; padding: 0 8px; border: 1px solid var(--border-low); border-radius: 8px; display: grid; place-items: center; font-size: 12px; line-height: 1.5; color: var(--fg-mid); white-space: nowrap; }
+  .prize-chip b { font-weight: 700; color: var(--fg-high); }
+  /* Grid tabs scroll sideways when a price has many grids; the fade + chevron shows there is more */
+  .grid-opts { position: relative; flex: 1; min-width: 0; }
+  .grid-scroll { overflow-x: auto; scrollbar-width: none; scroll-behavior: smooth; }
+  .grid-scroll::-webkit-scrollbar { display: none; }
+  .grid-scroll .seg-track { width: max-content; }
+  .grid-fade { position: absolute; top: 0; bottom: 0; width: 59px; padding: 0 2px; display: flex; align-items: center; border: 0; cursor: pointer; z-index: 1; }
+  .grid-fade.left { left: 0; background: linear-gradient(to right, #fff 35%, rgba(255, 255, 255, 0)); }
+  .grid-fade.right { right: 0; justify-content: flex-end; background: linear-gradient(to left, #fff 35%, rgba(255, 255, 255, 0)); }
+  .grid-fade svg { width: 24px; height: 24px; }
+  .grid-fade.right svg { transform: scaleX(-1); }
+  .badge-team { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 14px; line-height: 1.2; }
+  .teams { display: flex; flex-direction: column; gap: 6px; }
+  .eteam { display: flex; align-items: center; gap: 16px; }
+  .eteam .badge-team { width: 40px; height: 40px; font-size: 16px; letter-spacing: .48px; box-shadow: none; }
+  .eteam .badge-team.long { font-size: 12px; letter-spacing: 0; }
+  .eteam-name { flex: 1; min-width: 0; font-family: var(--nexa); font-weight: 800; font-size: 18px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vs-row { display: flex; align-items: center; gap: 10px; padding-left: 5px; }
+  .vs-row svg { width: 24px; height: 33px; flex: none; }
+  .vs-row::after, .ecard-sep::after { content: ""; flex: 1; height: 1px; background: var(--border-low); }
+  .ecard-sep { height: 17px; padding-left: 5px; display: flex; align-items: center; }
+  .view-link { align-self: flex-start; height: 28px; display: inline-flex; align-items: center; gap: 4px; font-family: var(--nexa); font-weight: 800; font-size: 14px; line-height: 1.5; color: #0072eb; }
+  .view-link svg { width: 14px; height: 14px; margin-right: 6px; }
+  .view-link:hover { text-decoration: underline; }
+  .view-link:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+
   .stats { height: 76px; padding: 0 12px; border: 1px solid var(--card-border); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; }
   .stat { display: flex; align-items: center; gap: 8px; }
   .stat-ico { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--fill-low); display: grid; place-items: center; }
@@ -163,8 +190,6 @@
   .bar { height: 5px; margin: 8px 0; border-radius: 999px; background: var(--card-border); overflow: hidden; }
   .bar i { display: block; height: 100%; border-radius: 999px; background: var(--primary); }
   .progress-foot { font-size: 12px; line-height: 12px; color: var(--fg-low); }
-  .gcard .btn { width: 100%; }
-  .badge-open.full { background: var(--fg-mid); }
   /* ===== My Grids (no Figma frame yet: built from the Grid Overview card parts) ===== */
   .my-summary { display: flex; flex-direction: column; gap: 18px; padding: 20px 28px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--shadow-card); }
   .my-title { font-family: var(--nexa); font-weight: 800; font-size: 22px; letter-spacing: -.66px; }
@@ -240,38 +265,16 @@
     .topbar, .navbar { display: none; }
     .m-header { display: flex; }
     .container { width: calc(100% - 16px); }
-    main { padding: 10px 0 40px; gap: 8px; }
-    .hero { margin: 0 4px 4px; }
-    .tabs { height: 36px; padding: 6px 0; }
-    .tabs button { height: 24px; padding: 0 12px; border-bottom-width: 2px; font-size: 12px; }
-    .tabs .my-tab { height: 26px; padding: 0 8px; gap: 4px; font-size: 12px; }
-    .my-tab svg { width: 14px; height: 14px; }
-    .my-count { min-width: 16px; height: 16px; padding: 0 4px; font-size: 10px; }
-    .my-summary { padding: 12px; gap: 12px; }
-    .my-title { font-size: 18px; letter-spacing: -.54px; }
-    .my-sub { font-size: 12px; }
-    .my-list { grid-template-columns: 1fr; gap: 8px; }
-    .mycard { padding: 12px; gap: 12px; }
-    .my-match { font-size: 14px; letter-spacing: -.42px; gap: 6px; }
-    .my-match .badge-team { width: 24px; height: 24px; font-size: 9px; }
-    .my-match .vs-text { font-size: 12px; }
-    .my-date, .my-sq-label { font-size: 12px; }
-    .my-sq-label { height: 36px; }
-    .chip { height: 22px; padding: 0 8px; font-size: 12px; }
-    .games { gap: 8px; }
-    .game { gap: 8px; }
-    .game-top { height: 44px; padding: 0 14px; }
-    .matchup { gap: 8px; }
-    .team { font-size: 14px; letter-spacing: -.42px; }
-    .team .full { display: none; }
-    .team .short { display: inline; }
-    .badge-team { width: 24px; height: 24px; font-size: 10px; }
-    .date-strip { height: 34px; font-size: 12px; }
-    .date-strip small { font-weight: 200; font-size: 10px; }
-    .track { gap: 8px; }
-    .gcard { flex-basis: 334px; width: 334px; padding: 12px; gap: 12px; }
-    .gcard-title { font-size: 14px; letter-spacing: -.42px; }
-    .badge-open { height: 20px; padding: 0 6px; font-size: 12px; }
+    main { padding: 10px 0 40px; gap: 12px; }
+    .hero { margin: 0 4px; }
+    .toolbar { min-height: 32px; }
+    .toolbar .btn { min-height: 32px; min-width: 80px; padding: 0 12px; gap: 6px; font-size: 14px; }
+    .toolbar .btn svg { width: 16px; height: 16px; }
+    .my-btn { min-width: 149px; padding-right: 6px; }
+    .games { gap: 12px; }
+    .league-head { height: 42px; justify-content: space-between; }
+    .ecard { flex-basis: 344px; width: 344px; }
+    .ecard-head, .ecard-body { padding-left: 16px; padding-right: 16px; }
     .stats { height: auto; display: grid; grid-template-columns: 1fr 1fr; padding: 0; }
     .stats .stat { height: 60px; padding: 0 12px; }
     .stats .stat:nth-of-type(2n) { padding-left: 20px; border-left: 1px solid var(--card-border); }
@@ -366,15 +369,12 @@
     </picture>
   </a>
 
-  <div class="tabs" role="tablist" aria-label="Leagues">
-    <button type="button" role="tab" aria-selected="true" data-league="NFL">NFL</button>
-    <button type="button" role="tab" aria-selected="false" data-league="NCAAF">NCAAF</button>
-    <button type="button" role="tab" aria-selected="false" data-league="NBA">NBA</button>
-    <button type="button" role="tab" aria-selected="false" data-league="NCAAB">NCAAB</button>
-    <button type="button" role="tab" aria-selected="false" data-league="MY" class="my-tab"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.5 7.5H17.5M2.5 12.5H17.5M7.5 2.5V17.5M12.5 2.5V17.5M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>My Grids<span class="my-count" id="myCount" hidden></span></button>
+  <div class="toolbar">
+    <button type="button" class="btn btn-outline back" id="allGames" hidden><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3.75L3.75 9L9 14.25M3.75 9H14.25" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>All Games</button>
+    <button type="button" class="btn btn-outline my-btn" id="myBtn" aria-pressed="false"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.5 7.5H17.5M2.5 12.5H17.5M7.5 2.5V17.5M12.5 2.5V17.5M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>My Squares<span class="my-count" id="myCount" hidden></span></button>
   </div>
 
-  <div class="games" id="games" role="tabpanel"></div>
+  <div class="games" id="games"></div>
 </main>
 
 <footer>
@@ -415,7 +415,7 @@
 </footer>
 
 <!-- Bump ?v= whenever games-data.js changes so browsers don't pair this page with a cached copy -->
-<script src="games-data.js?v=4"></script>
+<script src="games-data.js?v=5"></script>
 <script>
   const ICON = {
     dollar: "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M13.3334 6.66699H8.33341C7.89139 6.66699 7.46746 6.84259 7.1549 7.15515C6.84234 7.46771 6.66675 7.89163 6.66675 8.33366C6.66675 8.77569 6.84234 9.19961 7.1549 9.51217C7.46746 9.82473 7.89139 10.0003 8.33341 10.0003H11.6667C12.1088 10.0003 12.5327 10.1759 12.8453 10.4885C13.1578 10.801 13.3334 11.225 13.3334 11.667C13.3334 12.109 13.1578 12.5329 12.8453 12.8455C12.5327 13.1581 12.1088 13.3337 11.6667 13.3337H6.66675M10.0001 15.0003V5.00033M18.3334 10.0003C18.3334 14.6027 14.6025 18.3337 10.0001 18.3337C5.39771 18.3337 1.66675 14.6027 1.66675 10.0003C1.66675 5.39795 5.39771 1.66699 10.0001 1.66699C14.6025 1.66699 18.3334 5.39795 18.3334 10.0003Z\" stroke=\"#282E38\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
@@ -423,48 +423,109 @@
     users: "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M15.0001 17.5C15.0001 15.7319 14.2977 14.0362 13.0475 12.786C11.7972 11.5357 10.1015 10.8333 8.33341 10.8333M8.33341 10.8333C6.5653 10.8333 4.86961 11.5357 3.61937 12.786C2.36913 14.0362 1.66675 15.7319 1.66675 17.5M8.33341 10.8333C10.6346 10.8333 12.5001 8.96785 12.5001 6.66667C12.5001 4.36548 10.6346 2.5 8.33341 2.5C6.03223 2.5 4.16675 4.36548 4.16675 6.66667C4.16675 8.96785 6.03223 10.8333 8.33341 10.8333ZM18.3335 16.6666C18.3335 13.8583 16.6668 11.25 15.0001 9.99996C15.548 9.58893 15.9861 9.0492 16.2756 8.42852C16.5651 7.80784 16.6972 7.12535 16.6601 6.44146C16.6231 5.75757 16.418 5.09336 16.063 4.50763C15.7081 3.92189 15.2142 3.43268 14.6251 3.08329\" stroke=\"#282E38\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
     trophy: "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M5.00008 7.50033H3.75008C3.19755 7.50033 2.66764 7.28083 2.27694 6.89013C1.88624 6.49943 1.66675 5.96953 1.66675 5.41699C1.66675 4.86446 1.88624 4.33455 2.27694 3.94385C2.66764 3.55315 3.19755 3.33366 3.75008 3.33366H5.00008M5.00008 7.50033V1.66699H15.0001V7.50033M5.00008 7.50033C5.00008 8.82641 5.52687 10.0982 6.46455 11.0359C7.40223 11.9735 8.674 12.5003 10.0001 12.5003C11.3262 12.5003 12.5979 11.9735 13.5356 11.0359C14.4733 10.0982 15.0001 8.82641 15.0001 7.50033M15.0001 7.50033H16.2501C16.8026 7.50033 17.3325 7.28083 17.7232 6.89013C18.1139 6.49943 18.3334 5.96953 18.3334 5.41699C18.3334 4.86446 18.1139 4.33455 17.7232 3.94385C17.3325 3.55315 16.8026 3.33366 16.2501 3.33366H15.0001M3.33341 18.3337H16.6667M8.33341 12.2169V14.1669C8.33341 14.6253 7.94175 14.9836 7.52508 15.1753C6.54175 15.6253 5.83341 16.8669 5.83341 18.3336M11.6667 12.2169V14.1669C11.6667 14.6253 12.0584 14.9836 12.4751 15.1753C13.4584 15.6253 14.1667 16.8669 14.1667 18.3336\" stroke=\"#009C63\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
   };
-  const VS = "<svg viewBox=\"0 0 35 48\" fill=\"none\"><path d=\"M6.1265 16.1703H0L4.00075 33.7003C5.75606 33.566 7.85902 33.9223 9.56304 33.7304C9.97908 33.6838 10.2954 33.6921 10.5119 33.2727L21.3687 16.576C21.4428 16.0196 21.3459 16.2197 20.9498 16.1676C20.1491 16.0662 19.1774 16.269 18.3738 16.1676C17.9806 16.1182 17.8751 16.3156 17.9606 15.7674L25.358 0L8.83071 26.3128L6.1265 16.1731V16.1703ZM15.4331 32.3845C17.0089 32.6394 18.2313 33.5276 19.9297 33.8675C24.5886 34.8022 32.2767 34.0375 32.9862 28.2919C33.6274 23.1028 27.5237 23.7634 24.8708 22.2585C23.4317 21.4417 24.5431 20.7646 25.6971 20.4713C27.6804 19.9669 30.0541 20.6248 31.7752 21.6281L34.0691 17.2613C32.157 15.8798 24.8508 15.2274 23.2038 16.4307C22.8818 16.6665 19.2657 22.3243 18.9352 23.0151C18.1373 24.6708 19.1888 25.5014 20.7076 26.2662C22.1124 26.9761 25.7684 27.4339 26.5007 28.0945C28.2674 29.6872 23.5486 29.6735 22.6823 29.5748C20.246 29.3007 18.4621 27.7135 16.2395 27.2557L3.84687 47.6941L15.4359 32.3845H15.4331Z\" fill=\"white\"/><path d=\"M15.4323 32.3863L3.84326 47.6959L16.2387 27.2575C18.4614 27.7153 20.2452 29.3025 22.6815 29.5766C23.5478 29.6753 28.2666 29.689 26.4999 28.0963C25.7676 27.4357 22.1088 26.9779 20.7068 26.268C19.1909 25.5004 18.1394 24.6726 18.9344 23.0169C19.2678 22.3261 22.881 16.6683 23.203 16.4325C24.85 15.2292 32.1562 15.8816 34.0683 17.2631L31.7744 21.6299C30.0533 20.6293 27.6796 19.9714 25.6964 20.4731C24.5423 20.7664 23.431 21.4462 24.87 22.2603C27.5201 23.7625 33.6238 23.1046 32.9855 28.2937C32.2759 34.0393 24.5879 34.8041 19.9289 33.8693C18.2306 33.5294 17.0053 32.6412 15.4323 32.3863Z\" fill=\"white\"/><path d=\"M6.1265 16.1703L8.83071 26.31L25.358 0L17.9635 15.7729C17.8751 16.3211 17.9834 16.1237 18.3767 16.1731C19.1802 16.2718 20.1519 16.0689 20.9526 16.1731C21.3487 16.2224 21.4456 16.0223 21.3715 16.5815L10.5148 33.2781C10.2982 33.6976 9.98193 33.6893 9.5659 33.7359C7.86472 33.9278 5.75891 33.5715 4.0036 33.7058L0 16.1703H6.1265Z\" fill=\"white\"/></svg>";
   const ARROW_R = "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M4.16667 10H15.8333M10 15.8333L15.8333 10L10 4.16667\" stroke=\"white\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
   const NEXT = '<svg viewBox="0 0 40 40" fill="none"><path d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z" fill="#E7ECF3"/><path d="M17.5 25L22.5 20L17.5 15" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const CHEVRON_DOWN = '<svg viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const CHEVRON = '<svg viewBox="0 0 12 12" fill="none"><path d="M9.5 4.5L6 8L2.5 4.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   // Contest data lives in games-data.js (shared with the board page)
   const GAMES = { NFL: [], NCAAF: [], NBA: [], NCAAB: [] };
   window.SQUARES_GAMES.forEach(g => GAMES[g.league].push(g));
+  const PRICES = window.SQUARES_PRICES || [1, 3, 5];
+  const gridNo = window.SQUARES_GRID_NO || ((g, c) => c.grid);
   // Add squares bought on the board page (saved in this browser) to each grid's sold count
   const STORE = window.SQUARES_STORE || { owned: () => [], setOwned() {}, cash: () => 3670.25, setCash() {} };   // older cached games-data.js: no saved purchases
   const soldFor = (g, c) => Math.min(100, c.sold + STORE.owned(g.id, c.grid).length);
   const cashText = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   document.querySelectorAll(".cash-value").forEach(e => { e.textContent = cashText(STORE.cash()); });
 
-  const team = ([code, city, name, color, short = name], side) => {
-    const badge = `<span class="badge-team" style="background:${color}">${code}</span>`;
-    const label = `<span><span class="full">${city} ${name}</span><span class="short">${short}</span></span>`;
-    return `<div class="team">${side === "home" ? badge + label : label + badge}</div>`;
+  const VS_CARD = '<svg viewBox="0 0 24 33" fill="none" aria-hidden="true"><g opacity="0.2"><path d="M4.1912 11.0624H0L2.73695 23.0549C3.93778 22.963 5.37644 23.2068 6.54218 23.0755C6.82679 23.0436 7.04317 23.0493 7.19132 22.7624L14.6185 11.3399C14.6692 10.9592 14.6029 11.0961 14.332 11.0605C13.7842 10.9911 13.1194 11.1299 12.5697 11.0605C12.3007 11.0267 12.2286 11.1618 12.287 10.7867L17.3477 0L6.04118 18.001L4.1912 11.0642V11.0624ZM10.5579 22.1548C11.6359 22.3292 12.4722 22.9368 13.6341 23.1693C16.8213 23.8088 22.0808 23.2856 22.5662 19.3549C23.0048 15.805 18.8292 16.2569 17.0143 15.2274C16.0299 14.6686 16.7902 14.2054 17.5797 14.0047C18.9364 13.6597 20.5603 14.1097 21.7377 14.7961L23.307 11.8087C21.9989 10.8636 17.0007 10.4173 15.8739 11.2405C15.6537 11.4018 13.1799 15.2724 12.9537 15.745C12.4079 16.8777 13.1272 17.4459 14.1663 17.9691C15.1273 18.4548 17.6284 18.768 18.1294 19.2199C19.338 20.3095 16.1098 20.3001 15.5172 20.2326C13.8505 20.045 12.6301 18.9592 11.1096 18.6461L2.63169 32.6283L10.5599 22.1548H10.5579Z" fill="#282E38"/><path d="M10.5571 22.1553L2.62891 32.6289L11.1088 18.6466C12.6293 18.9598 13.8496 20.0456 15.5164 20.2331C16.109 20.3007 19.3372 20.31 18.1286 19.2205C17.6276 18.7685 15.1245 18.4554 14.1654 17.9697C13.1284 17.4446 12.409 16.8782 12.9529 15.7456C13.181 15.273 15.6528 11.4024 15.8731 11.2411C16.9999 10.4178 21.9981 10.8642 23.3062 11.8093L21.7369 14.7967C20.5595 14.1122 18.9356 13.6621 17.5788 14.0053C16.7893 14.2059 16.0291 14.671 17.0135 15.228C18.8264 16.2556 23.0021 15.8056 22.5654 19.3555C22.08 23.2861 16.8205 23.8093 13.6333 23.1699C12.4714 22.9373 11.6332 22.3297 10.5571 22.1553Z" fill="#282E38"/><path d="M4.1912 11.0624L6.04118 17.9991L17.3477 0L12.289 10.7905C12.2286 11.1655 12.3026 11.0305 12.5717 11.0643C13.1214 11.1318 13.7861 10.993 14.3339 11.0643C14.6049 11.098 14.6712 10.9611 14.6205 11.3437L7.19327 22.7661C7.04512 23.053 6.82874 23.0474 6.54413 23.0793C5.38034 23.2106 3.93973 22.9668 2.7389 23.0587L0 11.0624H4.1912Z" fill="#282E38"/></g></svg>';
+  const LINK_ARROW = '<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.41749 10.9786C8.30665 10.9786 8.19582 10.9378 8.10832 10.8503C7.93915 10.6811 7.93915 10.4011 8.10832 10.232L11.34 7.00031L8.10832 3.76865C7.93915 3.59948 7.93915 3.31948 8.10832 3.15031C8.27749 2.98115 8.55749 2.98115 8.72665 3.15031L12.2675 6.69115C12.4367 6.86031 12.4367 7.14031 12.2675 7.30948L8.72665 10.8503C8.63915 10.9378 8.52832 10.9786 8.41749 10.9786Z" fill="#0072EB"/><path d="M11.8595 7.4375H2.04199C1.80283 7.4375 1.60449 7.23917 1.60449 7C1.60449 6.76083 1.80283 6.5625 2.04199 6.5625H11.8595C12.0987 6.5625 12.297 6.76083 12.297 7C12.297 7.23917 12.0987 7.4375 11.8595 7.4375Z" fill="#0072EB"/></svg>';
+  const FADE_BTN = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M0 12C0 5.37258 5.37258 0 12 0C18.6274 0 24 5.37258 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12Z" fill="#E7ECF3"/><path d="M13.5 15L10.5 12L13.5 9" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" stroke="#282E38"/></svg>';
+
+  // Each card remembers the price and grid picked on it; it starts on the cheapest price with an open grid
+  const picks = {};
+  const pickFor = g => {
+    if (!picks[g.id]) {
+      const open = PRICES.map(p => g.grids.find(c => c.price === p && soldFor(g, c) < 100)).find(Boolean);
+      const c = open || g.grids[0];
+      picks[g.id] = { price: c.price, grid: c.grid };
+    }
+    return picks[g.id];
   };
-
-  const card = (g, c, sold = soldFor(g, c), full = sold >= 100) => `
-    <article class="gcard" aria-label="${g.home[2]} vs ${g.away[2]}, grid ${c.grid}">
-      <div class="gcard-head"><h3 class="gcard-title">Grid Overview</h3><span class="badge-open${full ? " full" : ""}">${full ? "Sold Out" : "Open"}</span></div>
-      <div class="stats">
-        <div class="stat"><span class="stat-ico">${ICON.dollar}</span><div><div class="stat-label">Square Price</div><div class="stat-value">$${c.price}</div></div></div>
-        <span class="stat-line"></span>
-        <div class="stat"><span class="stat-ico">${ICON.grid}</span><div><div class="stat-label">Grid</div><div class="stat-value">${c.grid}</div></div></div>
-        <span class="stat-line"></span>
-        <div class="stat"><span class="stat-ico">${ICON.users}</span><div><div class="stat-label">Squares Sold</div><div class="stat-value">${sold}/100</div></div></div>
-        <span class="stat-line"></span>
-        <div class="stat"><span class="stat-ico">${ICON.trophy}</span><div><div class="stat-label">Prize Pool</div><div class="stat-value jade">$${c.price * 100}</div></div></div>
+  const eteam = ([code, city, name, color]) =>
+    `<div class="eteam"><span class="badge-team${code.length > 3 ? " long" : ""}" style="background:${color}">${code}</span><span class="eteam-name">${city === name ? name : `${city} ${name}`}</span></div>`;
+  const card = g => {
+    const pick = pickFor(g);
+    const c = g.grids.find(x => x.grid === pick.grid);
+    const sameprice = g.grids.filter(x => x.price === pick.price);
+    const full = soldFor(g, c) >= 100;
+    const [date, time] = g.date.split(" | ");
+    return `
+    <article class="ecard" data-game="${g.id}" aria-label="${g.home[1]} ${g.home[2]} vs ${g.away[1]} ${g.away[2]}">
+      <div class="ecard-head"><p class="ecard-date">${date} • ${time} <small>EST</small></p><span class="badge-open${full ? " full" : ""}">${full ? "Sold Out" : "Open"}</span></div>
+      <div class="ecard-body">
+        <div class="ecard-ctrls">
+          <div class="ctrl-row"><span class="ctrl-label">Square</span>
+            <div class="ctrl-main">
+              <div class="seg-track" role="group" aria-label="Square price">${PRICES.map(p => `<button type="button" data-price="${p}" aria-pressed="${p === pick.price}"${g.grids.some(x => x.price === p) ? "" : " disabled"}>$${p}</button>`).join("")}</div>
+              <span class="prize-chip"><span>Prize Pool <b>$${pick.price * 100}</b></span></span>
+            </div>
+          </div>
+          <div class="ctrl-row"><span class="ctrl-label">Grid</span>
+            <div class="grid-opts">
+              <button type="button" class="grid-fade left" tabindex="-1" aria-hidden="true" hidden>${FADE_BTN}</button>
+              <div class="grid-scroll"><div class="seg-track grids" role="group" aria-label="Grid">${sameprice.map(x => `<button type="button" data-grid="${x.grid}" aria-pressed="${x.grid === c.grid}" aria-label="Grid ${gridNo(g, x)}${soldFor(g, x) >= 100 ? ", sold out" : ""}">#${gridNo(g, x)}</button>`).join("")}</div></div>
+              <button type="button" class="grid-fade right" tabindex="-1" aria-hidden="true" hidden>${FADE_BTN}</button>
+            </div>
+          </div>
+        </div>
+        <div class="teams">${eteam(g.home)}<div class="vs-row">${VS_CARD}</div>${eteam(g.away)}</div>
+        <div class="ecard-sep"></div>
+        <a class="view-link" href="index.html?game=${g.id}&amp;grid=${c.grid}">VIEW SQUARES ${LINK_ARROW}</a>
       </div>
-      <div>
-        <div class="progress-head"><span>Game progress</span><strong>${sold}% Sold</strong></div>
-        <div class="bar" role="progressbar" aria-valuenow="${sold}" aria-valuemin="0" aria-valuemax="100" aria-label="Squares sold"><i style="width:${sold}%"></i></div>
-        <div class="progress-foot">${full ? "All squares are sold" : `${100 - sold} squares are still available`}</div>
-      </div>
-      <a class="btn btn-primary" href="index.html?game=${g.id}&amp;grid=${c.grid}">${full ? "View Squares" : "Pick Squares"} ${ARROW_R}</a>
     </article>`;
+  };
+  // Show the fades only while there are more grid tabs hidden on that side
+  const syncFades = el => {
+    const sc = el.querySelector(".grid-scroll");
+    el.querySelector(".grid-fade.left").hidden = sc.scrollLeft <= 2;
+    el.querySelector(".grid-fade.right").hidden = sc.scrollLeft + sc.clientWidth >= sc.scrollWidth - 2;
+  };
+  const bindCard = el => {
+    const sc = el.querySelector(".grid-scroll");
+    const on = sc.querySelector('[aria-pressed="true"]');
+    if (on) { sc.style.scrollBehavior = "auto"; sc.scrollLeft = Math.max(0, on.offsetLeft + on.offsetWidth - sc.clientWidth + 8); sc.style.scrollBehavior = ""; }
+    sc.addEventListener("scroll", () => syncFades(el), { passive: true });
+    el.querySelector(".grid-fade.left").addEventListener("click", () => sc.scrollBy({ left: -120 }));
+    el.querySelector(".grid-fade.right").addEventListener("click", () => sc.scrollBy({ left: 120 }));
+    syncFades(el);
+  };
+  const redraw = (el, focusSel) => {
+    const g = window.SQUARES_GAMES.find(x => x.id === el.dataset.game);
+    el.outerHTML = card(g);
+    const fresh = document.querySelector(`.ecard[data-game="${g.id}"]`);
+    bindCard(fresh);
+    fresh.querySelector(focusSel)?.focus({ preventScroll: true });
+  };
+  // Price tabs switch the grid list to that price; grid tabs pick which grid VIEW SQUARES opens
+  document.getElementById("games").addEventListener("click", e => {
+    const el = e.target.closest(".ecard");
+    if (!el) return;
+    const g = window.SQUARES_GAMES.find(x => x.id === el.dataset.game);
+    const priceBtn = e.target.closest("[data-price]"), gridBtn = e.target.closest("[data-grid]");
+    if (priceBtn && !priceBtn.disabled) {
+      const price = +priceBtn.dataset.price;
+      const list = g.grids.filter(x => x.price === price);
+      const c = list.find(x => soldFor(g, x) < 100) || list[0];
+      picks[g.id] = { price, grid: c.grid };
+      redraw(el, `[data-price="${price}"]`);
+    } else if (gridBtn) {
+      picks[g.id].grid = +gridBtn.dataset.grid;
+      redraw(el, `[data-grid="${gridBtn.dataset.grid}"]`);
+    }
+  });
 
-  // ===== My Grids: every grid with squares bought in this browser, soonest game first =====
+  // ===== My Squares: every grid with squares bought in this browser, soonest game first =====
   const MONTHS = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
   const when = date => {   // "Thu, Oct 8 | 8:15 PM" -> sortable number
     const m = date.match(/(\w{3}) (\d+) \| (\d+):(\d+) (AM|PM)/);
@@ -490,7 +551,7 @@
         </div>
         <span class="badge-open${full ? " full" : ""}">${full ? "Sold Out" : "Open"}</span>
       </div>
-      <div class="my-meta"><span class="chip">${g.league}</span><span class="chip">Grid<b>${c.grid}</b></span><span class="chip">Square<b>$${c.price}</b></span><span class="chip">Paid<b>$${keys.length * c.price}</b></span><span class="chip">Prize Pool<b>$${c.price * 100}</b></span></div>
+      <div class="my-meta"><span class="chip">${g.league}</span><span class="chip">Grid<b>${gridNo(g, c)}</b></span><span class="chip">Square<b>$${c.price}</b></span><span class="chip">Paid<b>$${keys.length * c.price}</b></span><span class="chip">Prize Pool<b>$${c.price * 100}</b></span></div>
       <div>
         <button type="button" class="my-sq-label" aria-expanded="false" aria-controls="mysq-${g.id}-${c.grid}"><span>Your squares <strong>(${keys.length})</strong></span>${CHEVRON_DARK}</button>
         <div class="my-squares" id="mysq-${g.id}-${c.grid}" hidden>${sorted.map(chip).join("")}</div>
@@ -507,15 +568,15 @@
     const entries = myEntries();
     if (!entries.length) {
       box.innerHTML = `<div class="empty"><strong>You don't have any squares yet</strong>Pick squares in any grid and they'll show up here, so you can follow all your games in one place.<br><button type="button" class="btn btn-primary" id="browseBtn">Browse Games ${ARROW_R}</button></div>`;
-      document.getElementById("browseBtn").addEventListener("click", () => document.querySelector('.tabs [data-league="NFL"]').click());
+      document.getElementById("browseBtn").addEventListener("click", () => show(false));
       return;
     }
     const squares = entries.reduce((n, e) => n + e.keys.length, 0);
     const paid = entries.reduce((n, e) => n + e.keys.length * e.c.price, 0);
     const games = new Set(entries.map(e => e.g.id)).size;
     box.innerHTML = `
-      <section class="my-summary" aria-label="My Grids summary">
-        <div><h2 class="my-title">My Grids</h2><p class="my-sub">Every grid you have squares in, soonest game first</p></div>
+      <section class="my-summary" aria-label="My Squares summary">
+        <div><h2 class="my-title">My Squares</h2><p class="my-sub">Every grid you have squares in, soonest game first</p></div>
         <div class="stats">
           <div class="stat"><span class="stat-ico">${ICON.users}</span><div><div class="stat-label">Games</div><div class="stat-value">${games}</div></div></div>
           <span class="stat-line"></span>
@@ -533,63 +594,51 @@
       document.getElementById(t.getAttribute("aria-controls")).hidden = !open;
     }));
   }
+  // Badge on My Squares: how many squares the user owns across all grids
   const myCount = document.getElementById("myCount");
-  const n = myEntries().length;
-  myCount.textContent = n; myCount.hidden = !n;
-  document.querySelector(".my-tab").setAttribute("aria-label", `My Grids, ${n} grid${n === 1 ? "" : "s"}`);
+  const n = myEntries().reduce((t, e) => t + e.keys.length, 0);
+  myCount.textContent = n > 99 ? "99+" : n; myCount.hidden = !n;
+  document.getElementById("myBtn").setAttribute("aria-label", `My Squares, ${n} square${n === 1 ? "" : "s"}`);
 
-  function render(league) {
-    const box0 = document.getElementById("games");
-    if (league === "MY") { renderMine(box0); return; }
-    const list = GAMES[league];
-    const box = document.getElementById("games");
-    if (!list.length) { box.innerHTML = `<p class="empty">No ${league} squares games are open right now.</p>`; return; }
-    box.innerHTML = list.map((g, i) => `
-      <section class="game" aria-label="${g.home[1]} ${g.home[2]} vs ${g.away[1]} ${g.away[2]}">
-        <div class="game-head">
-          <div class="game-top">
-            <div class="matchup">${team(g.home, "home")}<span class="vs" aria-label="versus">${VS}</span>${team(g.away, "away")}</div>
-            <button type="button" class="collapse" aria-expanded="true" aria-controls="slider-${i}" aria-label="Hide grids">${CHEVRON}</button>
-          </div>
-          <div class="date-strip">${g.date} <small>EST</small></div>
-        </div>
-        <div class="slider" id="slider-${i}">
-          <button type="button" class="nav-btn prev" aria-label="Previous grids">${NEXT}</button>
-          <div class="track">${g.grids.map(c => card(g, c)).join("")}</div>
-          <button type="button" class="nav-btn next" aria-label="Next grids">${NEXT}</button>
+  function renderLeagues(box) {
+    box.innerHTML = Object.entries(GAMES).filter(([, list]) => list.length).map(([league, list]) => `
+      <section class="league" aria-label="${league}">
+        <div class="league-head"><h2>${league}</h2><span class="league-count">${list.length} GAME${list.length === 1 ? "" : "S"}</span></div>
+        <div class="slider">
+          <button type="button" class="nav-btn prev" aria-label="Previous ${league} games">${NEXT}</button>
+          <div class="track">${list.map(card).join("")}</div>
+          <button type="button" class="nav-btn next" aria-label="Next ${league} games">${NEXT}</button>
         </div>
       </section>`).join("");
-    box.querySelectorAll(".game").forEach(sec => {
+    box.querySelectorAll(".league").forEach(sec => {
       const track = sec.querySelector(".track");
       const prev = sec.querySelector(".prev"), next = sec.querySelector(".next");
       const sync = () => {
         prev.hidden = track.scrollLeft <= 2;
         next.hidden = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
       };
-      const step = () => track.querySelector(".gcard").offsetWidth + 12;
+      const step = () => track.querySelector(".ecard").offsetWidth + 8;
       prev.addEventListener("click", () => track.scrollBy({ left: -step() }));
       next.addEventListener("click", () => track.scrollBy({ left: step() }));
       track.addEventListener("scroll", sync, { passive: true });
       window.addEventListener("resize", sync);
       sync();
-      const btn = sec.querySelector(".collapse");
-      btn.addEventListener("click", () => {
-        const closed = sec.classList.toggle("closed");
-        btn.setAttribute("aria-expanded", !closed);
-        btn.setAttribute("aria-label", closed ? "Show grids" : "Hide grids");
-      });
-      // The whole blue bar toggles the section; the chevron button stays for keyboard and screen readers
-      sec.querySelector(".game-top").addEventListener("click", e => { if (!btn.contains(e.target)) btn.click(); });
     });
+    box.querySelectorAll(".ecard").forEach(bindCard);
   }
-
-  document.querySelectorAll(".tabs button").forEach(t => t.addEventListener("click", () => {
-    document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === t));
-    render(t.dataset.league);
-    history.replaceState(null, "", t.dataset.league === "MY" ? "#my-grids" : location.pathname + location.search);
-  }));
-  // games.html#my-grids opens straight on My Grids (the board's All Games link comes back here)
-  if (location.hash === "#my-grids") document.querySelector(".my-tab").click(); else render("NFL");
+  // My Squares toggles between the leagues and the user's own grids
+  const myBtn = document.getElementById("myBtn"), allGames = document.getElementById("allGames");
+  function show(mine) {
+    const box = document.getElementById("games");
+    myBtn.setAttribute("aria-pressed", mine);
+    allGames.hidden = !mine;
+    if (mine) renderMine(box); else renderLeagues(box);
+    history.replaceState(null, "", mine ? "#my-squares" : location.pathname + location.search);
+  }
+  myBtn.addEventListener("click", () => show(myBtn.getAttribute("aria-pressed") !== "true"));
+  allGames.addEventListener("click", () => show(false));
+  // games.html#my-squares opens straight on My Squares (the board's All Games link comes back here)
+  show(location.hash === "#my-squares" || location.hash === "#my-grids");
 
   const FOOT = [
     ["Sportsbook", ["Online Sportsbook", "NFL Odds", "NBA Odds", "MLB Odds", "World Series Odds", "NHL Odds", "NCAAF Odds", "NCAAB Odds", "UEFA Champions League Odds", "Nascar Odds", "Olympic Games Odds", "French Open Odds", "Live Betting"]],
